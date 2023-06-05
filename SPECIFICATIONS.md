@@ -23,6 +23,7 @@
 - Publication limit
 - No picture loading
 - Public / Private informations e.g.  phone number, job, office lovation
+- Notifications for publication on a category
 
 # Security
 - Password Strength
