@@ -7,6 +7,14 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
+    <string name="title_home">Home</string>
+    <string name="title_search">Search</string>
+    <string name="title_New_content">New Content</string>
+    <string name="title_profile">Profile</string>
+
+
+
+
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
