@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "284649142074",
+    "firebase_url": "https://greenshare-3d0ed-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "greenshare-3d0ed",
+    "storage_bucket": "greenshare-3d0ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:284649142074:android:40f7bc088216c9089b0203",
+        "android_client_info": {
+          "package_name": "com.ecotek.greenshare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "284649142074-ejol6qjompuuduigvjpob86826jfcku8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_yLAqaA-VhpgtlOuiboc18AjXaEBtNFw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "284649142074-ejol6qjompuuduigvjpob86826jfcku8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
