@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.ScrollView
 import androidx.fragment.app.Fragment
 
+
 class HomeFragment : Fragment() {
     val im = 10 // Nombre d'ViewImage et ViewText à ajouter
 
@@ -42,6 +43,9 @@ class HomeFragment : Fragment() {
                 val imageName = image[index]
                 val imageId = resources.getIdentifier(imageName, "drawable", requireActivity().packageName)
                 imageView.setImageResource(imageId)
+                imageView.setOnClickListener {
+                    handleImageClick(imageName)
+                }
             }
             if (texte.getOrNull(index) != null) {
                 val textView: TextView = postView.findViewById(R.id.textView)
@@ -68,4 +72,10 @@ class HomeFragment : Fragment() {
             }
         }
     }
+    private fun handleImageClick(imageName: String) {
+        println("Post")
+
+    }
+
+
 }
