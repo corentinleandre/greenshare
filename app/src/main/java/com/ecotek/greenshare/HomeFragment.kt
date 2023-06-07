@@ -1,18 +1,14 @@
-package com.example.applicationtest2
+package com.ecotek.greenshare
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.LinearLayout
 import android.widget.ImageView
-import android.app.Activity
 import android.widget.ScrollView
 import androidx.fragment.app.Fragment
-import com.ecotek.greenshare.R
 
 class HomeFragment : Fragment() {
     val im = 10 // Nombre d'ViewImage et ViewText à ajouter
@@ -22,14 +18,19 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-        CreatePost(view)
+        createPost(view)
         val scrollView: ScrollView = view.findViewById(R.id.scroll)
         detectEndOfScroll(scrollView)
         refreshScroll(scrollView)
         return view
     }
 
-    private fun CreatePost(view: View) {
+    private fun createPost(view: View) {
+
+        if (!isAdded) {
+            return  // Vérifie si le fragment est attaché avant d'accéder au contexte
+        }
+
         val linearContainer: LinearLayout = view.findViewById(R.id.fil)
         for (index in 0 until 9) {
             val inflater = LayoutInflater.from(requireContext())
@@ -55,7 +56,7 @@ class HomeFragment : Fragment() {
             val view = scrollView.getChildAt(scrollView.childCount - 1)
             val diff = (view.bottom - (scrollView.height + scrollView.scrollY))
             if (diff == 0) {
-                CreatePost(view)
+                createPost(view)
             }
         }
     }
@@ -63,7 +64,7 @@ class HomeFragment : Fragment() {
     private fun refreshScroll(scrollView: ScrollView) {
         scrollView.viewTreeObserver.addOnScrollChangedListener {
             if (scrollView.scrollY == 0) {
-                CreatePost(scrollView)
+                createPost(scrollView.getChildAt(0))
             }
         }
     }

@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import com.ecotek.greenshare.databinding.ActivityMainBinding
-import com.example.applicationtest2.HomeFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
