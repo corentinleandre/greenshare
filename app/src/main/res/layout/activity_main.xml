@@ -7,13 +7,21 @@
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
+    <FrameLayout
+        android:id="@+id/container_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_nav" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/green"
+        android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_menu"
         app:itemIconTint="@color/white"
-        app:labelVisibilityMode="labeled"
-        android:layout_alignParentBottom="true"/>
+        app:labelVisibilityMode="auto"
+        app:itemTextColor="@color/white" />
 
 </RelativeLayout>
