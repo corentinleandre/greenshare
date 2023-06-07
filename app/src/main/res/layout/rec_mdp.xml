@@ -24,7 +24,7 @@
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/password_rec"
+        android:id="@+id/emailrecovery"
         android:layout_width="338dp"
         android:layout_height="71dp"
         android:layout_alignParentTop="true"
@@ -61,7 +61,7 @@
         android:text="send me a recovery mail" />
 
     <Button
-        android:id="@+id/return_to_mdp"
+        android:id="@+id/return_to_login"
         android:layout_width="218dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"

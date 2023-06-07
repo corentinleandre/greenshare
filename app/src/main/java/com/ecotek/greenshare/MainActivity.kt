@@ -1,11 +1,13 @@
 package com.ecotek.greenshare
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import android.view.Menu
 import android.view.MenuItem
+import androidx.navigation.findNavController
 import com.ecotek.greenshare.databinding.ActivityMainBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -50,6 +52,12 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+
+        binding.buttontologin.setOnClickListener{
+            //findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+            startActivity(Intent(this@MainActivity,LoginActivity::class.java))
+            finish()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
