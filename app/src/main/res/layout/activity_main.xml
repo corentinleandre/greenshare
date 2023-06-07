@@ -17,6 +17,12 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize" />
 
+        <Button
+            android:id="@+id/buttontologin"
+            android:layout_width="310dp"
+            android:layout_height="wrap_content"
+            android:text="go to login" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
