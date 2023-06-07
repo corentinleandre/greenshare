@@ -13,12 +13,14 @@
         android:theme="@style/Theme.GreenShare"
         tools:targetApi="31">
         <activity
+            android:name=".RecoveryActivity"
+            android:exported="false" />
+        <activity
             android:name=".HomeActivity"
             android:exported="false" />
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
-
         <activity
             android:name=".LoginActivity"
             android:exported="true"
