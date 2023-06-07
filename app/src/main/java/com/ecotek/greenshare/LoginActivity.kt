@@ -29,6 +29,14 @@ open class LoginActivity : AppCompatActivity() {
         loginbtn.setOnClickListener{
             loginuser()
         }
+
+        var forgotpassbtn = findViewById<Button>(R.id.forgot)
+
+        forgotpassbtn.setOnClickListener{
+            startActivity(Intent(this@LoginActivity,RecoveryActivity::class.java))
+            finish()
+        }
+
     }
 
     private fun validateLogin(mail: String, pass: String):Boolean{
