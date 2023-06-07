@@ -32,23 +32,24 @@ class MainActivity : AppCompatActivity() {
         //setSupportActionBar(binding.toolbar)
 
         bottomNavigationView = findViewById(R.id.bottom_nav);
-        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
+        moveToFragment(HomeFragment())
+        bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when(menuItem.itemId){
                 R.id.nav_home -> {
                     moveToFragment(HomeFragment())
-                    return@setOnNavigationItemSelectedListener true
+                    return@setOnItemSelectedListener true
                 }
                 R.id.nav_New_content -> {
                     moveToFragment(NewContentFragment())
-                    return@setOnNavigationItemSelectedListener true
+                    return@setOnItemSelectedListener true
                 }
                 R.id.nav_profile -> {
                     moveToFragment(ProfileFragment())
-                    return@setOnNavigationItemSelectedListener true
+                    return@setOnItemSelectedListener true
                 }
                 R.id.nav_search -> {
                     moveToFragment(SearchFragment())
-                    return@setOnNavigationItemSelectedListener true
+                    return@setOnItemSelectedListener true
                 }
             }
             false
