@@ -25,18 +25,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
-
         val database = FirebaseDatabase.getInstance()
         val myRef = database.getReference("message")
-
-        binding.fab.setOnClickListener { view ->
-
-
-            myRef.setValue("Hello, World!")
-
-
-        }
 
         myRef.addValueEventListener(object: ValueEventListener {
 
@@ -52,12 +42,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-
-        binding.buttontologin.setOnClickListener{
-            //findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-            startActivity(Intent(this@MainActivity,LoginActivity::class.java))
-            finish()
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -45,13 +45,6 @@
         android:padding="20dp"
         android:textColor="@color/black"
         android:textColorHint="@color/black" />
-        <Button
-            android:id="@+id/buttontologin"
-            android:layout_width="310dp"
-            android:layout_height="wrap_content"
-            android:text="go to login" />
-
-    </com.google.android.material.appbar.AppBarLayout>
 
     <EditText
         android:id="@+id/password"
