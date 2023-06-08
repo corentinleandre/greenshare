@@ -33,7 +33,7 @@ class HomeFragment : Fragment() {
         }
 
         val linearContainer: LinearLayout = view.findViewById(R.id.fil)
-        for (index in 0 until 9) {
+        for (index in 0 until im) {
             val inflater = LayoutInflater.from(requireContext())
             val postView = inflater.inflate(R.layout.post, null)
             linearContainer.addView(postView)
@@ -44,13 +44,16 @@ class HomeFragment : Fragment() {
                 val imageId = resources.getIdentifier(imageName, "drawable", requireActivity().packageName)
                 imageView.setImageResource(imageId)
                 imageView.setOnClickListener {
-                    handleImageClick()
+                    handleClick()
                 }
             }
             if (texte.getOrNull(index) != null) {
                 val textView: TextView = postView.findViewById(R.id.textView)
                 val textValue = texte[index]
                 textView.text = textValue
+                textView.setOnClickListener {
+                    handleClick()
+                }
             }
         }
     }
@@ -74,7 +77,7 @@ class HomeFragment : Fragment() {
             }
         }
     }
-    private fun handleImageClick() {
+    private fun handleClick() {
         println("Post")
         (activity as MainActivity).moveToFragment(NewContentFragment())
 
