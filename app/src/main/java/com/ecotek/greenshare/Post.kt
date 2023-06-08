@@ -1,41 +1,44 @@
 package com.ecotek.greenshare
 
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.ListenerRegistration
 
 data class Post(
     val id: String = "",
     val title: String = "",
-    val author: String = "",
+    val authorID: String = "",
     val content: String = "",
     val publicationDate: String = "",
     val category: String = "",
     // TODO: like and comments
-    val likes: Int,
-    val comments: List<Comment>
+    val likes: Int = 0,
+    val comments: List<Comment> = emptyList()
 ) {
     companion object {
-        fun getPostFromFirebase(articleId: String, callback: (Post?) -> Unit) {
-            val database: FirebaseDatabase = FirebaseDatabase.getInstance()
-            val articleRef: DatabaseReference = database.getReference("articles").child(articleId)
+        fun getPostFromFirestore(postId: String, callback: (Post?) -> Unit): ListenerRegistration {
+            val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+            val postRef = firestore.collection("posts").document(postId)
 
-            articleRef.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val article: Post? = dataSnapshot.getValue(Post::class.java)
-                    callback(article)
+            return postRef.addSnapshotListener { snapshot: DocumentSnapshot?, exception: FirebaseFirestoreException? ->
+                if (exception != null) {
+                    // Erreur lors de la récupération du document
+                    callback(null)
+                    return@addSnapshotListener
                 }
 
-                override fun onCancelled(databaseError: DatabaseError) {
+                if (snapshot != null && snapshot.exists()) {
+                    val post: Post? = snapshot.toObject(Post::class.java)
+                    callback(post)
+                } else {
+                    // Document introuvable
                     callback(null)
                 }
-            })
+            }
         }
     }
 }
-
 
 //TODO configure like and comments
 data class Comment(
