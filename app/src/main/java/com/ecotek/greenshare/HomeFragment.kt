@@ -44,7 +44,7 @@ class HomeFragment : Fragment() {
                 val imageId = resources.getIdentifier(imageName, "drawable", requireActivity().packageName)
                 imageView.setImageResource(imageId)
                 imageView.setOnClickListener {
-                    handleImageClick(imageName)
+                    handleImageClick()
                 }
             }
             if (texte.getOrNull(index) != null) {
@@ -54,6 +54,8 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
+
 
     private fun detectEndOfScroll(scrollView: ScrollView) {
         scrollView.viewTreeObserver.addOnScrollChangedListener {
@@ -72,8 +74,9 @@ class HomeFragment : Fragment() {
             }
         }
     }
-    private fun handleImageClick(imageName: String) {
+    private fun handleImageClick() {
         println("Post")
+        (activity as MainActivity).moveToFragment(NewContentFragment())
 
     }
 
