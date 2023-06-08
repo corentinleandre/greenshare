@@ -12,6 +12,8 @@
     <string name="title_New_content">New Content</string>
     <string name="title_profile">Profile</string>
 
+    <string name="search">Search by Title or Tag</string>
+
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
@@ -50,8 +52,6 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_home_fragment">Hello home fragment</string>
-    <string name="hello_search_fragment">Hello search fragment</string>
     <string name="hello_new_content_fragment">Hello new content fragment</string>
     <string name="hello_profile_fragment">Hello profile fragment</string>
 
