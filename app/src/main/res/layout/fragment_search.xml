@@ -6,13 +6,13 @@
     android:orientation="vertical">
 
     <!-- Champ de recherche -->
-    <EditText
+    <!--<EditText
         android:id="@+id/searchEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/search"
         android:autofillHints=""
-        android:inputType="text" />
+        android:inputType="text" />-->
 
     <!-- Bouton de recherche -->
     <!--<Button
@@ -22,15 +22,15 @@
         android:text="Search"
         android:layout_gravity="end"/> -->
 
+    <!-- Widget de recherche -->
     <SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:iconifiedByDefault="false"
-        android:queryHint="Rechercher des articles"
-        android:imeOptions="actionSearch" />
+        android:imeOptions="actionSearch"
+        android:queryHint="@string/search" />
 
-    <!-- Liste des résultats de recherche -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchResultsRecyclerView"
         android:layout_width="match_parent"

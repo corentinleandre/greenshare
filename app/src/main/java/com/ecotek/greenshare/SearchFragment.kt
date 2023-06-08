@@ -1,59 +1,82 @@
-package com.ecotek.greenshare
-
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.RecyclerView
+import com.ecotek.greenshare.Post
+import com.ecotek.greenshare.R
+import com.ecotek.greenshare.SearchResultsAdapter
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.Query
+import com.google.firebase.database.ValueEventListener
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SearchFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SearchFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var searchView: SearchView
+    private lateinit var searchRecyclerView: RecyclerView
+    private val searchResults: MutableList<Post> = mutableListOf()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_search, container, false)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SearchFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SearchFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        searchView = view.findViewById(R.id.searchView)
+        searchRecyclerView = view.findViewById(R.id.searchResultsRecyclerView)
+        searchView.setIconifiedByDefault(false)
+        searchView.queryHint = "Search articles"
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                performSearch(query)
+                return true
             }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                // Réagit aux modification de texte en temps réel
+                return true
+            }
+        })
+
+        return view
+    }
+
+    private fun performSearch(query: String) {
+        val database: FirebaseDatabase = FirebaseDatabase.getInstance()
+        val postsRef: DatabaseReference = database.getReference("posts")
+
+        // recherche des posts par titre et tags
+        val searchTitle: Query = postsRef.orderByChild("title").startAt(query).endAt(query + "\uf8ff")
+        //val searchTag: Query = postsRef.orderByChild("tags").equalTo(query)
+
+        searchTitle.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // Traitement des résultats de la recherche
+                searchResults.clear() // Efface les résultats précédents
+                for (postSnapshot in dataSnapshot.children) {
+                    val post: Post? = postSnapshot.getValue(Post::class.java)
+                    post?.let {
+                        searchResults.add(it)
+                    }
+                }
+                // Met à jour l'interface utilisateur avec les résultats de la recherche
+                updateUIWithSearchResults()
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Gestion des erreur
+                Log.e("Search Error", "Firebase Database Error: ${databaseError.message}")
+            }
+        })
+    }
+
+    private fun updateUIWithSearchResults() {
+        // Crée un adapter pour le RecyclerView avec les résultats de recherche
+        val adapter = SearchResultsAdapter(searchResults)
+        // Applique l'adapter au RecyclerView
+        searchRecyclerView.adapter = adapter
     }
 }
