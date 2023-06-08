@@ -11,7 +11,7 @@ class FireStore {
 
     fun senddata(userInfo: User){
         mFirestore.collection("Users")
-            .document(userInfo.identification)
+            .document(userInfo.identification.toString())
             .set(userInfo, SetOptions.merge())
         //.addOnSuccessListener { }
     }
