@@ -11,7 +11,6 @@ import org.json.JSONException
 import java.io.IOException
 
 
-var GeneralId=1
 open class RegisterActivity : LoginActivity() {
     fun addusers(){
         val email:String = "marie.koza@uha.fr"
