@@ -21,8 +21,6 @@ open class LoginActivity : AppCompatActivity() {
         FireStore().getJsonDataFromAsset(this, "prof_data.json")
         FireStore().getJsonDataFromAsset(this, "student_data.json")
 
-        //FireStore().senddata()
-
         var loginbtn = findViewById<Button>(R.id.loginbtn)
         var mail = findViewById<EditText>(R.id.email)
         var pass = findViewById<EditText>(R.id.password)

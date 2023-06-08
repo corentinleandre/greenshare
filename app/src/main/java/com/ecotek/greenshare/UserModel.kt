@@ -10,5 +10,5 @@ class User(val identification: String ="",
            val role: String = "",
            val group: String,
            val icon: String,
-           val rights:String
+           val rights: String
            )
