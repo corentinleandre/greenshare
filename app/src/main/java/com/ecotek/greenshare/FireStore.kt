@@ -9,7 +9,9 @@ import com.google.firebase.firestore.SetOptions
 import org.json.JSONArray
 import org.json.JSONException
 import java.io.IOException
-
+import java.util.regex.Pattern
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.decodeFromString
 
 
 var GeneralId=1
@@ -67,4 +69,16 @@ class FireStore {
         }
     }
 
+    fun getname(activity: FirstFragment,identification : String){
+
+        mFirestore.collection("Users")
+            .document(identification)
+            .get()
+            .addOnSuccessListener { document ->
+                val user = document.toObject(User::class.java)
+                if (user != null) {
+                    //TODO
+                }
+            }
+    }
 }
