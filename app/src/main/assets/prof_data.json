@@ -1,0 +1,132 @@
+[
+    {
+      "email": "joel.dion@uha.fr",
+      "password": "joelbeau",
+      "id":0,
+      "numeroTel": "0",
+      "role": "staff", //boolean
+      "group": "aucun",
+      "icon": "r",
+      "rights": "a" //int
+    },
+    {
+      "email": "christian.vigouroux@uha.fr",
+      "password": "jaimelespommes",
+      "id":0,
+      "numeroTel": "0",
+      "role": "staff",
+      "group": "aucun",
+      "icon": "r",
+      "rights": "a"
+    },
+    {
+        "email":"denis.lienhardt@uha.fr",
+        "password":"routage",
+      "id":0,
+      "numeroTel": "0",
+      "role": "staff",
+      "group": "aucun",
+      "icon": "r",
+      "rights": "a"
+    },
+  {
+    "email":"germain.forestier@uha.fr",
+    "password":"tpbi&covid",
+    "id":0,
+    "numeroTel": "0",
+    "role": "staff",
+    "group": "aucun",
+    "icon": "r",
+    "rights": "a"
+  },
+  {
+    "email":"corinne.ruma@uha.fr",
+    "password":"toeicamphi",
+    "id":0,
+    "numeroTel": "0",
+    "role": "staff",
+    "group": "aucun",
+    "icon": "r",
+    "rights": "a"
+  },
+  {
+    "email":"philippe.studer@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numeroTel": "0",
+    "role": "staff",
+    "group": "aucun",
+    "icon": "r",
+    "rights": "a"
+  },
+  {
+    "email":"benoit.hilt@uha.fr",
+    "password":"commutateur",
+    "id":7,
+    "numeroTel": "0",
+    "role": "staff",
+    "group": "aucun",
+    "icon": "r",
+    "rights": "a"
+  },
+  {
+    "email":"armand.forestier@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numeroTel": "0",
+    "role": "staff",
+    "group": "aucun",
+    "icon": "r",
+    "rights": "a"
+  },
+  {
+    "email":"lionel.lenotre@uha.fr",
+    "password":"testcmagtest",
+    "id":0,
+    "numeroTel": "0",
+    "role": "staff",
+    "group": "aucun",
+    "icon": "r",
+    "rights": "a"
+  },
+  {
+    "email":"frederic.fondement@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numeroTel": "0",
+    "role": "staff",
+    "group": "aucun",
+    "icon": "r",
+    "rights": "a"
+  },
+  {
+    "email":"sylvia.anicic@uha.fr",
+    "password":"ancsaled",
+    "id":0,
+    "numeroTel": "0",
+    "role": "staff",
+    "group": "aucun",
+    "icon": "r",
+    "rights": "a"
+  },
+  {
+    "email":"ludovic.haye@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numeroTel": "0",
+    "role": "staff",
+    "group": "aucun",
+    "icon": "r",
+    "rights": "a"
+  },
+  {
+    "email":"thomas.josso-laurain@uha.fr",
+    "password":"profaseteam",
+    "id":0,
+    "numeroTel": "0",
+    "role": "staff",
+    "group": "aucun",
+    "icon": "r",
+    "rights": "a"
+  }
+]
