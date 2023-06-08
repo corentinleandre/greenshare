@@ -60,7 +60,7 @@ open class LoginActivity : AppCompatActivity() {
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
-                        startActivity(Intent(this@LoginActivity,MainActivity::class.java))
+                        startActivity(Intent(this@LoginActivity,HomeActivity::class.java))
                         finish()
                         //Toast.makeText(this@LoginActivity, "bien", Toast.LENGTH_LONG).show()
                     }

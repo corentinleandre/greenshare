@@ -76,7 +76,7 @@ class HomeFragment : Fragment() {
     }
     private fun handleImageClick() {
         println("Post")
-        (activity as MainActivity).moveToFragment(NewContentFragment())
+        (activity as HomeActivity).moveToFragment(NewContentFragment())
 
     }
 
