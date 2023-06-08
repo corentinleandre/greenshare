@@ -14,4 +14,6 @@ open class RegisterActivity : LoginActivity() {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,password)
         FirebaseAuth.getInstance().signOut()
     }
+
+
 }
