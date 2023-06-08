@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun moveToFragment(fragment: Fragment) {
+    fun moveToFragment(fragment: Fragment) {
         supportFragmentManager.commit {
             setReorderingAllowed(true)
             replace(R.id.container_view, fragment)
