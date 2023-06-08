@@ -18,8 +18,13 @@ open class LoginActivity : AppCompatActivity() {
         //binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(R.layout.login_activity)
-        FireStore().getJsonDataFromAsset(this, "prof_data.json")
-        FireStore().getJsonDataFromAsset(this, "student_data.json")
+        //FireStore().getJsonDataFromAsset(this, "prof_data.json")
+        //FireStore().getJsonDataFromAsset(this, "student_data.json")
+        Article.getArticle("1"){article ->
+            if (article != null){
+                Toast.makeText(this@LoginActivity, article.content, Toast.LENGTH_LONG).show()
+            }
+        }
 
         var loginbtn = findViewById<Button>(R.id.loginbtn)
         var mail = findViewById<EditText>(R.id.email)
