@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.ecotek.greenshare.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -22,7 +23,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         bottomNavigationView = findViewById(R.id.bottom_nav)
-        moveToFragment(HomeFragment())
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            add(R.id.container_view, HomeFragment())
+        }
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when(menuItem.itemId){
                 R.id.nav_home -> {
@@ -47,7 +51,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun moveToFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().replace(R.id.container_view, fragment).commit()
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            replace(R.id.container_view, fragment)
+        }
     }
 
 }
