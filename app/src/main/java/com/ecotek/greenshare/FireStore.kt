@@ -9,7 +9,12 @@ import com.google.firebase.firestore.SetOptions
 import org.json.JSONArray
 import org.json.JSONException
 import java.io.IOException
+import java.util.regex.Pattern
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.decodeFromString
 
+
+var GeneralId=1
 class FireStore {
 
     private val mFirestore = FirebaseFirestore.getInstance()
@@ -28,12 +33,29 @@ class FireStore {
             val userList = mutableListOf<User>()
 
             for (i in 0 until jsonArray.length()) {
+
                 val jsonObject = jsonArray.getJSONObject(i)
                 val email = jsonObject.getString("email")
                 val password = jsonObject.getString("password")
+                val numero= jsonObject.getInt("numero").toString()
+                val role = jsonObject.getBoolean("role").toString()
+                val group = jsonObject.getString("group")    // list de String
+                val icon = jsonObject.getString("icon")       //list de Integer
+                val rights = jsonObject.getInt("rights").toString()
+
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,password)
                 FirebaseAuth.getInstance().signOut()
-                val user = User(email, password)
+                //val pattern = Pattern.compile("^[a-z-]+\\.+[a-z-]+@uha.fr") // verification email
+                var list = email.split(".","@")
+                var firstname=list[0]
+                var lastname=list[1]
+
+                val identification=GeneralId.toString()
+                GeneralId=GeneralId+1
+
+
+                val user = User(identification, firstname, lastname,numero,email,role,group,icon,rights)
+                senddata(user)
                 userList.add(user)
             }
 

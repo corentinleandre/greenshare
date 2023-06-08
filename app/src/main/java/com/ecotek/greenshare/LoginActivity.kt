@@ -3,13 +3,10 @@ package com.ecotek.greenshare
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.ecotek.greenshare.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.core.view.View
 
 
 open class LoginActivity : AppCompatActivity() {
@@ -21,8 +18,10 @@ open class LoginActivity : AppCompatActivity() {
         //binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(R.layout.login_activity)
-        RegisterActivity().getJsonDataFromAsset(this, "prof_data.json")
-        //RegisterActivity().addusers(data)
+        FireStore().getJsonDataFromAsset(this, "prof_data.json")
+        FireStore().getJsonDataFromAsset(this, "student_data.json")
+
+        //FireStore().senddata()
 
         var loginbtn = findViewById<Button>(R.id.loginbtn)
         var mail = findViewById<EditText>(R.id.email)

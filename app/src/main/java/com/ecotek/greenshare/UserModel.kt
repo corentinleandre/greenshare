@@ -2,13 +2,13 @@ package com.ecotek.greenshare
 
 import android.media.Image
 
-class User(val identification: Int =0,
+class User(val identification: String ="",
            val firstname: String = "",
            val lastname: String = "",
-           val telephone: Int,
+           val telephone: String,
            val email: String = "",
-           val role: Boolean = false,
-           val group: List<String>,
-           val icon: List<Int>,
-           val rights: Short = 0
+           val role: String = "",
+           val group: String,
+           val icon: String,
+           val rights:String
            )
