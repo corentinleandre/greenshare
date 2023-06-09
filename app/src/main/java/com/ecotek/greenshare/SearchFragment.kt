@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -16,8 +17,8 @@ class SearchFragment : Fragment() {
 
     private lateinit var searchView: SearchView
     private lateinit var searchRecyclerView: RecyclerView
-    private val adapter: SearchResultsAdapter = SearchResultsAdapter { post ->
-        navigateToPostDetails(post)
+    private val adapter: SearchResultsAdapter = SearchResultsAdapter { article ->
+        navigateToPostDetails(article)
     }
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var query: Query
@@ -42,6 +43,7 @@ class SearchFragment : Fragment() {
             }
         })
 
+        searchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         searchRecyclerView.adapter = adapter
 
         return view
@@ -57,6 +59,7 @@ class SearchFragment : Fragment() {
 
     private fun startListening() {
         listener = query.addSnapshotListener { snapshot, exception ->
+
             if (exception != null) {
                 // Gérer l'erreur
                 Log.e("Search Error", "Firestore Error: ${exception.message}")
@@ -64,8 +67,9 @@ class SearchFragment : Fragment() {
             }
 
             if (snapshot != null) {
-                val searchResults: List<Post> = snapshot.documents.mapNotNull { document ->
-                    document.toObject(Post::class.java)
+                Log.d("SearchFragment","snapshot found")
+                val searchResults: List<Article> = snapshot.documents.mapNotNull { document ->
+                    document.toObject(Article::class.java)
                 }
 
                 updateUIWithSearchResults(searchResults)
@@ -73,7 +77,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun updateUIWithSearchResults(searchResults: List<Post>) {
+    private fun updateUIWithSearchResults(searchResults: List<Article>) {
         adapter.setSearchResults(searchResults)
     }
 
@@ -84,5 +88,20 @@ class SearchFragment : Fragment() {
 
     private fun stopListening() {
         listener.remove()
+    }
+
+    private fun navigateToPostDetails(article: Article) {
+        val readFragment = ReadFragment()
+        val args = Bundle()
+        args.putString("key", article.title)
+        args.putString("keyi", "ameen")
+        args.putString("keyd", article.content)
+        args.putString("index", article.id)
+        readFragment.arguments = args
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, readFragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

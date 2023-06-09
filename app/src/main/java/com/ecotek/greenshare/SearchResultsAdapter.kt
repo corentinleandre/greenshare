@@ -3,52 +3,54 @@ package com.ecotek.greenshare
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
-class SearchResultsAdapter(
-    private val onItemClick: (Post) -> Unit
-) : RecyclerView.Adapter<SearchResultsAdapter.ViewHolder>() {
+class SearchResultsAdapter(private val onItemClick: (Article) -> Unit) :
+    RecyclerView.Adapter<SearchResultsAdapter.SearchResultViewHolder>() {
 
+    private var searchResults: List<Article> = emptyList()
 
-    private val searchResults: MutableList<Post> = mutableListOf()
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_search_result, parent, false)
-        return ViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val itemView = inflater.inflate(R.layout.item_search_result, parent, false)
+        return SearchResultViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val post = searchResults[position]
-        holder.bind(post)
+    override fun onBindViewHolder(holder: SearchResultViewHolder, position: Int) {
+        val article = searchResults[position]
+        holder.bind(article)
     }
 
-    override fun getItemCount(): Int {
-        return searchResults.size
-    }
+    override fun getItemCount(): Int = searchResults.size
 
-    fun setSearchResults(results: List<Post>) {
-        searchResults.clear()
-        searchResults.addAll(results)
+    fun setSearchResults(results: List<Article>) {
+        searchResults = results
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
-        private val authorTextView: TextView = itemView.findViewById(R.id.authorTextView)
-        private val contentTextView: TextView = itemView.findViewById(R.id.contentTextView)
+    inner class SearchResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val imageView: ImageView = itemView.findViewById(R.id.resultImageView)
+        private val titleTextView: TextView = itemView.findViewById(R.id.resultTitleTextView)
 
         init {
             itemView.setOnClickListener {
-                val post = searchResults[adapterPosition]
-                onItemClick.invoke(post)
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val article = searchResults[position]
+                    onItemClick(article)
+                }
             }
         }
 
-        fun bind(post: Post) {
-            titleTextView.text = post.title
-            authorTextView.text = post.authorID
-            contentTextView.text = post.content
+        fun bind(article: Article) {
+            titleTextView.text = article.title
+
+            Glide.with(itemView)
+                .load("ameen")
+                .into(imageView)
         }
     }
 }
