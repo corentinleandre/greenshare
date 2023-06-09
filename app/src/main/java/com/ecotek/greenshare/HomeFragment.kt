@@ -40,6 +40,7 @@ class HomeFragment : Fragment() {
         val linearContainer: LinearLayout = view.findViewById(R.id.fil)
 
 
+    //Fonction qui récupère l'id du post le plus récent de la base
 
         val collection = FirebaseFirestore.getInstance().collection("Article")
         collection
@@ -50,6 +51,89 @@ class HomeFragment : Fragment() {
                     val id = document.id.toIntOrNull()
                     if (id != null && id > highestId) {
                         highestId = id
+                        for (index in highestId downTo highestId-10 step 1) {
+                            val inflater = LayoutInflater.from(requireContext())
+                            val postView = inflater.inflate(R.layout.post, null)
+                            val cardView: CardView = postView.findViewById(R.id.touchCard)
+
+                            linearContainer.addView(postView)
+                            val args = Bundle()
+                            //val cardView: CardView = view.findViewById(R.id.touchCard)
+                            //cardView.setOnClickListener {}
+
+                            //Rajouter une margin TOP de 40dp pour le tout premier post
+                            if (index == 0) {
+                                val layoutParams = postView.layoutParams as ViewGroup.MarginLayoutParams
+                                val marginTop =
+                                    resources.getDimensionPixelSize(R.dimen.margin_top) // Remplace R.dimen.margin_top par la ressource correspondante à 20dp
+                                layoutParams.setMargins(
+                                    layoutParams.leftMargin,
+                                    marginTop,
+                                    layoutParams.rightMargin,
+                                    layoutParams.bottomMargin
+                                )
+                                postView.layoutParams = layoutParams
+                            }
+
+                            if (image.getOrNull(index) != null) {
+
+                                val imageView: ImageView = postView.findViewById(R.id.imageView)
+                                val imageName = image[index]
+                                val imageId =
+                                    resources.getIdentifier(imageName, "drawable", requireActivity().packageName)
+                                imageView.setImageResource(imageId)
+                            }
+
+                            if (texte.getOrNull(index) != null) {
+                                val textView: TextView = postView.findViewById(R.id.textView)
+                                Article.getArticle(index.toString()) { article ->
+                                    if (article != null) {
+                                        textView.text = article.title
+                                    }
+
+                                }
+                            }
+
+
+                            cardView.setOnClickListener {
+                                val textView: TextView = postView.findViewById(R.id.textView)
+                                var textValue = texte[index]
+                                textView.text = textValue
+                                val imageView: ImageView = postView.findViewById(R.id.imageView)
+                                val imageName = image[index]
+                                val imageId = resources.getIdentifier(
+                                    imageName,
+                                    "drawable",
+                                    requireActivity().packageName
+                                )
+                                imageView.setImageResource(imageId)
+
+                                var descript: String? = null
+                                if (description.getOrNull(index) != null) {
+                                    descript = description[index]
+
+                                }
+
+                                args.putString("index",index.toString())
+                                args.putString("keyd", descript)
+                                args.putString("keyi", imageName)
+                                args.putString("key", textValue)
+                                val readFragment = ReadFragment()
+                                readFragment.arguments = args
+                                handleClick(readFragment, args)
+                            }
+
+
+                        }
+
+
+
+
+
+
+
+
+
                     }
                 }
             }
@@ -57,78 +141,6 @@ class HomeFragment : Fragment() {
                 //
             }
 
-        for (index in 0 until max) {
-            val inflater = LayoutInflater.from(requireContext())
-            val postView = inflater.inflate(R.layout.post, null)
-            val cardView: CardView = postView.findViewById(R.id.touchCard)
-
-            linearContainer.addView(postView)
-            val args = Bundle()
-            //val cardView: CardView = view.findViewById(R.id.touchCard)
-            //cardView.setOnClickListener {}
-
-            //Rajouter une margin TOP de 40dp pour le tout premier post
-            if (index == 0) {
-                val layoutParams = postView.layoutParams as ViewGroup.MarginLayoutParams
-                val marginTop =
-                    resources.getDimensionPixelSize(R.dimen.margin_top) // Remplace R.dimen.margin_top par la ressource correspondante à 20dp
-                layoutParams.setMargins(
-                    layoutParams.leftMargin,
-                    marginTop,
-                    layoutParams.rightMargin,
-                    layoutParams.bottomMargin
-                )
-                postView.layoutParams = layoutParams
-            }
-            if (image.getOrNull(index) != null) {
-
-                val imageView: ImageView = postView.findViewById(R.id.imageView)
-                val imageName = image[index]
-                val imageId =
-                    resources.getIdentifier(imageName, "drawable", requireActivity().packageName)
-                imageView.setImageResource(imageId)
-            }
-            if (texte.getOrNull(index) != null) {
-                val textView: TextView = postView.findViewById(R.id.textView)
-                Article.getArticle(index.toString()) { article ->
-                    if (article != null) {
-                        textView.text = article.title
-                    }
-
-                }
-            }
-
-
-                cardView.setOnClickListener {
-                    val textView: TextView = postView.findViewById(R.id.textView)
-                    var textValue = texte[index]
-                    textView.text = textValue
-                    val imageView: ImageView = postView.findViewById(R.id.imageView)
-                    val imageName = image[index]
-                    val imageId = resources.getIdentifier(
-                        imageName,
-                        "drawable",
-                        requireActivity().packageName
-                    )
-                    imageView.setImageResource(imageId)
-
-                    var descript: String? = null
-                    if (description.getOrNull(index) != null) {
-                        descript = description[index]
-
-                    }
-
-                    args.putString("index",index.toString())
-                    args.putString("keyd", descript)
-                    args.putString("keyi", imageName)
-                    args.putString("key", textValue)
-                    val readFragment = ReadFragment()
-                    readFragment.arguments = args
-                    handleClick(readFragment, args)
-                }
-
-
-            }
         }
 
 
