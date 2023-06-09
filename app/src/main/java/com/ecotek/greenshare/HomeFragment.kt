@@ -12,10 +12,11 @@ import android.widget.RelativeLayout
 import android.widget.ScrollView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class HomeFragment : Fragment() {
-    val im = 10 // Nombre d'ViewImage et ViewText à ajouter
+    val max = 10 // Nombre d'ViewImage et ViewText à ajouter
 
     var image = mutableListOf<String>("a", "ameen", "r", "a", "ameen", "r","a", "ameen", "r", "a", "ameen", "r")
     var texte = mutableListOf<String>("a", "ameen", "r", "a", "ameen", "r","a", "ameen", "r", "a", "ameen", "r")
@@ -27,6 +28,7 @@ class HomeFragment : Fragment() {
         val scrollView: ScrollView = view.findViewById(R.id.scroll)
         detectEndOfScroll(scrollView)
         refreshScroll(scrollView)
+
         return view
     }
 
@@ -36,90 +38,126 @@ class HomeFragment : Fragment() {
         }
 
         val linearContainer: LinearLayout = view.findViewById(R.id.fil)
-        for (index in 0 until im) {
+
+
+
+        val collection = FirebaseFirestore.getInstance().collection("Article")
+        collection
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                var highestId = 0
+                for (document in querySnapshot) {
+                    val id = document.id.toIntOrNull()
+                    if (id != null && id > highestId) {
+                        highestId = id
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                //
+            }
+
+        for (index in 0 until max) {
             val inflater = LayoutInflater.from(requireContext())
             val postView = inflater.inflate(R.layout.post, null)
             val cardView: CardView = postView.findViewById(R.id.touchCard)
-
 
             linearContainer.addView(postView)
             val args = Bundle()
             //val cardView: CardView = view.findViewById(R.id.touchCard)
             //cardView.setOnClickListener {}
 
-
             //Rajouter une margin TOP de 40dp pour le tout premier post
             if (index == 0) {
                 val layoutParams = postView.layoutParams as ViewGroup.MarginLayoutParams
-                val marginTop = resources.getDimensionPixelSize(R.dimen.margin_top) // Remplace R.dimen.margin_top par la ressource correspondante à 20dp
-                layoutParams.setMargins(layoutParams.leftMargin, marginTop, layoutParams.rightMargin, layoutParams.bottomMargin)
+                val marginTop =
+                    resources.getDimensionPixelSize(R.dimen.margin_top) // Remplace R.dimen.margin_top par la ressource correspondante à 20dp
+                layoutParams.setMargins(
+                    layoutParams.leftMargin,
+                    marginTop,
+                    layoutParams.rightMargin,
+                    layoutParams.bottomMargin
+                )
                 postView.layoutParams = layoutParams
             }
             if (image.getOrNull(index) != null) {
 
                 val imageView: ImageView = postView.findViewById(R.id.imageView)
                 val imageName = image[index]
-                val imageId = resources.getIdentifier(imageName, "drawable", requireActivity().packageName)
+                val imageId =
+                    resources.getIdentifier(imageName, "drawable", requireActivity().packageName)
                 imageView.setImageResource(imageId)
             }
             if (texte.getOrNull(index) != null) {
                 val textView: TextView = postView.findViewById(R.id.textView)
-                var textValue = texte[index]
-                textView.text = textValue
+                Article.getArticle(index.toString()) { article ->
+                    if (article != null) {
+                        textView.text = article.title
+                    }
+
+                }
             }
 
 
-            cardView.setOnClickListener {
-                val textView: TextView = postView.findViewById(R.id.textView)
-                var textValue = texte[index]
-                textView.text = textValue
-                val imageView: ImageView = postView.findViewById(R.id.imageView)
-                val imageName = image[index]
-                val imageId = resources.getIdentifier(imageName, "drawable", requireActivity().packageName)
-                imageView.setImageResource(imageId)
+                cardView.setOnClickListener {
+                    val textView: TextView = postView.findViewById(R.id.textView)
+                    var textValue = texte[index]
+                    textView.text = textValue
+                    val imageView: ImageView = postView.findViewById(R.id.imageView)
+                    val imageName = image[index]
+                    val imageId = resources.getIdentifier(
+                        imageName,
+                        "drawable",
+                        requireActivity().packageName
+                    )
+                    imageView.setImageResource(imageId)
 
-                var descript:String?=null
-                if (description.getOrNull(index) != null) {
-                    descript=description[index]
+                    var descript: String? = null
+                    if (description.getOrNull(index) != null) {
+                        descript = description[index]
+
+                    }
+
+                    args.putString("index",index.toString())
+                    args.putString("keyd", descript)
+                    args.putString("keyi", imageName)
+                    args.putString("key", textValue)
+                    val readFragment = ReadFragment()
+                    readFragment.arguments = args
+                    handleClick(readFragment, args)
                 }
 
 
-                args.putString("keyd",descript)
-                args.putString("keyi", imageName)
-                args.putString("key", textValue)
-                val readFragment = ReadFragment()
-                readFragment.arguments = args
-                handleClick(readFragment, args)
-            }
-
-
-        }
-    }
-
-
-
-    private fun detectEndOfScroll(scrollView: ScrollView) {
-        scrollView.viewTreeObserver.addOnScrollChangedListener {
-            val view = scrollView.getChildAt(scrollView.childCount - 1)
-            val diff = (view.bottom - (scrollView.height + scrollView.scrollY))
-            if (diff == 0) {
-                createPost(view)
             }
         }
-    }
 
-    private fun refreshScroll(scrollView: ScrollView) {
-        scrollView.viewTreeObserver.addOnScrollChangedListener {
-            if (scrollView.scrollY == 0) {
-                createPost(scrollView.getChildAt(0))
+
+
+
+        private fun detectEndOfScroll(scrollView: ScrollView) {
+            scrollView.viewTreeObserver.addOnScrollChangedListener {
+                val view = scrollView.getChildAt(scrollView.childCount - 1)
+                val diff = (view.bottom - (scrollView.height + scrollView.scrollY))
+                if (diff == 0) {
+                    createPost(view)
+                }
             }
         }
-    }
-    fun handleClick(fragment:Fragment, arguments: Bundle) {
-        fragment.arguments = arguments
-        (activity as HomeActivity).moveToFragment(fragment)
 
-    }
+        private fun refreshScroll(scrollView: ScrollView) {
+            scrollView.viewTreeObserver.addOnScrollChangedListener {
+                if (scrollView.scrollY == 0) {
+                    println("coucou")
+                    createPost(scrollView.getChildAt(0))
+                }
+            }
+        }
+
+        fun handleClick(fragment: Fragment, arguments: Bundle) {
+            fragment.arguments = arguments
+            (activity as HomeActivity).moveToFragment(fragment)
+
+        }
 
 
 

@@ -29,15 +29,16 @@ class ReadFragment : Fragment() {
         if (!isAdded) {
             return  // Vérifie si le fragment est attaché avant d'accéder au contexte
         }
-
         val linearContainer: LinearLayout = view.findViewById(R.id.fil)
         val inflater = LayoutInflater.from(requireContext())
         val postView = inflater.inflate(R.layout.post_read, null)
         linearContainer.addView(postView)
+
         val imageView: ImageView = postView.findViewById(R.id.imageView1)
         val imageName = arguments?.getString("keyi")
         val des=arguments?.getString("keyd")
         val titre=arguments?.getString("key")
+        val index=arguments?.getString("index")
 
         if (imageName != null) {
             val imageId =
@@ -45,11 +46,23 @@ class ReadFragment : Fragment() {
             imageView.setImageResource(imageId)
         }
         val textView: TextView = postView.findViewById(R.id.textView)
-        textView.text = titre
+        Article.getArticle(index.toString()) { article ->
+            if (article != null) {
+                textView.text = article.title
+            }
+
+        }
+
 
         if (des!= null) {
         val description:TextView=postView.findViewById(R.id.description)
-        description.text=des
+            Article.getArticle(index.toString()) { article ->
+                if (article != null) {
+                    description.text = article.content
+                }
+
+            }
+
         }
 
 
