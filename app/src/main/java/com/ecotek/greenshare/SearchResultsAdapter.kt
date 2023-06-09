@@ -6,7 +6,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class SearchResultsAdapter(private val searchResults: List<Post>) : RecyclerView.Adapter<SearchResultsAdapter.ViewHolder>() {
+class SearchResultsAdapter(
+    private val onItemClick: (Post) -> Unit
+) : RecyclerView.Adapter<SearchResultsAdapter.ViewHolder>() {
+
+
+    private val searchResults: MutableList<Post> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_search_result, parent, false)
@@ -22,10 +27,23 @@ class SearchResultsAdapter(private val searchResults: List<Post>) : RecyclerView
         return searchResults.size
     }
 
+    fun setSearchResults(results: List<Post>) {
+        searchResults.clear()
+        searchResults.addAll(results)
+        notifyDataSetChanged()
+    }
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         private val authorTextView: TextView = itemView.findViewById(R.id.authorTextView)
         private val contentTextView: TextView = itemView.findViewById(R.id.contentTextView)
+
+        init {
+            itemView.setOnClickListener {
+                val post = searchResults[adapterPosition]
+                onItemClick.invoke(post)
+            }
+        }
 
         fun bind(post: Post) {
             titleTextView.text = post.title

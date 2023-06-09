@@ -1,3 +1,5 @@
+package com.ecotek.greenshare
+
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -6,21 +8,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.RecyclerView
-import com.ecotek.greenshare.Post
-import com.ecotek.greenshare.R
-import com.ecotek.greenshare.SearchResultsAdapter
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.Query
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 
 class SearchFragment : Fragment() {
 
     private lateinit var searchView: SearchView
     private lateinit var searchRecyclerView: RecyclerView
-    private val searchResults: MutableList<Post> = mutableListOf()
+    private val adapter: SearchResultsAdapter = SearchResultsAdapter { post ->
+        navigateToPostDetails(post)
+    }
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private lateinit var query: Query
+    private lateinit var listener: ListenerRegistration
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_search, container, false)
@@ -36,47 +37,52 @@ class SearchFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                // Réagit aux modification de texte en temps réel
+                // Réagit aux modifications de texte en temps réel
                 return true
             }
         })
+
+        searchRecyclerView.adapter = adapter
 
         return view
     }
 
     private fun performSearch(query: String) {
-        val database: FirebaseDatabase = FirebaseDatabase.getInstance()
-        val postsRef: DatabaseReference = database.getReference("posts")
+        this.query = firestore.collection("posts")
+            .whereGreaterThanOrEqualTo("title", query)
+            .whereLessThanOrEqualTo("title", query + "\uf8ff")
 
-        // recherche des posts par titre et tags
-        val searchTitle: Query = postsRef.orderByChild("title").startAt(query).endAt(query + "\uf8ff")
-        //val searchTag: Query = postsRef.orderByChild("tags").equalTo(query)
-
-        searchTitle.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Traitement des résultats de la recherche
-                searchResults.clear() // Efface les résultats précédents
-                for (postSnapshot in dataSnapshot.children) {
-                    val post: Post? = postSnapshot.getValue(Post::class.java)
-                    post?.let {
-                        searchResults.add(it)
-                    }
-                }
-                // Met à jour l'interface utilisateur avec les résultats de la recherche
-                updateUIWithSearchResults()
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Gestion des erreur
-                Log.e("Search Error", "Firebase Database Error: ${databaseError.message}")
-            }
-        })
+        startListening()
     }
 
-    private fun updateUIWithSearchResults() {
-        // Crée un adapter pour le RecyclerView avec les résultats de recherche
-        val adapter = SearchResultsAdapter(searchResults)
-        // Applique l'adapter au RecyclerView
-        searchRecyclerView.adapter = adapter
+    private fun startListening() {
+        listener = query.addSnapshotListener { snapshot, exception ->
+            if (exception != null) {
+                // Gérer l'erreur
+                Log.e("Search Error", "Firestore Error: ${exception.message}")
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null) {
+                val searchResults: List<Post> = snapshot.documents.mapNotNull { document ->
+                    document.toObject(Post::class.java)
+                }
+
+                updateUIWithSearchResults(searchResults)
+            }
+        }
+    }
+
+    private fun updateUIWithSearchResults(searchResults: List<Post>) {
+        adapter.setSearchResults(searchResults)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        stopListening()
+    }
+
+    private fun stopListening() {
+        listener.remove()
     }
 }

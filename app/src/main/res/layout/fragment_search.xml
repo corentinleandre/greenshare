@@ -3,33 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <!-- Champ de recherche -->
-    <!--<EditText
-        android:id="@+id/searchEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/search"
-        android:autofillHints=""
-        android:inputType="text" />-->
-
-    <!-- Bouton de recherche -->
-    <!--<Button
-        android:id="@+id/searchButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Search"
-        android:layout_gravity="end"/> -->
+    android:orientation="vertical"
+    android:paddingTop="25dp">
 
     <!-- Widget de recherche -->
-    <SearchView
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:iconifiedByDefault="false"
-        android:imeOptions="actionSearch"
-        android:queryHint="@string/search" />
+        android:imeOptions="actionSearch" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchResultsRecyclerView"
