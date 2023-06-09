@@ -48,7 +48,7 @@ class AddPostFragment : Fragment() {
                         val currentDate = Date()
                         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                         val dateString = dateFormat.format(currentDate)
-                        Article.postArticle(titleAreaTextInput.text.toString(),userId.toString(),contentAreaTextInput.text.toString(),dateString,"")
+                        //Article.postArticle(titleAreaTextInput.text.toString(),userId.toString(),contentAreaTextInput.text.toString(),dateString,"")
                     } else { }
                 }
                 .addOnFailureListener { exception ->
