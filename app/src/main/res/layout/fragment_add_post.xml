@@ -1,0 +1,123 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="#DA7878"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/contentArea"
+            android:layout_width="364dp"
+            android:layout_height="560dp"
+            android:background="@drawable/border"
+            android:hint="Write your publication"
+            android:padding="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.528"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            app:layout_constraintVertical_bias="0.969" />
+
+        <ImageButton
+            android:id="@+id/imgbtn"
+            android:layout_width="55dp"
+            android:layout_height="37dp"
+            android:background="@null"
+            android:onClick="pickedPhoto"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.839"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.962"
+            app:srcCompat="@drawable/img_2" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteY="140dp" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/titleArea"
+            android:layout_width="361dp"
+            android:layout_height="89dp"
+            android:background="@drawable/border"
+
+            android:hint="Add a title"
+            android:paddingStart="12dp"
+            android:textColorHint="#4A4F47"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.541"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.16" />
+
+        <LinearLayout
+            android:layout_width="158dp"
+            android:layout_height="86dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0">
+
+            <Button
+                android:id="@+id/postbtn"
+                android:layout_width="152dp"
+                android:layout_height="69dp"
+                android:backgroundTint="#7FDA48"
+                android:text="Share"
+                android:textColor="@color/black"
+                android:textColorHint="#87EB4B"
+                android:textSize="21dp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="133dp"
+                tools:layout_editor_absoluteY="636dp" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="298dp"
+            android:layout_height="56dp"
+            android:text="Add an article !"
+            android:textColor="@color/black"
+            android:textSize="25dp"
+            android:textStyle="bold|italic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.053" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="169dp"
+            android:layout_height="210dp"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.412"
+            app:srcCompat="@drawable/ic_launcher_foreground"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

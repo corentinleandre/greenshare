@@ -5,6 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import android.content.Context
+import org.json.JSONArray
+import org.json.JSONException
+import java.io.IOException
+
 
 open class RegisterActivity : LoginActivity() {
     fun addusers(){
@@ -13,5 +18,7 @@ open class RegisterActivity : LoginActivity() {
 
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,password)
         FirebaseAuth.getInstance().signOut()
+
+
     }
 }

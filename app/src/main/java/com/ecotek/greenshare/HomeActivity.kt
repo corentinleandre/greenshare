@@ -34,7 +34,7 @@ class HomeActivity : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
                 R.id.nav_New_content -> {
-                    moveToFragment(NewContentFragment())
+                    moveToFragment(AddPostFragment())
                     return@setOnItemSelectedListener true
                 }
                 R.id.nav_profile -> {
