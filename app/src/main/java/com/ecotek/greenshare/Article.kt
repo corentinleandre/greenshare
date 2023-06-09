@@ -12,6 +12,7 @@ data class Article(
     //val category: String = "",
     // TODO: like and comments
     //val likes: Int = 0,
+    val mediasID: String = "",
     val commentID: String = "" ){
 
     companion object {
@@ -48,6 +49,7 @@ data class Article(
                     }
                     highestId += 1
                     val article = Article(highestId.toString(),title,authorID,content,date,commentID)
+
                     mFirestore.collection("Article")
                         .document(article.id.toString())
                         .set(article, SetOptions.merge())
@@ -57,7 +59,6 @@ data class Article(
                     //
                 }
         }
-
     }
 }
 

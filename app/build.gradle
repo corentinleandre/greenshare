@@ -55,5 +55,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0'
-
+    implementation 'com.google.firebase:firebase-storage-ktx'
 }
