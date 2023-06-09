@@ -1,0 +1,532 @@
+[
+    {
+      "email":"maria.ait-bouserhane@uha.fr",
+      "password":"tpbicovid",
+      "id":0,
+      "numero": "0",
+      "role": false,
+      "group":"",
+      "icon": "",
+      "rights":0
+    },
+    {
+      "email":"pierre.albertini@uha.fr",
+      "password":"tpbicovid",
+      "id":0,
+      "numero": "0",
+      "role": false,
+      "group":"",
+      "icon": "",
+      "rights":0
+    },
+    {
+      "email":"asmaa.antari@uha.fr",
+      "password":"tpbicovid",
+      "id":0,
+      "numero": "0",
+      "role": false,
+      "group":"",
+      "icon": "",
+      "rights":0
+    },
+    {
+    "email":"felix.asselino@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group":"",
+    "icon": "",
+    "rights":0
+    },
+    {
+      "email":"ikrame.atir@uha.fr",
+      "password":"tpbicovid",
+      "id":0,
+      "numero": "0",
+      "role": false,
+      "group":"",
+      "icon": "",
+      "rights":0
+    },
+    {
+      "email":"rim.benchahboun@uha.fr",
+      "password":"tpbicovid",
+      "id":0,
+      "numero": "0",
+      "role": false,
+      "group":"",
+      "icon": "",
+      "rights":0
+    },
+    {
+      "email":"salma.benhamza@uha.fr",
+      "password":"tpbicovid",
+      "id":0,
+      "numero": "0",
+      "role": false,
+      "group": "",
+      "icon": "",
+      "rights":0
+    },
+  {
+    "email":"anthony.benoit@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"adrien.bocca@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"alexandre.caux@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"gauthier.cetingoz@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"younes.chaguer@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"jerry.chan@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"olivier.chappe@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"isaac.dalberto@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"lucas.dehe@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"luca.diaconu@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"geryes.doumit@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"jordan.duranton@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"ayhan.durakan@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"yahya.el-aili@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"akram.el-hadhoudi@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"ludovic.ertzer@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"nathan.fallet@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"pierre.gien@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"alex.giovannetti@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"hugues.guiffard-frondziak@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"thibaut.herault@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"valentin.herzog@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"dylan.imbert@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"andoni.iparaguirre@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"othmane.jeddad@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"thomas.keppler@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"mahmoud.khoubji@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights": 0
+  },
+  {
+    "email":"marie.koza@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":2
+  },
+  {
+    "email":"guilhem.lacassagne@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"theo.langevin@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"corentin.leandre@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"clement.lemaire@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"peter.lin@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"ameen.mohd-fairuz@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"oleg.pravednyi@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"marc.proux@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"francois.roy@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"sofia.saadi@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"farah.salama@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"romaissae.salhi@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"arthur.sicard@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"marian.szawelski@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"ayoub.tazi-chibi@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"mame-yacine.thiam@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"baptiste.wetterwald@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  },
+  {
+    "email":"matthias.zdravkovic@uha.fr",
+    "password":"tpbicovid",
+    "id":0,
+    "numero": "0",
+    "role": false,
+    "group": "",
+    "icon": "",
+    "rights":0
+  }
+]
