@@ -3,7 +3,7 @@ package com.ecotek.greenshare
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 
-data class Article(
+data class   Article(
     val id: String = "",
     val title: String = "",
     val authorID: String = "",
