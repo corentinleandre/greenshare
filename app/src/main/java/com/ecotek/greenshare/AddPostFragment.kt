@@ -90,8 +90,6 @@ class AddPostFragment : Fragment() {
                         val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
                         val dateString = dateFormat.format(currentDate)
                         postArticle(titleAreaTextInput.text.toString(),userId.toString(),contentAreaTextInput.text.toString(),dateString,"")
-                        //uploadMediaFilesToFirebase()
-                        (activity as HomeActivity).moveToFragment(HomeFragment())
                     } else { }
                 }
                 .addOnFailureListener { exception ->
