@@ -16,7 +16,7 @@ import java.util.Locale
 
 //private const val ARG_PARAM1 = "param1"
 //private const val ARG_PARAM2 = "param2"
-val listBlocked : List<String> = listOf("fuck","f*ck","con","abruti","bâtard","putain","connard","connasse","p*tain","c*n","c*nne","merde","nique")
+val listBlocked : List<String> = listOf("fuck","f*ck","con","abruti","batard","putain","connard","connasse","p*tain","c*n","c*nne","merde","nique","tg","fdp")
 class AddPostFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -54,16 +54,16 @@ class AddPostFragment : Fragment() {
                             var blockedWord=""
                             for(element in list){
                                 for (f in listBlocked){
-                                    if (element==f) {
+                                    if (element.toLowerCase()==f) {
                                         println("MOT INTERDIT !")
-                                        blockedWord=f
+                                        blockedWord=element
                                         allowed=false
                                         break //if the world isn't allowed, stop the verification
                                     }
                                 }
                                 if (!allowed) {
                                     println("post bloqué")
-                                    blockedPost(blockedWord) //TODO : requests to user to delete the blockedWord
+                                    blockedPost(blockedWord) //requests to user to delete the blockedWord
                                     break
                                 }
                             }
@@ -90,8 +90,8 @@ class AddPostFragment : Fragment() {
     fun blockedPost(mot:String){
         val alertDialog: AlertDialog? =AlertDialog.Builder(requireActivity()).create()
         if (alertDialog != null) {
-            alertDialog.setTitle("Alert")
-            alertDialog.setMessage("Veuillez supprimer le mot '$mot' de votre post")
+            alertDialog.setTitle("Attention !")
+            alertDialog.setMessage("Veuillez supprimer le mot '$mot' de votre post, ce mot n'est pas autorisé. Merci d'adopter un comportement adapté et respectueux !")
             alertDialog.show()
         }
     }
