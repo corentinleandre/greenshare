@@ -40,6 +40,7 @@
                 android:paddingVertical="12dp"
                 android:textColor="@color/black"
                 android:textSize="22sp"
+                android:gravity="center"
 
                 />
             <TextView
