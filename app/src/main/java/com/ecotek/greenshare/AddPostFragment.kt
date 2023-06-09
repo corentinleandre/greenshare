@@ -42,7 +42,8 @@ class AddPostFragment : Fragment() {
     private lateinit var imageButton: ImageButton
     private lateinit var imageView:ImageView
 
-    private lateinit var selectedMediaUris: List<Uri>
+    //private lateinit var selectedMediaUris: List<Uri> = emptyList()
+    private var selectedMediaUris: List<Uri>? = null // Initialize as null
 
     private val pickMediaLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -138,34 +139,39 @@ class AddPostFragment : Fragment() {
     }
 
     fun uploadMediaFilesToFirebase(id: String) {
-        val data = hashMapOf<String, Any>("id" to id)
+        // Check if there are any selected media URIs
+        if (selectedMediaUris != null && selectedMediaUris!!.isNotEmpty()) {
+            val data = hashMapOf<String, Any>("id" to id)
 
-        selectedMediaUris.forEachIndexed { index, mediaUri ->
-            val number = index + 1
-            val fileName = "${id}/image$number"
-            val mediaReference = mstorageReference.child(fileName)
-            val uploadTask = mediaReference.putFile(mediaUri)
+            selectedMediaUris!!.forEachIndexed { index, mediaUri ->
+                val number = index + 1
+                val fileName = "${id}/image$number"
+                val mediaReference = mstorageReference.child(fileName)
+                val uploadTask = mediaReference.putFile(mediaUri)
 
-            uploadTask.addOnSuccessListener { taskSnapshot ->
-                // Media upload success, get the download URL
-                mediaReference.downloadUrl.addOnSuccessListener { downloadUri ->
-                    data["image$number"] = downloadUri.toString()
+                uploadTask.addOnSuccessListener { taskSnapshot ->
+                    // Media upload success, get the download URL
+                    mediaReference.downloadUrl.addOnSuccessListener { downloadUri ->
+                        data["image$number"] = downloadUri.toString()
 
-                    if (number == selectedMediaUris.size) {
-                        mfirestore.collection("Medias")
-                            .document(id)
-                            .set(data)
-                            .addOnSuccessListener {
-                                // Data saved successfully in Firestore
-                            }
-                            .addOnFailureListener { exception ->
-                                // Handle any errors that occur while saving data to Firestore
-                            }
+                        if (number == selectedMediaUris!!.size) {
+                            mfirestore.collection("Medias")
+                                .document(id)
+                                .set(data)
+                                .addOnSuccessListener {
+                                    // Data saved successfully in Firestore
+                                }
+                                .addOnFailureListener { exception ->
+                                    // Handle any errors that occur while saving data to Firestore
+                                }
+                        }
                     }
+                }.addOnFailureListener { exception ->
+                    // Handle any errors that occur during media upload
                 }
-            }.addOnFailureListener { exception ->
-                // Handle any errors that occur during media upload
             }
+        } else {
+            // Handle the case where no media is selected
         }
     }
 
