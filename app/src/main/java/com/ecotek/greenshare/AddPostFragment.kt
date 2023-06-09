@@ -138,17 +138,30 @@ class AddPostFragment : Fragment() {
     }
 
     fun uploadMediaFilesToFirebase(id: String) {
-        var number = 0
-        selectedMediaUris.forEach { mediaUri ->
-            number += 1
-            val fileName = "${id}/${number}"
-            val mediaReference = mstorageReference.child("$fileName")
+        val data = hashMapOf<String, Any>("id" to id)
+
+        selectedMediaUris.forEachIndexed { index, mediaUri ->
+            val number = index + 1
+            val fileName = "${id}/image$number"
+            val mediaReference = mstorageReference.child(fileName)
             val uploadTask = mediaReference.putFile(mediaUri)
 
             uploadTask.addOnSuccessListener { taskSnapshot ->
                 // Media upload success, get the download URL
                 mediaReference.downloadUrl.addOnSuccessListener { downloadUri ->
-                    saveDataToFirestore(downloadUri.toString())
+                    data["image$number"] = downloadUri.toString()
+
+                    if (number == selectedMediaUris.size) {
+                        mfirestore.collection("Medias")
+                            .document(id)
+                            .set(data)
+                            .addOnSuccessListener {
+                                // Data saved successfully in Firestore
+                            }
+                            .addOnFailureListener { exception ->
+                                // Handle any errors that occur while saving data to Firestore
+                            }
+                    }
                 }
             }.addOnFailureListener { exception ->
                 // Handle any errors that occur during media upload
@@ -156,25 +169,9 @@ class AddPostFragment : Fragment() {
         }
     }
 
-    private fun saveDataToFirestore(mediaUrl: String) {
-        val title = titleAreaTextInput.text.toString()
-        val content = contentAreaTextInput.text.toString()
 
-        val data = hashMapOf(
-            "title" to title,
-            "content" to content,
-            "mediaUrl" to mediaUrl
-        )
 
-        mfirestore.collection("Medias")
-            .add(data)
-            .addOnSuccessListener { documentReference ->
-                // Data saved successfully in Firestore
-            }
-            .addOnFailureListener { exception ->
-                // Handle any errors that occur while saving data to Firestore
-            }
-    }
+    //private fun saveDataToFirestore(mediaUrl: String) {} //moved into uploadmedia function
 
     companion object {
         private const val PERMISSION_REQUEST_CODE = 2
