@@ -201,7 +201,9 @@ class AddPostFragment : Fragment() {
                     }
                 }
                 highestId += 1
-                val article = Article(highestId.toString(),title,authorID,content,date,highestId.toString(),commentID)
+                var imageID : String
+                if (selectedMediaUris == null){imageID= ""} else{imageID=highestId.toString()}
+                val article = Article(highestId.toString(),title,authorID,content,date,imageID,commentID)
                 uploadMediaFilesToFirebase(highestId.toString())
                 mFirestore.collection("Article")
                     .document(article.id.toString())
