@@ -32,7 +32,6 @@ import androidx.core.content.ContextCompat
 class AddPostFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_add_post, container, false)
         return view
     }
@@ -46,11 +45,11 @@ class AddPostFragment : Fragment() {
         val contentAreaTextInput = view.findViewById<TextInputEditText>(R.id.contentArea)
         val postButton = view.findViewById<Button>(R.id.postbtn)
 
-        val imageButton = view.findViewById<ImageButton>(R.id.imgbtn)
-        val imageView = view.findViewById<ImageView>(R.id.imageView4)
+        imageButton = view.findViewById<ImageButton>(R.id.imgbtn)
+        imageView = view.findViewById<ImageView>(R.id.imageView4)
 
         imageButton.setOnClickListener {
-            checkPermissionAndOpenGallery()
+            checkPermissionAndOpenGallery(imageView,imageButton)
         }
 
         postButton.setOnClickListener {
@@ -64,7 +63,7 @@ class AddPostFragment : Fragment() {
                     if (!querySnapshot.isEmpty) {
                         val userId = querySnapshot.documents[0].getString("identification")
                         val currentDate = Date()
-                        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                        val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
                         val dateString = dateFormat.format(currentDate)
                         Article.postArticle(titleAreaTextInput.text.toString(),userId.toString(),contentAreaTextInput.text.toString(),dateString,"")
                         (activity as HomeActivity).moveToFragment(HomeFragment())
@@ -79,20 +78,10 @@ class AddPostFragment : Fragment() {
 
     private val PERMISSION_REQUEST_CODE = 2
 
-    private lateinit var imageButton: ImageButton
-    private lateinit var imageView: ImageView
+    //private lateinit var imageButton: ImageButton
+    //private lateinit var imageView: ImageView
 
-    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == AppCompatActivity.RESULT_OK) {
-            val data: Intent? = result.data
-            val pickedPhoto: Uri? = data?.data
-            if (pickedPhoto != null) {
-                imageView.setImageURI(pickedPhoto)
-            }
-        }
-    }
-
-    private fun checkPermissionAndOpenGallery() {
+    private fun checkPermissionAndOpenGallery(imageView:ImageButton,imageButton:ImageView) {
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.READ_EXTERNAL_STORAGE
@@ -100,7 +89,7 @@ class AddPostFragment : Fragment() {
         ) {
             requestPermission()
         } else {
-            openGallery()
+            openGallery(imageView)
         }
     }
 
@@ -126,8 +115,17 @@ class AddPostFragment : Fragment() {
             }
         }
     }
+    private fun openGallery(imageView:ImageView) {
+        val pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                val data: Intent? = result.data
+                val pickedPhoto: Uri? = data?.data
+                if (pickedPhoto != null) {
+                    imageView.setImageURI(pickedPhoto)
+                }
+            }
+        }
 
-    private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         pickImageLauncher.launch(intent)
     }
