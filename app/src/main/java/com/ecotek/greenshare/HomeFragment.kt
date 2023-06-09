@@ -67,6 +67,8 @@ class HomeFragment : Fragment() {
                 var textValue = texte[index]
                 textView.text = textValue
             }
+
+
             cardView.setOnClickListener {
                 val textView: TextView = postView.findViewById(R.id.textView)
                 var textValue = texte[index]
@@ -75,7 +77,12 @@ class HomeFragment : Fragment() {
                 val imageName = image[index]
                 val imageId = resources.getIdentifier(imageName, "drawable", requireActivity().packageName)
                 imageView.setImageResource(imageId)
-                var descript=description[index]
+
+                var descript:String?=null
+                if (description.getOrNull(index) != null) {
+                    descript=description[index]
+                }
+
 
                 args.putString("keyd",descript)
                 args.putString("keyi", imageName)

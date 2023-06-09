@@ -36,6 +36,8 @@ class ReadFragment : Fragment() {
         linearContainer.addView(postView)
         val imageView: ImageView = postView.findViewById(R.id.imageView1)
         val imageName = arguments?.getString("keyi")
+        val des=arguments?.getString("keyd")
+        val titre=arguments?.getString("key")
 
         if (imageName != null) {
             val imageId =
@@ -43,10 +45,12 @@ class ReadFragment : Fragment() {
             imageView.setImageResource(imageId)
         }
         val textView: TextView = postView.findViewById(R.id.textView)
-        textView.text = arguments?.getString("key")
+        textView.text = titre
 
+        if (des!= null) {
         val description:TextView=postView.findViewById(R.id.description)
-        description.text=arguments?.getString("keyd")
+        description.text=des
+        }
 
 
     }
