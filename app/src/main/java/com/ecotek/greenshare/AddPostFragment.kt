@@ -16,12 +16,15 @@ import java.util.Date
 import java.util.Locale
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.MediaStore
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.VideoView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -29,6 +32,7 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+
 
 //private const val ARG_PARAM1 = "param1"
 //private const val ARG_PARAM2 = "param2"
@@ -41,9 +45,12 @@ class AddPostFragment : Fragment() {
     private lateinit var postButton: Button
     private lateinit var imageButton: ImageButton
     private lateinit var imageView:ImageView
+    private lateinit var mediaLayout: LinearLayout
 
     //private lateinit var selectedMediaUris: List<Uri> = emptyList()
     private var selectedMediaUris: List<Uri>? = null // Initialize as null
+    private val selectedImageUris: MutableList<Uri> = mutableListOf()
+
 
     private val pickMediaLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -56,7 +63,7 @@ class AddPostFragment : Fragment() {
 
             if (mediaUris != null) {
                 selectedMediaUris = mediaUris
-                // Perform any required operations with the selected media URIs
+                displaySelectedMedia()
             }
         }
     }
@@ -70,6 +77,7 @@ class AddPostFragment : Fragment() {
         postButton = view.findViewById<Button>(R.id.postbtn)
         imageButton = view.findViewById(R.id.add_pic)
         imageView = view.findViewById<ImageView>(R.id.imageView2)
+        mediaLayout = view.findViewById(R.id.mediaLayout)
 
         imageButton.setOnClickListener{
 
@@ -97,6 +105,57 @@ class AddPostFragment : Fragment() {
 
         }
         return view
+    }
+    private fun displaySelectedMedia() {
+        mediaLayout.removeAllViews()
+
+        selectedMediaUris?.forEach { mediaUri ->
+            val mediaView = if (isImageUri(mediaUri)) {
+                createImageView(requireContext(), mediaUri)
+            } else {
+                createVideoView(requireContext(), mediaUri)
+            }
+
+            mediaLayout.addView(mediaView)
+        }
+    }
+
+    private fun isImageUri(uri: Uri): Boolean {
+        val contentResolver = requireContext().contentResolver
+        val mimeType = contentResolver.getType(uri)
+        return mimeType?.startsWith("image") == true
+    }
+
+    private fun createImageView(context: Context, imageUri: Uri): ImageView {
+        val imageView = ImageView(context)
+        imageView.layoutParams = LinearLayout.LayoutParams(
+            0,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            1.0f
+        )
+        imageView.setPadding(0, 0, 0, 0) // Optional: Remove padding if present
+        imageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
+
+        imageView.setImageURI(imageUri)
+
+        return imageView
+    }
+
+    private fun createVideoView(context: Context, videoUri: Uri): VideoView {
+        val videoView = VideoView(context)
+        videoView.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        videoView.setVideoURI(videoUri)
+        videoView.setOnPreparedListener { mediaPlayer ->
+            mediaPlayer.setVolume(0f, 0f)
+            mediaPlayer.isLooping = true
+            mediaPlayer.start()
+        }
+
+        return videoView
     }
     private fun checkPermissionAndOpenMediaPicker() {
         if (ContextCompat.checkSelfPermission(
@@ -172,8 +231,6 @@ class AddPostFragment : Fragment() {
             // Handle the case where no media is selected
         }
     }
-
-
 
     //private fun saveDataToFirestore(mediaUrl: String) {} //moved into uploadmedia function
 

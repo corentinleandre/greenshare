@@ -76,10 +76,10 @@
             android:textColorHint="#4A4F47"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.243"
+            app:layout_constraintHorizontal_bias="0.244"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.41" />
+            app:layout_constraintVertical_bias="0.318" />
 
         <ImageButton
             android:id="@+id/add_pic"
@@ -91,11 +91,24 @@
             android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.389"
+            app:layout_constraintHorizontal_bias="0.437"
             app:layout_constraintStart_toEndOf="@+id/titleArea"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.443"
-            app:srcCompat="@drawable/baseline_image_search_24"/>
+            app:layout_constraintVertical_bias="0.347"
+            app:srcCompat="@drawable/baseline_image_search_24" />
+
+        <LinearLayout
+            android:id="@+id/mediaLayout"
+            android:layout_width="409dp"
+            android:layout_height="124dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.836"
+            tools:ignore="MissingConstraints"></LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </LinearLayout>
