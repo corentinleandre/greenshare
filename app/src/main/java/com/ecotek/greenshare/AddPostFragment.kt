@@ -98,6 +98,7 @@ class AddPostFragment : Fragment() {
                         val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
                         val dateString = dateFormat.format(currentDate)
                         postArticle(titleAreaTextInput.text.toString(),userId.toString(),contentAreaTextInput.text.toString(),dateString,"")
+                        (activity as HomeActivity).moveToFragment(HomeFragment())
                     } else { }
                 }
                 .addOnFailureListener { exception ->
@@ -120,11 +121,13 @@ class AddPostFragment : Fragment() {
         }
     }
 
+
     private fun isImageUri(uri: Uri): Boolean {
         val contentResolver = requireContext().contentResolver
         val mimeType = contentResolver.getType(uri)
-        return mimeType?.startsWith("image") == true
+        return mimeType?.startsWith("image") == true || mimeType?.startsWith("video") == true
     }
+
 
     private fun createImageView(context: Context, imageUri: Uri): ImageView {
         val imageView = ImageView(context)
@@ -157,8 +160,9 @@ class AddPostFragment : Fragment() {
 
         return videoView
     }
+
     private fun checkPermissionAndOpenMediaPicker() {
-        if (ContextCompat.checkSelfPermission(
+        /*if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
@@ -166,7 +170,8 @@ class AddPostFragment : Fragment() {
             requestMediaPermission()
         } else {
             openMediaPicker()
-        }
+        }*/
+        openMediaPicker()
     }
 
     private fun requestMediaPermission() {
@@ -191,9 +196,10 @@ class AddPostFragment : Fragment() {
     private fun openMediaPicker() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        // Add additional media types if required, e.g., videos: intent.setType("video/*")
+        intent.type = "image/* video/*"  // Allow selecting both images and videos
         pickMediaLauncher.launch(intent)
     }
+
 
     fun uploadMediaFilesToFirebase(id: String) {
         // Check if there are any selected media URIs
@@ -209,7 +215,7 @@ class AddPostFragment : Fragment() {
                 uploadTask.addOnSuccessListener { taskSnapshot ->
                     // Media upload success, get the download URL
                     mediaReference.downloadUrl.addOnSuccessListener { downloadUri ->
-                        data["image$number"] = downloadUri.toString()
+                        data["media$number"] = downloadUri.toString()
 
                         if (number == selectedMediaUris!!.size) {
                             mfirestore.collection("Medias")
