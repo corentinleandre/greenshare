@@ -16,6 +16,7 @@ open class LoginActivity : AppCompatActivity() {
     var name:String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         //binding = ActivityMainBinding.inflate(layoutInflater)
 
@@ -27,6 +28,10 @@ open class LoginActivity : AppCompatActivity() {
         //        Toast.makeText(this@LoginActivity, article.content, Toast.LENGTH_LONG).show()
         //    }
         //}
+        if (FirebaseAuth.getInstance().currentUser != null){
+            startActivity(Intent(this@LoginActivity,HomeActivity::class.java))
+            finish()
+        }
 
         var loginbtn = findViewById<Button>(R.id.loginbtn)
         var mail = findViewById<EditText>(R.id.email)
