@@ -24,11 +24,12 @@ class ReadFragment : Fragment() {
         return view
     }
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId", "SuspiciousIndentation")
     private fun createPost(view: View) {
         if (!isAdded) {
             return  // Vérifie si le fragment est attaché avant d'accéder au contexte
         }
+
         val linearContainer: LinearLayout = view.findViewById(R.id.fil)
         val inflater = LayoutInflater.from(requireContext())
         val postView = inflater.inflate(R.layout.post_read, null)
@@ -36,8 +37,6 @@ class ReadFragment : Fragment() {
 
         val imageView: ImageView = postView.findViewById(R.id.imageView1)
         val imageName = arguments?.getString("keyi")
-        val des=arguments?.getString("keyd")
-        val titre=arguments?.getString("key")
         val index=arguments?.getString("index")
 
         if (imageName != null) {
@@ -45,6 +44,8 @@ class ReadFragment : Fragment() {
                 resources.getIdentifier(imageName, "drawable", requireActivity().packageName)
             imageView.setImageResource(imageId)
         }
+
+
         val textView: TextView = postView.findViewById(R.id.textView)
         Article.getArticle(index.toString()) { article ->
             if (article != null) {
@@ -53,8 +54,6 @@ class ReadFragment : Fragment() {
 
         }
 
-
-        if (des!= null) {
         val description:TextView=postView.findViewById(R.id.description)
             Article.getArticle(index.toString()) { article ->
                 if (article != null) {
@@ -62,10 +61,6 @@ class ReadFragment : Fragment() {
                 }
 
             }
-
-        }
-
-
     }
 
 
