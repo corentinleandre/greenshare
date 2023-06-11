@@ -47,9 +47,11 @@ class AddPostFragment : Fragment() {
     private lateinit var videoButton: ImageButton
     private lateinit var imageView:ImageView
     private lateinit var mediaLayout: LinearLayout
+    private lateinit var videoView: VideoView
 
     //private lateinit var selectedMediaUris: List<Uri> = emptyList()
-    private var selectedMediaUris: List<Uri>? = null // Initialize as null
+    private var selectedMediaUris: List<Uri> = listOf()
+    // Initialize as null
     private val selectedImageUris: MutableList<Uri> = mutableListOf()
 
 
@@ -80,7 +82,8 @@ class AddPostFragment : Fragment() {
         videoButton = view.findViewById(R.id.add_vid)
         imageView = view.findViewById<ImageView>(R.id.imageView2)
         mediaLayout = view.findViewById(R.id.mediaLayout)
-
+        //videoView = view.findViewById<VideoView>(R.id.videoView2)
+        displaySelectedMedia()
         imageButton.setOnClickListener{
 
             checkPermissionAndOpenMediaPicker()
@@ -117,14 +120,19 @@ class AddPostFragment : Fragment() {
     private fun displaySelectedMedia() {
         mediaLayout.removeAllViews()
 
-        selectedMediaUris?.forEach { mediaUri ->
-            val mediaView = if (isImageUri(mediaUri)) {
-                createImageView(requireContext(), mediaUri)
-            } else {
-                createVideoView(requireContext(), mediaUri)
-            }
+        selectedMediaUris.forEach { mediaUri ->
+            val contentResolver = requireContext().contentResolver
+            val mimeType = contentResolver.getType(mediaUri)
+            if (mimeType?.startsWith("image") == true) {
+                mediaLayout.addView(createImageView(requireContext(), mediaUri))
 
-            mediaLayout.addView(mediaView)
+            } else if(mimeType?.startsWith("video") == true) {
+                mediaLayout.addView(createVideoView(requireContext(), mediaUri))
+
+            }else {
+                mediaLayout.addView(createVideoView(requireContext(), mediaUri))
+            }
+            //mediaLayout.addView(mediaView)
         }
     }
 
@@ -139,10 +147,9 @@ class AddPostFragment : Fragment() {
     private fun createImageView(context: Context, imageUri: Uri): ImageView {
         val imageView = ImageView(context)
         imageView.layoutParams = LinearLayout.LayoutParams(
-
+            0,
             LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.MATCH_PARENT
-
+            1.0f
         )
         imageView.setPadding(0, 0, 0, 0) // Optional: Remove padding if present
         imageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
@@ -166,7 +173,7 @@ class AddPostFragment : Fragment() {
             mediaPlayer.start()
         }
 
-        return videoView
+        return videoView!!
     }
 
     private fun checkPermissionAndOpenMediaPicker() {
