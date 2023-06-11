@@ -44,6 +44,7 @@ class AddPostFragment : Fragment() {
     private lateinit var contentAreaTextInput: EditText
     private lateinit var postButton: Button
     private lateinit var imageButton: ImageButton
+    private lateinit var videoButton: ImageButton
     private lateinit var imageView:ImageView
     private lateinit var mediaLayout: LinearLayout
 
@@ -76,12 +77,18 @@ class AddPostFragment : Fragment() {
         contentAreaTextInput = view.findViewById<TextInputEditText>(R.id.contentArea)
         postButton = view.findViewById<Button>(R.id.postbtn)
         imageButton = view.findViewById(R.id.add_pic)
+        videoButton = view.findViewById(R.id.add_vid)
         imageView = view.findViewById<ImageView>(R.id.imageView2)
         mediaLayout = view.findViewById(R.id.mediaLayout)
 
         imageButton.setOnClickListener{
 
             checkPermissionAndOpenMediaPicker()
+        }
+
+        videoButton.setOnClickListener{
+
+            checkPermissionAndOpenMediaPicker2()
         }
 
         postButton.setOnClickListener {
@@ -132,9 +139,10 @@ class AddPostFragment : Fragment() {
     private fun createImageView(context: Context, imageUri: Uri): ImageView {
         val imageView = ImageView(context)
         imageView.layoutParams = LinearLayout.LayoutParams(
-            0,
+
             LinearLayout.LayoutParams.WRAP_CONTENT,
-            1.0f
+            LinearLayout.LayoutParams.MATCH_PARENT
+
         )
         imageView.setPadding(0, 0, 0, 0) // Optional: Remove padding if present
         imageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
@@ -171,7 +179,20 @@ class AddPostFragment : Fragment() {
         } else {
             openMediaPicker()
         }*/
-        openMediaPicker()
+        openMediaPicker("image/*")
+    }
+
+    private fun checkPermissionAndOpenMediaPicker2() {
+        /*if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestMediaPermission()
+        } else {
+            openMediaPicker()
+        }*/
+        openMediaPicker("video/*")
     }
 
     private fun requestMediaPermission() {
@@ -186,17 +207,17 @@ class AddPostFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == AddPostFragment.PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openMediaPicker()
+                openMediaPicker("image/*")
             } else {
                 // Handle the case where the permission is denied
             }
         }
     }
 
-    private fun openMediaPicker() {
+    private fun openMediaPicker(type:String) {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        intent.type = "image/* video/*"  // Allow selecting both images and videos
+        intent.type = type //"image/* video/*"  // Allow selecting both images and videos
         pickMediaLauncher.launch(intent)
     }
 
