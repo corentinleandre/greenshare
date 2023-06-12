@@ -8,7 +8,8 @@
         android:id="@+id/resultImageView"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/resultTitleTextView"

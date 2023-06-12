@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 class SearchResultsAdapter(private val onItemClick: (String) -> Unit) :
     RecyclerView.Adapter<SearchResultsAdapter.SearchResultViewHolder>() {
 
-    private var searchResults: List<String> = emptyList()
+    private var searchResults: List<Pair<String, String>> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -20,13 +20,13 @@ class SearchResultsAdapter(private val onItemClick: (String) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: SearchResultViewHolder, position: Int) {
-        val title = searchResults[position]
-        holder.bind(title)
+        val (title, imageUrl) = searchResults[position]
+        holder.bind(title, imageUrl)
     }
 
     override fun getItemCount(): Int = searchResults.size
 
-    fun setSearchResults(results: List<String>) {
+    fun setSearchResults(results: List<Pair<String, String>>) {
         searchResults = results
         notifyDataSetChanged()
     }
@@ -39,20 +39,24 @@ class SearchResultsAdapter(private val onItemClick: (String) -> Unit) :
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    val title = searchResults[position]
-                    onItemClick(title)
+                    val (title, imageUrl) = searchResults[position]
+                    onItemClick(imageUrl)
                 }
             }
         }
 
-        fun bind(title: String) {
+        fun bind(title: String, imageUrl: String) {
             titleTextView.text = title
 
-            // Utilisez Glide pour charger l'image correspondante ici
-            Glide.with(itemView)
-                .load("ameen")  // Replace "image_url_here" with the actual URL of the image
-                .into(imageView)
+            if (imageUrl.isNotEmpty()) {
+                imageView.visibility = View.VISIBLE
+                Glide.with(itemView)
+                    .load(imageUrl)
+                    .into(imageView)
+            } else {
+                imageView.visibility = View.GONE
+            }
         }
     }
-}
 
+}
