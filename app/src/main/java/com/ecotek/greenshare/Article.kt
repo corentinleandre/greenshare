@@ -12,6 +12,7 @@ data class Article(
     //val category: String = "",
     // TODO: like and comments
     //val likes: Int = 0,
+    val mediasID:String="",
     val commentID: String = "" ){
 
     companion object {

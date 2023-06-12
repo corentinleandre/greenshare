@@ -11,12 +11,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.LinearLayout
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -24,11 +26,13 @@ import com.google.firebase.firestore.Query
 
 class HomeFragment : Fragment() {
     var currentId=0
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         createPost(view)
         val scrollView: ScrollView = view.findViewById(R.id.scroll)
+
         detectEndOfScroll(scrollView)
         refreshScroll(scrollView)
 
@@ -59,7 +63,7 @@ class HomeFragment : Fragment() {
                         highestId = id
                     }
                 }
-                val id10 = highestId - 4
+                val id10 = highestId - 10
                 while (highestId > id10){
                     Article.getArticle(highestId.toString()){article ->
                         if (article != null){
@@ -75,6 +79,7 @@ class HomeFragment : Fragment() {
 
                             //Rajouter une margin TOP de 40dp pour le tout premier post
                             if (index == highestId) {
+                                print("je suis le premier post")
                                 val layoutParams = postView.layoutParams as ViewGroup.MarginLayoutParams
                                 val marginTop =
                                     resources.getDimensionPixelSize(R.dimen.margin_top) // Remplace R.dimen.margin_top par la ressource correspondante à 20dp
@@ -88,21 +93,16 @@ class HomeFragment : Fragment() {
                             }
 
                             if (article.mediasID!= "") {
-                                println("bonjour")
-
-                                var medias=FirebaseFirestore.getInstance().collection("Medias").document(highestId.toString())
+                                var medias=FirebaseFirestore.getInstance().collection("Medias").document(article.id)
                                 medias.get()
                                     .addOnSuccessListener {documentSnapshot->
                                         val media1=documentSnapshot.getString("media1")
-                                        println("voiture")
                                         val mediaView: ImageView= postView.findViewById(R.id.imageView)
-                                        //mediaView.setImageResource(R.drawable.ameen)
-                                        mediaView.setImageURI(Uri.parse("https://firebasestorage.googleapis.com/v0/b/greenshare-3d0ed.appspot.com/o/56%2Fimage1?alt=media&token=780b1f8c-d74c-45be-acc7-4fc1c0ef9424"))
-
-
+                                        Glide.with(requireContext())
+                                            .load(media1)
+                                            .into(mediaView)
                                     }
                             }
-
 
                             val textView: TextView = postView.findViewById(R.id.textView)
                             textView.text = article.title
@@ -134,7 +134,7 @@ class HomeFragment : Fragment() {
                     highestId -= 1
                 }
                 if (highestId > currentId) {
-                    currentId = highestId}
+                    currentId = id10}
 
             }
             .addOnFailureListener { exception ->
@@ -143,7 +143,6 @@ class HomeFragment : Fragment() {
 
 
         }
-    //Rajouter une vérification pour bloquer quand la base n'a plus de posts
     private fun createnextPost(view: View) {
         if (!isAdded) {
             return  // Vérifie si le fragment est attaché avant d'accéder au contexte
@@ -249,8 +248,10 @@ class HomeFragment : Fragment() {
         private fun refreshScroll(scrollView: ScrollView) {
             scrollView.viewTreeObserver.addOnScrollChangedListener {
                 if (scrollView.scrollY == 0) {
+                    currentId=0
 
                     createPost(scrollView.getChildAt(0))
+
                 }
             }
         }

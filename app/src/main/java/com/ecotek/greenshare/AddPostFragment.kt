@@ -46,7 +46,7 @@ class AddPostFragment : Fragment() {
                     if (!querySnapshot.isEmpty) {
                         val userId = querySnapshot.documents[0].getString("identification")
                         val currentDate = Date()
-                        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                        val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
                         val dateString = dateFormat.format(currentDate)
                         Article.postArticle(titleAreaTextInput.text.toString(),userId.toString(),contentAreaTextInput.text.toString(),dateString,"")
                         (activity as HomeActivity).moveToFragment(HomeFragment())

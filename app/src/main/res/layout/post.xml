@@ -22,7 +22,6 @@
         >
 
         <LinearLayout
-            android:id ="@+id/lol"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -30,7 +29,8 @@
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
+
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"/>
 
