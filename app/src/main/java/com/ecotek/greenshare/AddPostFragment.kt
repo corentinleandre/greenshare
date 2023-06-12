@@ -18,6 +18,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
 import android.widget.EditText
@@ -39,6 +41,7 @@ import com.google.firebase.storage.StorageReference
 val listBlocked : List<String> = listOf("fuck","f*ck","con","abruti","batard","putain","connard","connasse","p*tain","c*n","c*nne","merde","nique","tg","fdp")
 class AddPostFragment : Fragment() {
 
+    private val MAX_IMAGE_SIZE = 1024 // Maximum image size in kilobytes (1MB)
 
     private lateinit var titleAreaTextInput: EditText
     private lateinit var contentAreaTextInput: EditText
@@ -131,7 +134,7 @@ class AddPostFragment : Fragment() {
                         val titleVerif = verificationPost(titleAreaTextInput.text.toString())
                         val contentVerif=verificationPost(contentAreaTextInput.text.toString())
                         if (titleVerif && contentVerif) {
-                            Article.postArticle(titleAreaTextInput.text.toString(),userId.toString(),contentAreaTextInput.text.toString(),dateString,"")
+                            postArticle(titleAreaTextInput.text.toString(),userId.toString(),contentAreaTextInput.text.toString(),dateString,"")
                             (activity as HomeActivity).moveToFragment(HomeFragment())
                         }
 
@@ -173,16 +176,16 @@ class AddPostFragment : Fragment() {
 
 
     private fun createImageView(context: Context, imageUri: Uri): ImageView {
+        val compressedBitmap = compressImage(imageUri)
         val imageView = ImageView(context)
         imageView.layoutParams = LinearLayout.LayoutParams(
             0,
             LinearLayout.LayoutParams.WRAP_CONTENT,
             1.0f
         )
-        imageView.setPadding(0, 0, 0, 0) // Optional: Remove padding if present
+        imageView.setPadding(0, 0, 0, 0)
         imageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
-
-        imageView.setImageURI(imageUri)
+        imageView.setImageBitmap(compressedBitmap)
 
         return imageView
     }
@@ -293,6 +296,44 @@ class AddPostFragment : Fragment() {
             // Handle the case where no media is selected
         }
     }
+
+    private fun compressImage(imageUri: Uri): Bitmap? {
+        val imageStream = requireContext().contentResolver.openInputStream(imageUri)
+        val options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        BitmapFactory.decodeStream(imageStream, null, options)
+        imageStream?.close()
+
+        var bitmap: Bitmap? = null
+
+        // Calculate the sample size to resize the image while maintaining aspect ratio
+        val scaleFactor = calculateSampleSize(options)
+
+        // Reopen the input stream and decode the bitmap with the calculated sample size
+        val inputStream = requireContext().contentResolver.openInputStream(imageUri)
+        options.inJustDecodeBounds = false
+        options.inSampleSize = scaleFactor
+        bitmap = BitmapFactory.decodeStream(inputStream, null, options)
+        inputStream?.close()
+
+        return bitmap
+    }
+
+    private fun calculateSampleSize(options: BitmapFactory.Options): Int {
+        val imageHeight = options.outHeight
+        val imageWidth = options.outWidth
+        var scaleFactor = 1
+
+        if (imageHeight > MAX_IMAGE_SIZE || imageWidth > MAX_IMAGE_SIZE) {
+            val heightRatio = Math.round(imageHeight.toFloat() / MAX_IMAGE_SIZE.toFloat())
+            val widthRatio = Math.round(imageWidth.toFloat() / MAX_IMAGE_SIZE.toFloat())
+            scaleFactor = if (heightRatio < widthRatio) heightRatio else widthRatio
+        }
+
+        return scaleFactor
+    }
+
+
 
     //private fun saveDataToFirestore(mediaUrl: String) {} //moved into uploadmedia function
     //requests to user to delete the blockedWord. It is like a prevention
