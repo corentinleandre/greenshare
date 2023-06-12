@@ -1,10 +1,15 @@
 package com.ecotek.greenshare
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,7 +39,31 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        val view = inflater.inflate(R.layout.fragment_profile, container, false)
+        //add the user's personal data
+        val currentUser = FirebaseAuth.getInstance().currentUser?.email
+        val mFirestore = FirebaseFirestore.getInstance()
+
+        mFirestore.collection("Users")
+            .whereEqualTo("email", currentUser)
+            .get()
+            .addOnSuccessListener { document ->
+                val userDocument = document.documents[0]
+                val phoneNumber = userDocument.getString("telephone")
+                val roleUser = userDocument.getString("role")
+                val groupUser = userDocument.getString("group")
+                var list = userDocument.getString("email")?.split(".", "@")
+                var firstname = list?.get(0)?.capitalize()
+                var lastname = list?.get(1)?.capitalize()
+                view.findViewById<TextView>(R.id.user_name).text = "$firstname $lastname"
+                view.findViewById<TextView>(R.id.user_role).text = roleUser
+                view.findViewById<TextView>(R.id.user_group).text = groupUser
+                view.findViewById<TextView>(R.id.user_numero).text = phoneNumber
+                view.findViewById<TextView>(R.id.user_email).text = currentUser
+                view.findViewById<TextView>(R.id.user_bureau).text = "Plus tard" //TODO : add to data base "bureau"
+            }
+
+        return view
     }
 
     companion object {
