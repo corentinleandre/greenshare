@@ -1,5 +1,6 @@
 package com.ecotek.greenshare
 
+import SearchResultsAdapter
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -58,8 +59,13 @@ class SearchFragment : Fragment() {
 
         Log.d("SearchFragment", "Performing search for query: $query")
 
+        // Réinitialise les résultats de la recherche précédente
+        adapter.setSearchResults(emptyList())
+        showNoResultsMessage(false)
+
         startListening()
     }
+
 
     private fun startListening() {
         listener = query.addSnapshotListener { snapshot, exception ->
@@ -84,11 +90,11 @@ class SearchFragment : Fragment() {
     private fun updateUIWithSearchResults(searchResults: List<String>) {
         if (searchResults.isEmpty()) {
             showNoResultsMessage(true)
+            adapter.setSearchResults(emptyList()) // Réinitialise les résultats de la recherche
             return
         }
 
-        val resultsWithImageUrls = mutableListOf<Pair<String, String>>() // Pair of title and image URL
-        var isPhotoAvailable = true
+        val resultsWithImageUrls = mutableListOf<Pair<String, String>>() // Paires de titre et d'URL d'image
 
         firestore.collection("Article")
             .whereIn("title", searchResults)
@@ -105,15 +111,12 @@ class SearchFragment : Fragment() {
                             if (imageUrl != null && title != null) {
                                 resultsWithImageUrls.add(Pair(title, imageUrl))
                             } else {
-                                isPhotoAvailable = false
+                                // Ajoute une paire avec une URL d'image vide
+                                resultsWithImageUrls.add(Pair(title ?: "", ""))
                             }
                             // Vérifie si toutes les paires d'images ont été récupérées
                             if (resultsWithImageUrls.size == searchResults.size) {
-                                if (isPhotoAvailable) {
-                                    adapter.setSearchResults(resultsWithImageUrls)
-                                } else {
-                                    adapter.setSearchResults(searchResults.map { Pair(it, "") })
-                                }
+                                adapter.setSearchResults(resultsWithImageUrls)
                                 showNoResultsMessage(false)
                             }
                         }
@@ -127,6 +130,7 @@ class SearchFragment : Fragment() {
                 showNoResultsMessage(true)
             }
     }
+
 
 
     private fun showNoResultsMessage(noResults: Boolean) {
@@ -151,7 +155,7 @@ class SearchFragment : Fragment() {
 
     private fun navigateToPostDetails(title: String) {
         val args = Bundle()
-        args.putString("key", title)
+        args.putString("title", title)
         val readFragment = ReadFragment()
         readFragment.arguments = args
         handleClick(readFragment, args)

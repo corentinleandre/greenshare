@@ -1,5 +1,3 @@
-package com.ecotek.greenshare
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,11 +5,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-
+import com.ecotek.greenshare.R
 class SearchResultsAdapter(private val onItemClick: (String) -> Unit) :
     RecyclerView.Adapter<SearchResultsAdapter.SearchResultViewHolder>() {
 
-    private var searchResults: List<Pair<String, String>> = emptyList()
+    private var searchResults: MutableList<Pair<String, String>> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -27,9 +25,11 @@ class SearchResultsAdapter(private val onItemClick: (String) -> Unit) :
     override fun getItemCount(): Int = searchResults.size
 
     fun setSearchResults(results: List<Pair<String, String>>) {
-        searchResults = results
+        searchResults.clear()
+        searchResults.addAll(results)
         notifyDataSetChanged()
     }
+
 
     inner class SearchResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val imageView: ImageView = itemView.findViewById(R.id.resultImageView)
