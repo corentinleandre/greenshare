@@ -112,11 +112,11 @@ class ProfileFragment : Fragment() {
 
                 view.findViewById<ImageView>(R.id.userImageView).setImageDrawable(userIcon)
                 view.findViewById<TextView>(R.id.user_name).text = "$firstname $lastname"
-                view.findViewById<TextView>(R.id.user_role).text = roleUser
-                view.findViewById<TextView>(R.id.user_group).text = groupUser
-                view.findViewById<TextView>(R.id.user_numero).text = phoneNumber
-                view.findViewById<TextView>(R.id.user_email).text = currentUser
-                view.findViewById<TextView>(R.id.user_bureau).text = "Plus tard" //TODO : add to data base "bureau"
+                view.findViewById<TextView>(R.id.user_role).text = "Role: "+roleUser
+                view.findViewById<TextView>(R.id.user_group).text = "Group: "+groupUser
+                view.findViewById<TextView>(R.id.user_numero).text = "Phone Number: "+phoneNumber
+                view.findViewById<TextView>(R.id.user_email).text = "Email: "+currentUser
+                view.findViewById<TextView>(R.id.user_bureau).text = "Plus tard " //TODO : add to data base "bureau"
             }
         return view
     }
