@@ -79,7 +79,6 @@ class HomeFragment : Fragment() {
 
                             //Rajouter une margin TOP de 40dp pour le tout premier post
                             if (index == highestId) {
-                                print("je suis le premier post")
                                 val layoutParams = postView.layoutParams as ViewGroup.MarginLayoutParams
                                 val marginTop =
                                     resources.getDimensionPixelSize(R.dimen.margin_top) // Remplace R.dimen.margin_top par la ressource correspondante à 20dp
@@ -119,6 +118,7 @@ class HomeFragment : Fragment() {
 
 
 
+
                                 val readFragment = ReadFragment()
                                 readFragment.arguments = args
                                 handleClick(readFragment, args)
@@ -126,8 +126,7 @@ class HomeFragment : Fragment() {
 
 
 
-                            println(article.id)
-                            println(article.content)
+
 
                         }
                     }
@@ -193,6 +192,18 @@ class HomeFragment : Fragment() {
                                 postView.layoutParams = layoutParams
                             }
 
+
+                            if (article.mediasID!= "") {
+                                var medias=FirebaseFirestore.getInstance().collection("Medias").document(article.id)
+                                medias.get()
+                                    .addOnSuccessListener {documentSnapshot->
+                                        val media1=documentSnapshot.getString("media1")
+                                        val mediaView: ImageView= postView.findViewById(R.id.imageView)
+                                        Glide.with(requireContext())
+                                            .load(media1)
+                                            .into(mediaView)
+                                    }
+                            }
                             val textView: TextView = postView.findViewById(R.id.textView)
                             textView.text = article.title
 
@@ -215,8 +226,7 @@ class HomeFragment : Fragment() {
 
 
 
-                            println(article.id)
-                            println(article.content)
+
 
                         }
                     }
