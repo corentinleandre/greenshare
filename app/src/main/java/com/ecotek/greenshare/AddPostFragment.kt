@@ -359,7 +359,7 @@ class AddPostFragment : Fragment() {
                 var imageID : String
                 if (selectedMediaUris == null){imageID= ""} else{imageID=highestId.toString()}
                 val article = Article(highestId.toString(),title,authorID,content,date,imageID,commentID)
-                uploadMediaFilesToFirebase(highestId.toString(), require())
+                uploadMediaFilesToFirebase(highestId.toString(), requireContext())
                 mFirestore.collection("Article")
                     .document(article.id.toString())
                     .set(article, SetOptions.merge())
