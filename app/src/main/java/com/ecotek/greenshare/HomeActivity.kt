@@ -55,5 +55,9 @@ class HomeActivity : AppCompatActivity() {
             setReorderingAllowed(true)
             replace(R.id.container_view, fragment)
         }
+        when(fragment){
+            is HomeFragment -> bottomNavigationView.menu.findItem(R.id.nav_home).isChecked = true
+            is AddPostFragment -> bottomNavigationView.menu.findItem(R.id.nav_New_content).isChecked = false
+        }
     }
 }
