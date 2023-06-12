@@ -23,7 +23,7 @@
         app:srcCompat="@drawable/baseline_logout_24" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/userImageView"
         android:layout_width="102dp"
         android:layout_height="109dp"
         android:layout_gravity="center_horizontal"

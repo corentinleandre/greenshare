@@ -12,6 +12,19 @@ import android.widget.ImageButton
 import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import android.content.Context
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import androidx.core.content.ContextCompat
+import android.graphics.Bitmap
+import android.os.Environment
+import android.widget.ImageView
+import java.io.File
+import java.io.FileOutputStream
+import android.graphics.Bitmap.Config.ARGB_8888
+import java.io.IOException
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,6 +40,7 @@ class ProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    var initials: String =""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,26 +67,57 @@ class ProfileFragment : Fragment() {
         val currentUser = FirebaseAuth.getInstance().currentUser?.email
         val mFirestore = FirebaseFirestore.getInstance()
 
+        //creates icon User
+        fun createCustomUserIcon(context: Context, initials: String): Drawable {
+            val size = 512 // Taille de l'icône (en pixels)
+
+            val bitmap = Bitmap.createBitmap(size, size, ARGB_8888)
+            val canvas = Canvas(bitmap)
+
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+            paint.color = Color.BLACK
+            canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
+
+            val textSize = size / initials.length.toFloat()
+            paint.color = Color.WHITE
+            paint.textSize = textSize
+            paint.typeface = Typeface.DEFAULT_BOLD
+            paint.textAlign = Paint.Align.CENTER
+
+            val textBounds = Rect()
+            paint.getTextBounds(initials, 0, initials.length, textBounds)
+            val x = canvas.width / 2
+            val y = (canvas.height / 2) - (textBounds.top + textBounds.bottom) / 2
+
+            canvas.drawText(initials, x.toFloat(), y.toFloat(), paint)
+
+            return BitmapDrawable(context.resources, bitmap)
+        }
+
         mFirestore.collection("Users")
             .whereEqualTo("email", currentUser)
             .get()
             .addOnSuccessListener { document ->
+                val context = requireContext()
+                val userIcon = createCustomUserIcon(context,initials)
                 val userDocument = document.documents[0]
                 val phoneNumber = userDocument.getString("telephone")
                 val roleUser = userDocument.getString("role")
                 val groupUser = userDocument.getString("group")
-                var list = userDocument.getString("email")?.split(".","@")
-                var firstname= list?.get(0)?.capitalize()
-                var lastname= list?.get(1)?.capitalize()
+
+                var list = userDocument.getString("email")?.split(".", "@")
+                var firstname = list?.get(0)?.capitalize()
+                var lastname = list?.get(1)?.capitalize()
+                initials=list?.get(0)?.capitalize()?.substring(0, 1) + list?.get(1)?.capitalize()?.substring(0,1)
+
+                view.findViewById<ImageView>(R.id.userImageView).setImageDrawable(userIcon)
                 view.findViewById<TextView>(R.id.user_name).text = "$firstname $lastname"
-                view.findViewById<TextView>(R.id.user_role).text= roleUser
-                view.findViewById<TextView>(R.id.user_group).text= groupUser
-                view.findViewById<TextView>(R.id.user_numero).text= phoneNumber
-                view.findViewById<TextView>(R.id.user_email).text= currentUser
-                view.findViewById<TextView>(R.id.user_bureau).text= "Plus tard" //TODO : add to data base "bureau"
-
+                view.findViewById<TextView>(R.id.user_role).text = roleUser
+                view.findViewById<TextView>(R.id.user_group).text = groupUser
+                view.findViewById<TextView>(R.id.user_numero).text = initials
+                view.findViewById<TextView>(R.id.user_email).text = currentUser
+                view.findViewById<TextView>(R.id.user_bureau).text = "Plus tard" //TODO : add to data base "bureau"
             }
-
         return view
     }
 
