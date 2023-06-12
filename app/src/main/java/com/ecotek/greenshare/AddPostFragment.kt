@@ -34,7 +34,6 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import java.io.ByteArrayOutputStream
 
 
 //private const val ARG_PARAM1 = "param1"
@@ -42,6 +41,7 @@ import java.io.ByteArrayOutputStream
 val listBlocked : List<String> = listOf("fuck","f*ck","con","abruti","batard","putain","connard","connasse","p*tain","c*n","c*nne","merde","nique","tg","fdp")
 class AddPostFragment : Fragment() {
 
+    private val MAX_IMAGE_SIZE = 1024 // Maximum image size in kilobytes (1MB)
 
     private lateinit var titleAreaTextInput: EditText
     private lateinit var contentAreaTextInput: EditText
@@ -139,10 +139,14 @@ class AddPostFragment : Fragment() {
                             postArticle(titleAreaTextInput.text.toString(),userId.toString(),contentAreaTextInput.text.toString(),dateString,"")
                             (activity as HomeActivity).moveToFragment(HomeFragment())
                         }
+
+
+
                     } else { }
                 }
                 .addOnFailureListener { exception ->
                 }
+
         }
         return view
     }
@@ -174,16 +178,16 @@ class AddPostFragment : Fragment() {
 
 
     private fun createImageView(context: Context, imageUri: Uri): ImageView {
+        val compressedBitmap = compressImage(imageUri)
         val imageView = ImageView(context)
         imageView.layoutParams = LinearLayout.LayoutParams(
             0,
             LinearLayout.LayoutParams.WRAP_CONTENT,
             1.0f
         )
-        imageView.setPadding(0, 0, 0, 0) // Optional: Remove padding if present
+        imageView.setPadding(0, 0, 0, 0)
         imageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
-
-        imageView.setImageURI(imageUri)
+        imageView.setImageBitmap(compressedBitmap)
 
         return imageView
     }
@@ -258,33 +262,23 @@ class AddPostFragment : Fragment() {
     }
 
 
-    fun uploadMediaFilesToFirebase(id: String,context: Context) {
+    fun uploadMediaFilesToFirebase(id: String) {
         // Check if there are any selected media URIs
-        if (selectedMediaUris.isNotEmpty()) {
+        if (selectedMediaUris != null && selectedMediaUris!!.isNotEmpty()) {
             val data = hashMapOf<String, Any>("id" to id)
 
-            selectedMediaUris.forEachIndexed { index, mediaUri ->
+            selectedMediaUris!!.forEachIndexed { index, mediaUri ->
                 val number = index + 1
                 val fileName = "${id}/image$number"
                 val mediaReference = mstorageReference.child(fileName)
-                val selectedImageUri : Uri = mediaUri
-                val imageStream = context.contentResolver.openInputStream(selectedImageUri)
-                val selectedImage = BitmapFactory.decodeStream(imageStream)
-                val lightImage = lightImage(selectedImage)
-                val imageArray = ByteArrayOutputStream()
-                lightImage.compress(Bitmap.CompressFormat.JPEG, 75, imageArray)
-                val datas = imageArray.toByteArray()
-                val uploadTask = mediaReference.putBytes(datas)
-
-                //val uploadTask = mediaReference.putFile(mediaUri)
-
+                val uploadTask = mediaReference.putFile(mediaUri)
 
                 uploadTask.addOnSuccessListener { taskSnapshot ->
                     // Media upload success, get the download URL
                     mediaReference.downloadUrl.addOnSuccessListener { downloadUri ->
                         data["media$number"] = downloadUri.toString()
 
-                        if (number == selectedMediaUris.size) {
+                        if (number == selectedMediaUris!!.size) {
                             mfirestore.collection("Medias")
                                 .document(id)
                                 .set(data)
@@ -296,7 +290,7 @@ class AddPostFragment : Fragment() {
                                 }
                         }
                     }
-                }.addOnFailureListener {
+                }.addOnFailureListener { exception ->
                     // Handle any errors that occur during media upload
                 }
             }
@@ -305,23 +299,43 @@ class AddPostFragment : Fragment() {
         }
     }
 
-    private fun lightImage(image : Bitmap) : Bitmap {
-        val width = image.width
-        val height = image.height
-        if(width <= 1280 && height <= 720) {
-            return image
-        }
-        val ratio : Float
-        if(width > height) {
-            ratio = 1280.toFloat() / width
-        }
-        else {
-            ratio = 720.toFloat() / height
-        }
-        val sizedWidth : Int = (width * ratio).toInt()
-        val sizedHeight : Int = (height * ratio).toInt()
-        return Bitmap.createScaledBitmap(image, sizedWidth, sizedHeight, true)
+    private fun compressImage(imageUri: Uri): Bitmap? {
+        val imageStream = requireContext().contentResolver.openInputStream(imageUri)
+        val options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        BitmapFactory.decodeStream(imageStream, null, options)
+        imageStream?.close()
+
+        var bitmap: Bitmap? = null
+
+        // Calculate the sample size to resize the image while maintaining aspect ratio
+        val scaleFactor = calculateSampleSize(options)
+
+        // Reopen the input stream and decode the bitmap with the calculated sample size
+        val inputStream = requireContext().contentResolver.openInputStream(imageUri)
+        options.inJustDecodeBounds = false
+        options.inSampleSize = scaleFactor
+        bitmap = BitmapFactory.decodeStream(inputStream, null, options)
+        inputStream?.close()
+
+        return bitmap
     }
+
+    private fun calculateSampleSize(options: BitmapFactory.Options): Int {
+        val imageHeight = options.outHeight
+        val imageWidth = options.outWidth
+        var scaleFactor = 1
+
+        if (imageHeight > MAX_IMAGE_SIZE || imageWidth > MAX_IMAGE_SIZE) {
+            val heightRatio = Math.round(imageHeight.toFloat() / MAX_IMAGE_SIZE.toFloat())
+            val widthRatio = Math.round(imageWidth.toFloat() / MAX_IMAGE_SIZE.toFloat())
+            scaleFactor = if (heightRatio < widthRatio) heightRatio else widthRatio
+        }
+
+        return scaleFactor
+    }
+
+
 
     //private fun saveDataToFirestore(mediaUrl: String) {} //moved into uploadmedia function
 
@@ -359,7 +373,7 @@ class AddPostFragment : Fragment() {
                 var imageID : String
                 if (selectedMediaUris == null){imageID= ""} else{imageID=highestId.toString()}
                 val article = Article(highestId.toString(),title,authorID,content,date,imageID,commentID)
-                uploadMediaFilesToFirebase(highestId.toString(), requireContext())
+                uploadMediaFilesToFirebase(highestId.toString())
                 mFirestore.collection("Article")
                     .document(article.id.toString())
                     .set(article, SetOptions.merge())
