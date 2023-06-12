@@ -295,7 +295,7 @@ class AddPostFragment : Fragment() {
     }
 
     //private fun saveDataToFirestore(mediaUrl: String) {} //moved into uploadmedia function
-    //requests to user to delete the blockedWord
+    //requests to user to delete the blockedWord. It is like a prevention
     fun blockedPost(mot:String){
         val alertDialog: AlertDialog? =AlertDialog.Builder(requireActivity()).create()
         if (alertDialog != null) {
