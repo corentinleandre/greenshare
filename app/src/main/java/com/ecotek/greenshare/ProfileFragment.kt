@@ -75,11 +75,11 @@ class ProfileFragment : Fragment() {
             val canvas = Canvas(bitmap)
 
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-            paint.color = Color.BLACK
+            paint.color = Color.BLACK // color for background
             canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
 
             val textSize = size / initials.length.toFloat()
-            paint.color = Color.WHITE
+            paint.color = Color.WHITE // color for text
             paint.textSize = textSize
             paint.typeface = Typeface.DEFAULT_BOLD
             paint.textAlign = Paint.Align.CENTER
