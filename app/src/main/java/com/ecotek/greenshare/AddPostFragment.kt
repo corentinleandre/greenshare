@@ -50,7 +50,7 @@ class AddPostFragment : Fragment() {
     private lateinit var selectedAudience: BooleanArray
     private val audienceList = ArrayList<String>(listOf("uha","professeurs","etudiants"))
     private val selectedOptions = ArrayList<String>()
-
+    private lateinit var mediaType: String
     private lateinit var titleAreaTextInput: EditText
     private lateinit var contentAreaTextInput: EditText
     private lateinit var postButton: Button
@@ -236,12 +236,13 @@ class AddPostFragment : Fragment() {
             val mimeType = contentResolver.getType(mediaUri)
             if (mimeType?.startsWith("image") == true) {
                 mediaLayout.addView(createImageView(requireContext(), mediaUri))
-
+                mediaType = "image"
             } else if(mimeType?.startsWith("video") == true) {
                 mediaLayout.addView(createVideoView(requireContext(), mediaUri))
-
+                mediaType = "video"
             }else {
                 mediaLayout.addView(createVideoView(requireContext(), mediaUri))
+                mediaType = "video"
             }
             //mediaLayout.addView(mediaView)
         }
@@ -343,7 +344,7 @@ class AddPostFragment : Fragment() {
     fun uploadMediaFilesToFirebase(id: String) {
         // Check if there are any selected media URIs
         if (selectedMediaUris != null && selectedMediaUris!!.isNotEmpty()) {
-            val data = hashMapOf<String, Any>("id" to id)
+            val data = hashMapOf<String, Any>("type" to mediaType)
 
             selectedMediaUris!!.forEachIndexed { index, mediaUri ->
                 val number = index + 1
