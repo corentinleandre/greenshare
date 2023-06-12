@@ -115,15 +115,13 @@ class AddPostFragment : Fragment() {
                             for(element in list){
                                 for (f in listBlocked){
                                     if (element.toLowerCase()==f) {
-                                        println("MOT INTERDIT !")
                                         blockedWord=element
                                         allowed=false
                                         break //if the world isn't allowed, stop the verification
                                     }
                                 }
                                 if (!allowed) {
-                                    println("post bloqué")
-                                    blockedPost(blockedWord) //requests to user to delete the blockedWord
+                                    blockedPost(blockedWord)
                                     break
                                 }
                             }
@@ -297,7 +295,7 @@ class AddPostFragment : Fragment() {
     }
 
     //private fun saveDataToFirestore(mediaUrl: String) {} //moved into uploadmedia function
-
+    //requests to user to delete the blockedWord
     fun blockedPost(mot:String){
         val alertDialog: AlertDialog? =AlertDialog.Builder(requireActivity()).create()
         if (alertDialog != null) {
