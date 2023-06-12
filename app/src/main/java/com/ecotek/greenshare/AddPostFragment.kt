@@ -133,7 +133,7 @@ class AddPostFragment : Fragment() {
                         val titleVerif = verificationPost(titleAreaTextInput.text.toString())
                         val contentVerif=verificationPost(contentAreaTextInput.text.toString())
                         if (titleVerif && contentVerif) {
-                            Article.postArticle(titleAreaTextInput.text.toString(),userId.toString(),contentAreaTextInput.text.toString(),dateString,"")
+                            postArticle(titleAreaTextInput.text.toString(),userId.toString(),contentAreaTextInput.text.toString(),dateString,"")
                             (activity as HomeActivity).moveToFragment(HomeFragment())
                         }
 
