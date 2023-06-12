@@ -11,12 +11,23 @@
     tools:context=".MainActivity">
     // an icon is set inplace of the pic//
 
+    <ImageButton
+        android:id="@+id/logoutButton"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@null"
+        android:layout_gravity="right"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="20dp"
+        android:onClick="pickedPhoto"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/baseline_logout_24" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="102dp"
         android:layout_height="109dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="19dp"
         android:contentDescription="Profile Picture"
         android:scaleType="centerCrop"
         android:src="@drawable/ameen" />
@@ -78,6 +89,7 @@
                     tools:layout_conversion_absoluteWidth="176dp" />
 
                 <TextView
+                    android:id="@+id/user_role"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="role: "
@@ -88,6 +100,7 @@
                     tools:layout_conversion_absoluteWidth="39dp" />
 
                 <TextView
+                    android:id="@+id/user_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Email: john.doe@uha.fr"
@@ -98,6 +111,7 @@
                     tools:layout_conversion_absoluteWidth="184dp" />
 
                 <TextView
+                    android:id="@+id/user_bureau"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="bureau : 304 "
@@ -108,9 +122,10 @@
                     tools:layout_conversion_absoluteWidth="103dp" />
 
                 <TextView
+                    android:id="@+id/user_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="fillier:"
+                    android:text="group:"
                     android:textSize="18sp"
                     tools:layout_conversion_absoluteHeight="24dp"
                     tools:layout_editor_absoluteY="376dp"
@@ -118,9 +133,10 @@
                     tools:layout_conversion_absoluteWidth="42dp" />
 
                 <TextView
+                    android:id="@+id/user_numero"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="numero : USA"
+                    android:text="numero : 06"
                     android:textSize="18sp"
                     tools:layout_conversion_absoluteHeight="24dp"
                     tools:layout_editor_absoluteY="400dp"

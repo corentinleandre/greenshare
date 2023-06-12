@@ -7,112 +7,79 @@
     android:background="@drawable/background"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/Login"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="573dp"
-        android:gravity="center"
-        android:text="Log in "
-        android:textColor="@color/black"
-        android:textSize="35dp"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="338dp"
-        android:layout_height="71dp"
-        android:layout_below="@id/Login"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="40dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="279dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginRight="10dp"
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="130dp"
+            android:layout_height="117dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            app:srcCompat="@drawable/logo" />
 
-        android:layout_marginBottom="380dp"
-        android:background="@drawable/border"
-        android:drawableLeft="@drawable/baseline_mail_outline_24"
-        android:drawablePadding="20dp"
-        android:hapticFeedbackEnabled="true"
-        android:hint="Email"
-        android:padding="20dp"
-        android:textColor="@color/black"
-        android:textColorHint="@color/black" />
+        <TextView
+            android:id="@+id/Login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="80dp"
+            android:fontFamily="sans-serif-thin"
+            android:gravity="center"
+            android:text="Log in "
+            android:textColor="@color/black"
+            android:textSize="35dp"
+            android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="335dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/email"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="40dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="373dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginRight="10dp"
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="335dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/border"
+            android:drawableLeft="@drawable/baseline_mail_outline_24"
+            android:drawablePadding="20dp"
+            android:hapticFeedbackEnabled="true"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:padding="20dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black" />
 
-        android:layout_marginBottom="286dp"
-        android:background="@drawable/border"
-        android:drawableLeft="@drawable/baseline_password_24"
-        android:drawablePadding="20dp"
-        android:hint="Password"
-        android:padding="20dp"
-        android:textColor="@color/black"
-        android:textColorHint="@color/black" />
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="335dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/border"
+            android:drawableLeft="@drawable/baseline_password_24"
+            android:drawablePadding="20dp"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:padding="20dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black" />
 
-    <Button
-        android:id="@+id/loginbtn"
-        android:layout_width="190dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="90dp"
-        android:layout_marginTop="140dp"
-        android:layout_marginEnd="90dp"
-        android:layout_marginBottom="203dp"
-        android:backgroundTint="#04b518"
-        android:text="Login" />
+        <Button
+            android:id="@+id/loginbtn"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="#04b518"
+            android:text="Login" />
 
-    <Button
-        android:id="@+id/forgot"
-        android:layout_width="190dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="90dp"
-        android:layout_marginTop="140dp"
-        android:layout_marginEnd="90dp"
-        android:layout_marginBottom="136dp"
-        android:backgroundTint="#04b518"
-        android:text="forgot password ?" />
+        <Button
+            android:id="@+id/forgot"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="#04b518"
+            android:text="forgot password ?" />
 
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="130dp"
-        android:layout_height="117dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="130dp"
-        android:layout_marginEnd="130dp"
-        android:layout_marginBottom="609dp"
-        android:cropToPadding="false"
-        app:srcCompat="@drawable/logo" />
+    </LinearLayout>
 
 
 </RelativeLayout>
