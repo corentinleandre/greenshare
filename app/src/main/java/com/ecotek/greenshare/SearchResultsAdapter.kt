@@ -8,10 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-class SearchResultsAdapter(private val onItemClick: (Article) -> Unit) :
+class SearchResultsAdapter(private val onItemClick: (String) -> Unit) :
     RecyclerView.Adapter<SearchResultsAdapter.SearchResultViewHolder>() {
 
-    private var searchResults: List<Article> = emptyList()
+    private var searchResults: List<String> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -20,13 +20,13 @@ class SearchResultsAdapter(private val onItemClick: (Article) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: SearchResultViewHolder, position: Int) {
-        val article = searchResults[position]
-        holder.bind(article)
+        val title = searchResults[position]
+        holder.bind(title)
     }
 
     override fun getItemCount(): Int = searchResults.size
 
-    fun setSearchResults(results: List<Article>) {
+    fun setSearchResults(results: List<String>) {
         searchResults = results
         notifyDataSetChanged()
     }
@@ -39,18 +39,20 @@ class SearchResultsAdapter(private val onItemClick: (Article) -> Unit) :
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    val article = searchResults[position]
-                    onItemClick(article)
+                    val title = searchResults[position]
+                    onItemClick(title)
                 }
             }
         }
 
-        fun bind(article: Article) {
-            titleTextView.text = article.title
+        fun bind(title: String) {
+            titleTextView.text = title
 
+            // Utilisez Glide pour charger l'image correspondante ici
             Glide.with(itemView)
-                .load("ameen")
+                .load("ameen")  // Replace "image_url_here" with the actual URL of the image
                 .into(imageView)
         }
     }
 }
+

@@ -17,8 +17,8 @@ class SearchFragment : Fragment() {
 
     private lateinit var searchView: SearchView
     private lateinit var searchRecyclerView: RecyclerView
-    private val adapter: SearchResultsAdapter = SearchResultsAdapter { article ->
-        navigateToPostDetails(article)
+    private val adapter: SearchResultsAdapter = SearchResultsAdapter { title ->
+        navigateToPostDetails(title)
     }
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var query: Query
@@ -50,9 +50,10 @@ class SearchFragment : Fragment() {
     }
 
     private fun performSearch(query: String) {
-        this.query = firestore.collection("posts")
-            .whereGreaterThanOrEqualTo("title", query)
-            .whereLessThanOrEqualTo("title", query + "\uf8ff")
+        this.query = firestore.collection("Article")
+            .whereEqualTo("title", query)
+
+        Log.d("SearchFragment", "Performing search for query: $query")
 
         startListening()
     }
@@ -67,9 +68,9 @@ class SearchFragment : Fragment() {
             }
 
             if (snapshot != null) {
-                Log.d("SearchFragment","snapshot found")
-                val searchResults: List<Article> = snapshot.documents.mapNotNull { document ->
-                    document.toObject(Article::class.java)
+                Log.d("SearchFragment", "snapshot found")
+                val searchResults: List<String> = snapshot.documents.mapNotNull { document ->
+                    document.getString("title")
                 }
 
                 updateUIWithSearchResults(searchResults)
@@ -77,7 +78,8 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun updateUIWithSearchResults(searchResults: List<Article>) {
+    private fun updateUIWithSearchResults(searchResults: List<String>) {
+        Log.d("SearchFragment", "Search results: $searchResults")
         adapter.setSearchResults(searchResults)
     }
 
@@ -90,18 +92,7 @@ class SearchFragment : Fragment() {
         listener.remove()
     }
 
-    private fun navigateToPostDetails(article: Article) {
-        val readFragment = ReadFragment()
-        val args = Bundle()
-        args.putString("key", article.title)
-        args.putString("keyi", "ameen")
-        args.putString("keyd", article.content)
-        args.putString("index", article.id)
-        readFragment.arguments = args
-
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, readFragment)
-            .addToBackStack(null)
-            .commit()
+    private fun navigateToPostDetails(title: String) {
+        //TODO Implémenter la navigation vers les détails de l'article
     }
 }
