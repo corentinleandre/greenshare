@@ -13,7 +13,7 @@ data class   Article(
     val likes: String = "",
     val mediasID: String = "",
     val commentID: String = "",
-    val isVerified: String = ""
+    val verified: String = ""
     ){
 
     companion object {

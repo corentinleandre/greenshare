@@ -19,6 +19,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -51,8 +52,18 @@ class HomeFragment : Fragment() {
         //Fonction qui récupère l'id du post le plus récent de la base
 
         val mFirestore = FirebaseFirestore.getInstance()
+        var userRights="0"
+        val currentUser = FirebaseAuth.getInstance().currentUser?.email
+        val collectionuser = mFirestore.collection("Users")
+        collectionuser
+            .whereEqualTo("email", currentUser)
+            .get()
+            .addOnSuccessListener { document ->
+                val userDocument = document.documents[0]
+                userRights = userDocument.getString("rights").toString()
+                Log.d("test Marie 1", userRights)
+            }
         val collection = mFirestore.collection("Article")
-
         collection
             .get()
             .addOnSuccessListener { querySnapshot ->
@@ -66,8 +77,12 @@ class HomeFragment : Fragment() {
                 val id10 = highestId - 10
                 while (highestId > id10){
                     Article.getArticle(highestId.toString()){article ->
-                        if (article != null){
-                            var index=article.id.toInt()
+                        var articleVerified=article?.verified.toString()
+
+                        Log.d("Test Marie 2", userRights)
+
+                        if (article != null && (articleVerified!="no" || (articleVerified=="no" && userRights!="0"))){
+                            var index=article?.id?.toInt()
                             val inflater = LayoutInflater.from(requireContext())
                             val postView = inflater.inflate(R.layout.post, null)
                             val cardView: CardView = postView.findViewById(R.id.touchCard)
@@ -102,7 +117,6 @@ class HomeFragment : Fragment() {
                                             .into(mediaView)
                                     }
                             }
-
                             val textView: TextView = postView.findViewById(R.id.textView)
                             textView.text = article.title
 
@@ -124,11 +138,7 @@ class HomeFragment : Fragment() {
                                 handleClick(readFragment, args)
                             }
 
-
-
-
-
-                        }
+                        } // end if
                     }
                     highestId -= 1
                 }
@@ -139,7 +149,6 @@ class HomeFragment : Fragment() {
             .addOnFailureListener { exception ->
                 //
             }
-
 
         }
     private fun createnextPost(view: View) {
