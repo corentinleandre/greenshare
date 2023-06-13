@@ -85,7 +85,6 @@ class ReadFragment : Fragment() {
         val commenterlayout = view.findViewById<LinearLayout>(R.id.commenter)
         commenterlayout.addView(commentView)
 
-
         Article.getArticle(index.toString()){article ->
             if (article != null) {
                 if (article.mediasID != "") {
@@ -96,7 +95,7 @@ class ReadFragment : Fragment() {
                             val media1 = documentSnapshot.getString("media1")
                             val media2 = documentSnapshot.getString("media2")
                             val media3 = documentSnapshot.getString("media3")
-                            val media4 = documentSnapshot.getString("media4")
+                            val media4 = documentSnapshot.getString("media3")
                             val mediaView1: ImageView = postView.findViewById(R.id.imageView1)
 //
                             Glide.with(requireContext())
@@ -107,18 +106,6 @@ class ReadFragment : Fragment() {
                                 val mediaView2: ImageView = postView.findViewById(R.id.imageView2)
                                 val mediaView3: ImageView = postView.findViewById(R.id.imageView3)
                                 val mediaView4: ImageView = postView.findViewById(R.id.imageView4)
-                                mediaView2.layoutParams = LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                                )
-                                mediaView3.layoutParams = LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                                )
-                                mediaView4.layoutParams = LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                                )
                                 Glide.with(requireContext())
                                     .load(media2)
                                     .into(mediaView2)
@@ -128,7 +115,9 @@ class ReadFragment : Fragment() {
                                 Glide.with(requireContext())
                                     .load(media4)
                                     .into(mediaView4)
+
                             }
+
                         }
                 }
             }
@@ -145,15 +134,13 @@ class ReadFragment : Fragment() {
         }
 
         val description:TextView=postView.findViewById(R.id.description)
-            Article.getArticle(index.toString()) { article ->
-                if (article != null) {
-                    description.text = article.content
-                }
-
+        Article.getArticle(index.toString()) { article ->
+            if (article != null) {
+                description.text = article.content
             }
+
+        }
     }
-
-
 
 
 }
