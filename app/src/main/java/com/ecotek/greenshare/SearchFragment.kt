@@ -1,16 +1,19 @@
 package com.ecotek.greenshare
 
-import SearchResultsAdapter
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
@@ -20,9 +23,6 @@ class SearchFragment : Fragment() {
     private lateinit var searchView: SearchView
     private lateinit var searchRecyclerView: RecyclerView
     private lateinit var noResultsTextView: TextView
-    private val adapter: SearchResultsAdapter = SearchResultsAdapter { title ->
-        navigateToPostDetails(title)
-    }
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var query: Query
     private lateinit var listener: ListenerRegistration
@@ -48,7 +48,6 @@ class SearchFragment : Fragment() {
         })
 
         searchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        searchRecyclerView.adapter = adapter
 
         return view
     }
@@ -60,7 +59,6 @@ class SearchFragment : Fragment() {
         Log.d("SearchFragment", "Performing search for query: $query")
 
         // Réinitialise les résultats de la recherche précédente
-        adapter.setSearchResults(emptyList())
         showNoResultsMessage(false)
 
         startListening()
@@ -79,56 +77,60 @@ class SearchFragment : Fragment() {
             if (snapshot != null) {
                 Log.d("SearchFragment", "snapshot found")
                 val searchResults: List<String> = snapshot.documents.mapNotNull { document ->
-                    document.getString("title")
+                    document.getString("id")
                 }
 
-                updateUIWithSearchResults(searchResults)
+                view?.let { updateUIWithSearchResults(searchResults, it, ) }
             }
         }
     }
 
-    private fun updateUIWithSearchResults(searchResults: List<String>) {
-        if (searchResults.isEmpty()) {
-            showNoResultsMessage(true)
-            adapter.setSearchResults(emptyList()) // Réinitialise les résultats de la recherche
-            return
+    private fun updateUIWithSearchResults(searchResults: List<String>, view: View) {
+        if (!isAdded) {
+            return  // Vérifie si le fragment est attaché avant d'accéder au contexte
         }
 
-        val resultsWithImageUrls = mutableListOf<Pair<String, String>>() // Paires de titre et d'URL d'image
+        val linearContainer: LinearLayout = view.findViewById(R.id.search_fragment)
 
-        firestore.collection("Article")
-            .whereIn("title", searchResults)
-            .get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    val title = document.getString("title")
-                    val articleId = document.id
-                    firestore.collection("Medias")
-                        .document(articleId)
-                        .get()
-                        .addOnSuccessListener { mediaDocument ->
-                            val imageUrl = mediaDocument.getString("media1")
-                            if (imageUrl != null && title != null) {
-                                resultsWithImageUrls.add(Pair(title, imageUrl))
-                            } else {
-                                // Ajoute une paire avec une URL d'image vide
-                                resultsWithImageUrls.add(Pair(title ?: "", ""))
-                            }
-                            // Vérifie si toutes les paires d'images ont été récupérées
-                            if (resultsWithImageUrls.size == searchResults.size) {
-                                adapter.setSearchResults(resultsWithImageUrls)
-                                showNoResultsMessage(false)
-                            }
+        val mFirestore = FirebaseFirestore.getInstance()
+
+        if (searchResults.isNotEmpty()) {
+            val articleId = searchResults[0]
+            Article.getArticle(articleId) { article ->
+                if (article != null) {
+                    val inflater = LayoutInflater.from(requireContext())
+                    val postView = inflater.inflate(R.layout.post, null)
+                    val cardView: CardView = postView.findViewById(R.id.touchCard)
+                    linearContainer.addView(postView)
+                    showNoResultsMessage(false)
+
+                    val args = Bundle()
+
+                    if (article.mediasID != "") {
+                        val medias = FirebaseFirestore.getInstance().collection("Medias").document(article.id)
+                        medias.get().addOnSuccessListener { documentSnapshot ->
+                            val media1 = documentSnapshot.getString("media1")
+                            val mediaView: ImageView = postView.findViewById(R.id.imageView)
+                            Glide.with(requireContext())
+                                .load(media1)
+                                .into(mediaView)
                         }
-                        .addOnFailureListener { exception ->
-                            Log.e("SearchFragment", "Error retrieving image URL: ${exception.message}")
-                        }
+                    }
+
+                    val textView: TextView = postView.findViewById(R.id.textView)
+                    textView.text = article.title
+
+                    cardView.setOnClickListener {
+                        args.putString("index", article.id)
+                        val readFragment = ReadFragment()
+                        readFragment.arguments = args
+                        handleClick(readFragment, args)
+                    }
                 }
             }
-            .addOnFailureListener { exception ->
-                Log.e("SearchFragment", "Error retrieving articles: ${exception.message}")
-                showNoResultsMessage(true)
-            }
+        } else {
+            showNoResultsMessage(true)
+        }
     }
 
 
@@ -153,17 +155,10 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun navigateToPostDetails(title: String) {
-        val args = Bundle()
-        args.putString("title", title)
-        val readFragment = ReadFragment()
-        readFragment.arguments = args
-        handleClick(readFragment, args)
-    }
-
     fun handleClick(fragment: Fragment, arguments: Bundle) {
         fragment.arguments = arguments
         (activity as HomeActivity).moveToFragment(fragment)
+
     }
 }
 
