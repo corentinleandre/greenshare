@@ -5,16 +5,34 @@ import com.google.firebase.firestore.SetOptions
 
 data class   Article(
     val id: String = "",
-    val title: String = "",
-    val authorID: String = "",
-    val content: String = "",
-    val date: String = "",
-    val group: String = "",
-    val likes: String = "",
-    val mediasID: String = "",
-    val commentID: String = "",
-    val verified: String = ""
+    var title: String = "",
+    var authorID: String = "",
+    var content: String = "",
+    var date: String = "",
+    var group: String = "",
+    var likes: String = "",
+    var mediasID: String = "",
+    var commentID: String = "",
+    var verified: String = ""
     ){
+
+    //when moderator validate article
+    fun validateModo(user: User, id:String){
+        val mFirestore = FirebaseFirestore.getInstance()
+
+        mFirestore.collection("Article")
+            .document(id)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (user.rights!="0"){
+                    verified="1"
+                }
+            }
+    }
+
+    fun deleteArticle(id :String){
+
+    }
 
     companion object {
         fun getArticle(id: String, callback: (Article?) -> Unit) {

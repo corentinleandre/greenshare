@@ -79,8 +79,6 @@ class HomeFragment : Fragment() {
                     Article.getArticle(highestId.toString()){article ->
                         var articleVerified=article?.verified.toString()
 
-                        Log.d("Test Marie 2", userRights)
-
                         if (article != null && (articleVerified!="no" || (articleVerified=="no" && userRights!="0"))){
                             var index=article?.id?.toInt()
                             val inflater = LayoutInflater.from(requireContext())
