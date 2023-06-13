@@ -31,7 +31,6 @@ data class   Article(
     }
 
     fun deleteArticle(id :String){
-
     }
 
     companion object {

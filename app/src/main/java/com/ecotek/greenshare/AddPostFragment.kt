@@ -42,7 +42,7 @@ import java.util.Collections
 
 //private const val ARG_PARAM1 = "param1"
 //private const val ARG_PARAM2 = "param2"
-val listBlocked : List<String> = listOf("fuck","f*ck","con","abruti","batard","putain","connard","connasse","p*tain","c*n","c*nne","merde","nique","tg","fdp")
+val listBlocked : List<String> = listOf("fuck","f*ck","con","abruti","batard","putain","connard","connasse","p*tain","c*n","c*nne","merde","nique","tg","fdp","bite")
 class AddPostFragment : Fragment() {
 
     private val MAX_IMAGE_SIZE = 1024 // Maximum image size in kilobytes (1MB)

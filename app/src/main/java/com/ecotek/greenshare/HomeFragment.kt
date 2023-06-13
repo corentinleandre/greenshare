@@ -77,10 +77,15 @@ class HomeFragment : Fragment() {
                 val id10 = highestId - 10
                 while (highestId > id10){
                     Article.getArticle(highestId.toString()){article ->
-                        var articleVerified=article?.verified.toString()
-
+                        val articleVerified=article?.verified.toString()
+                        val flagImageView = view.findViewById<ImageView>(R.id.red_flag)
+                        /*if (userRights!="0" && articleVerified=="no") {
+                            flagImageView.visibility = View.VISIBLE
+                        } else {
+                            flagImageView.visibility = View.GONE
+                        }*/
                         if (article != null && (articleVerified!="no" || (articleVerified=="no" && userRights!="0"))){
-                            var index=article?.id?.toInt()
+                            val index= article.id.toInt()
                             val inflater = LayoutInflater.from(requireContext())
                             val postView = inflater.inflate(R.layout.post, null)
                             val cardView: CardView = postView.findViewById(R.id.touchCard)

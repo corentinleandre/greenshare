@@ -33,18 +33,30 @@
 
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"/>
-
-            <TextView
-                android:id="@+id/textView"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="12dp"
-                android:textColor="@color/black"
-                android:textSize="22sp"
-
-                />
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp"
+                    android:textColor="@color/black"
+                    android:textSize="22sp"
+                    android:drawablePadding="8dp"
+                    />
+                <ImageView
+                    android:id="@+id/red_flag"
+                    android:layout_width="24dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/red_flag_24"
+                    />
+            </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
     <LinearLayout
