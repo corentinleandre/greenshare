@@ -77,12 +77,19 @@ class HomeFragment : Fragment() {
                                     val medias = FirebaseFirestore.getInstance().collection("Medias").document(article.id)
                                     medias.get().addOnSuccessListener { documentSnapshot ->
                                         val media1 = documentSnapshot.getString("media1")
-                                        val mediaView: ImageView = postView.findViewById(R.id.imageView)
-                                        Glide.with(requireContext())
-                                            .load(media1)
-                                            .into(mediaView)
+                                        if (media1 != null) {
+                                            val mediaView: ImageView = postView.findViewById(R.id.imageView)
+                                            mediaView.layoutParams = LinearLayout.LayoutParams(
+                                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                                300
+                                            )
+                                            Glide.with(requireContext())
+                                                .load(media1)
+                                                .into(mediaView)
+                                        }
                                     }
                                 }
+
 
                                 val textView: TextView = postView.findViewById(R.id.textView)
                                 textView.text = article.title
