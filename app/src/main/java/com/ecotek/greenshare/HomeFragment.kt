@@ -31,6 +31,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         createPost(view)
+
         val scrollView: ScrollView = view.findViewById(R.id.scroll)
 
         detectEndOfScroll(scrollView)
@@ -40,108 +41,70 @@ class HomeFragment : Fragment() {
     }
 
     @SuppressLint("MissingInflatedId")
-    private fun createPost(view: View) {
+    private fun createPost(view: View){
         if (!isAdded) {
             return  // Vérifie si le fragment est attaché avant d'accéder au contexte
         }
 
         val linearContainer: LinearLayout = view.findViewById(R.id.fil)
 
-
-        //Fonction qui récupère l'id du post le plus récent de la base
-
         val mFirestore = FirebaseFirestore.getInstance()
         val collection = mFirestore.collection("Article")
-
+        // Tri par ordre décroissant des IDs
         collection
+            .orderBy("date", Query.Direction.DESCENDING).limit(8)
             .get()
             .addOnSuccessListener { querySnapshot ->
-                var highestId = 0
+                val articles = ArrayList<Article>()
                 for (document in querySnapshot) {
-                    val id = document.id.toIntOrNull()
-                    if (id != null && id > highestId) {
-                        highestId = id
-                    }
-                }
-                val id10 = highestId - 10
-                while (highestId > id10){
-                    Article.getArticle(highestId.toString()){article ->
-                        if (article != null){
-                            var index=article.id.toInt()
-                            val inflater = LayoutInflater.from(requireContext())
-                            val postView = inflater.inflate(R.layout.post, null)
-                            val cardView: CardView = postView.findViewById(R.id.touchCard)
+                    val id = document.id.toString()
+                    Article.getArticle(id) { article ->
+                        if (article != null) {
+                            articles.add(article)
+                        }
+                        // Vérifie si tous les articles ont été récupérés
+                        if (articles.size == querySnapshot.documents.size) {
+                            articles.sortByDescending { it.date } // Trie les articles par ordre décroissant de la date
+                            for (article in articles) {
+                                val inflater = LayoutInflater.from(requireContext())
+                                val postView = inflater.inflate(R.layout.post, null)
+                                val cardView: CardView = postView.findViewById(R.id.touchCard)
+                                linearContainer.addView(postView)
 
-                            linearContainer.addView(postView)
-                            val args = Bundle()
-                            //val cardView: CardView = view.findViewById(R.id.touchCard)
-                            //cardView.setOnClickListener {}
+                                val args = Bundle()
 
-                            //Rajouter une margin TOP de 40dp pour le tout premier post
-                            if (index == highestId) {
-                                val layoutParams = postView.layoutParams as ViewGroup.MarginLayoutParams
-                                val marginTop =
-                                    resources.getDimensionPixelSize(R.dimen.margin_top) // Remplace R.dimen.margin_top par la ressource correspondante à 20dp
-                                layoutParams.setMargins(
-                                    layoutParams.leftMargin,
-                                    marginTop,
-                                    layoutParams.rightMargin,
-                                    layoutParams.bottomMargin
-                                )
-                                postView.layoutParams = layoutParams
-                            }
-
-                            if (article.mediasID!= "") {
-                                var medias=FirebaseFirestore.getInstance().collection("Medias").document(article.id)
-                                medias.get()
-                                    .addOnSuccessListener {documentSnapshot->
-                                        val media1=documentSnapshot.getString("media1")
-                                        val mediaView: ImageView= postView.findViewById(R.id.imageView)
+                                if (article.mediasID != "") {
+                                    val medias = FirebaseFirestore.getInstance().collection("Medias").document(article.id)
+                                    medias.get().addOnSuccessListener { documentSnapshot ->
+                                        val media1 = documentSnapshot.getString("media1")
+                                        val mediaView: ImageView = postView.findViewById(R.id.imageView)
                                         Glide.with(requireContext())
                                             .load(media1)
                                             .into(mediaView)
                                     }
-                            }
+                                }
 
-                            val textView: TextView = postView.findViewById(R.id.textView)
-                            textView.text = article.title
-
-
-
-                            cardView.setOnClickListener {
                                 val textView: TextView = postView.findViewById(R.id.textView)
-
                                 textView.text = article.title
 
-
-                                args.putString("index",article.id)
-
-
-
-
-                                val readFragment = ReadFragment()
-                                readFragment.arguments = args
-                                handleClick(readFragment, args)
+                                cardView.setOnClickListener {
+                                    args.putString("index", article.id)
+                                    val readFragment = ReadFragment()
+                                    readFragment.arguments = args
+                                    handleClick(readFragment, args)
+                                }
+                                currentId = articles.lastOrNull()?.id?.toInt() ?: 0
                             }
-
-
-
-
-
                         }
                     }
-                    highestId -= 1
                 }
-                if (highestId > currentId) {
-                    currentId = id10}
-
             }
             .addOnFailureListener { exception ->
                 //
             }
 
+    }
 
-        }
     private fun createnextPost(view: View) {
         if (!isAdded) {
             return  // Vérifie si le fragment est attaché avant d'accéder au contexte
@@ -149,102 +112,68 @@ class HomeFragment : Fragment() {
 
         val linearContainer: LinearLayout = view.findViewById(R.id.fil)
 
-
-        //Fonction qui récupère l'id du post le plus récent de la base
-
         val mFirestore = FirebaseFirestore.getInstance()
         val collection = mFirestore.collection("Article")
         collection
             .get()
             .addOnSuccessListener { querySnapshot ->
-                var highestId = 0
+                val articles = ArrayList<Article>()
                 for (document in querySnapshot) {
-                    val id = document.id.toIntOrNull()
-                    if (id != null && id > highestId) {
-                        highestId = id
-                    }
-                }
-                val id10 = currentId - 5
-                while (currentId > id10 && currentId < highestId){
-                    Article.getArticle(currentId.toString()){article ->
-                        if (article != null){
-                            var index=article.id.toInt()
-                            val inflater = LayoutInflater.from(requireContext())
-                            val postView = inflater.inflate(R.layout.post, null)
-                            val cardView: CardView = postView.findViewById(R.id.touchCard)
+                    val id = document.id.toString()
+                    Article.getArticle(id) { article ->
+                        if (article != null) {
+                            articles.add(article)
+                        }
+                        // Vérifie si tous les articles ont été récupérés
+                        if (articles.size == querySnapshot.documents.size) {
+                            articles.sortByDescending { it.date } // Trie les articles par ordre décroissant de la date
+                            val smallestId = articles.lastOrNull()?.id?.toInt() ?: 0
+                            val idLimit = currentId - 5
+                            val articlesToDisplay = articles.filter { it.id.toInt() < currentId && it.id.toInt() > idLimit }
+                            for (article in articlesToDisplay) {
+                                val inflater = LayoutInflater.from(requireContext())
+                                val postView = inflater.inflate(R.layout.post, null)
+                                val cardView: CardView = postView.findViewById(R.id.touchCard)
+                                linearContainer.addView(postView)
 
-                            linearContainer.addView(postView)
-                            val args = Bundle()
-                            //val cardView: CardView = view.findViewById(R.id.touchCard)
-                            //cardView.setOnClickListener {}
+                                val args = Bundle()
 
-                            //Rajouter une margin TOP de 40dp pour le tout premier post
-                            if (index == highestId) {
-                                val layoutParams = postView.layoutParams as ViewGroup.MarginLayoutParams
-                                val marginTop =
-                                    resources.getDimensionPixelSize(R.dimen.margin_top) // Remplace R.dimen.margin_top par la ressource correspondante à 20dp
-                                layoutParams.setMargins(
-                                    layoutParams.leftMargin,
-                                    marginTop,
-                                    layoutParams.rightMargin,
-                                    layoutParams.bottomMargin
-                                )
-                                postView.layoutParams = layoutParams
-                            }
-
-
-                            if (article.mediasID!= "") {
-                                var medias=FirebaseFirestore.getInstance().collection("Medias").document(article.id)
-                                medias.get()
-                                    .addOnSuccessListener {documentSnapshot->
-                                        val media1=documentSnapshot.getString("media1")
-                                        val mediaView: ImageView= postView.findViewById(R.id.imageView)
+                                if (article.mediasID != "") {
+                                    val medias = FirebaseFirestore.getInstance().collection("Medias").document(article.id)
+                                    medias.get().addOnSuccessListener { documentSnapshot ->
+                                        val media1 = documentSnapshot.getString("media1")
+                                        val mediaView: ImageView = postView.findViewById(R.id.imageView)
                                         Glide.with(requireContext())
                                             .load(media1)
                                             .into(mediaView)
                                     }
-                            }
-                            val textView: TextView = postView.findViewById(R.id.textView)
-                            textView.text = article.title
+                                }
 
-
-
-                            cardView.setOnClickListener {
                                 val textView: TextView = postView.findViewById(R.id.textView)
-
                                 textView.text = article.title
 
-
-                                args.putString("index",article.id)
-
-
-
-                                val readFragment = ReadFragment()
-                                readFragment.arguments = args
-                                handleClick(readFragment, args)
+                                cardView.setOnClickListener {
+                                    args.putString("index", article.id)
+                                    val readFragment = ReadFragment()
+                                    readFragment.arguments = args
+                                    handleClick(readFragment, args)
+                                }
                             }
-
-
-
-
-
+                            currentId = articlesToDisplay.lastOrNull()?.id?.toInt() ?: 0
                         }
                     }
-                    currentId -= 1
                 }
-
             }
             .addOnFailureListener { exception ->
                 //
             }
-
-
     }
 
 
 
 
-        private fun detectEndOfScroll(scrollView: ScrollView) {
+
+    private fun detectEndOfScroll(scrollView: ScrollView) {
             scrollView.viewTreeObserver.addOnScrollChangedListener {
                 val view = scrollView.getChildAt(scrollView.childCount - 1)
                 val diff = (view.bottom - (scrollView.height + scrollView.scrollY))
@@ -272,20 +201,6 @@ class HomeFragment : Fragment() {
 
         }
 
-    private fun createImageView(context: Context, imageUri: Uri): ImageView {
-        val imageView = ImageView(context)
-        imageView.layoutParams = LinearLayout.LayoutParams(
-
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        imageView.setPadding(0, 0, 0, 0) // Optional: Remove padding if present
-        imageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
-
-        imageView.setImageURI(imageUri)
-
-        return imageView
-    }
 
 
 
