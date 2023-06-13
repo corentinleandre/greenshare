@@ -103,10 +103,11 @@ class ProfileFragment : Fragment() {
                 val phoneNumber = userDocument.getString("telephone")
                 val roleUser = userDocument.getString("role")
                 val groupUser = userDocument.getString("group")
+                val idUser= userDocument.getString("identification")
 
-                var list = userDocument.getString("email")?.split(".", "@")
-                var firstname = list?.get(0)?.capitalize()
-                var lastname = list?.get(1)?.capitalize()
+                val list = userDocument.getString("email")?.split(".", "@")
+                val firstname = list?.get(0)?.capitalize()
+                val lastname = list?.get(1)?.capitalize()
                 initials=list?.get(0)?.capitalize()?.substring(0, 1) + list?.get(1)?.capitalize()?.substring(0,1)
                 val userIcon = createCustomUserIcon(context,initials)
 

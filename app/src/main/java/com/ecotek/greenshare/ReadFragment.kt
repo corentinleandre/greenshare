@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import android.widget.LinearLayout
 import android.widget.ImageView
@@ -12,11 +13,13 @@ import android.widget.ScrollView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 
 class ReadFragment : Fragment() {
     val im = 10 // Nombre d'ViewImage et ViewText à ajouter
+    val currentUser = FirebaseAuth.getInstance().currentUser?.email
 
 
 
@@ -32,6 +35,16 @@ class ReadFragment : Fragment() {
         if (!isAdded) {
             return  // Vérifie si le fragment est attaché avant d'accéder au contexte
         }
+        var userRights="0"
+        val mFirestore = FirebaseFirestore.getInstance()
+        val collectionuser = mFirestore.collection("Users")
+        collectionuser
+            .whereEqualTo("email", currentUser)
+            .get()
+            .addOnSuccessListener { document ->
+                val userDocument = document.documents[0]
+                userRights = userDocument.getString("rights").toString()
+            }
 
         val linearContainer: LinearLayout = view.findViewById(R.id.fil)
         val inflater = LayoutInflater.from(requireContext())
@@ -53,9 +66,18 @@ class ReadFragment : Fragment() {
                             val media1 = documentSnapshot.getString("media1")
                             val media2 = documentSnapshot.getString("media2")
                             val media3 = documentSnapshot.getString("media3")
-                            val media4 = documentSnapshot.getString("media3")
+                            val media4 = documentSnapshot.getString("media4")
+                            val buttonCross = postView.findViewById<Button>(R.id.buttonCross)
+                            val buttonCheck = postView.findViewById<Button>(R.id.buttonCheck)
                             val mediaView1: ImageView = postView.findViewById(R.id.imageView1)
 //
+
+                            if (userRights == "0") {
+                                buttonCross.visibility = View.GONE
+                                buttonCheck.visibility = View.GONE
+                            }
+
+
                             Glide.with(requireContext())
                                 .load(media1)
                                 .into(mediaView1)
