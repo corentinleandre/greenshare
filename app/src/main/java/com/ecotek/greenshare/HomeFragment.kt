@@ -149,12 +149,19 @@ class HomeFragment : Fragment() {
                                     val medias = FirebaseFirestore.getInstance().collection("Medias").document(article.id)
                                     medias.get().addOnSuccessListener { documentSnapshot ->
                                         val media1 = documentSnapshot.getString("media1")
-                                        val mediaView: ImageView = postView.findViewById(R.id.imageView)
-                                        Glide.with(requireContext())
-                                            .load(media1)
-                                            .into(mediaView)
+                                        if (media1 != null) {
+                                            val mediaView: ImageView = postView.findViewById(R.id.imageView)
+                                            mediaView.layoutParams = LinearLayout.LayoutParams(
+                                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                                300
+                                            )
+                                            Glide.with(requireContext())
+                                                .load(media1)
+                                                .into(mediaView)
+                                        }
                                     }
                                 }
+
 
                                 val textView: TextView = postView.findViewById(R.id.textView)
                                 textView.text = article.title
@@ -181,34 +188,31 @@ class HomeFragment : Fragment() {
 
 
     private fun detectEndOfScroll(scrollView: ScrollView) {
-            scrollView.viewTreeObserver.addOnScrollChangedListener {
-                val view = scrollView.getChildAt(scrollView.childCount - 1)
-                val diff = (view.bottom - (scrollView.height + scrollView.scrollY))
-                if (diff == 0) {
-                    //changer la fonction create post par la fonction add other posts qui ajoute les posts des id suivants
-                    createnextPost(view)
-                }
+        scrollView.viewTreeObserver.addOnScrollChangedListener {
+            val view = scrollView.getChildAt(scrollView.childCount - 1)
+            val diff = (view.bottom - (scrollView.height + scrollView.scrollY))
+            if (diff == 0) {
+                //changer la fonction create post par la fonction add other posts qui ajoute les posts des id suivants
+                createnextPost(view)
             }
         }
+    }
 
-        private fun refreshScroll(scrollView: ScrollView) {
-            scrollView.viewTreeObserver.addOnScrollChangedListener {
-                if (scrollView.scrollY == 0) {
-                    currentId=0
+    private fun refreshScroll(scrollView: ScrollView) {
+        scrollView.viewTreeObserver.addOnScrollChangedListener {
+            if (scrollView.scrollY == 0) {
+                val linearContainer: LinearLayout = scrollView.findViewById(R.id.fil)
+                linearContainer.removeAllViews()
+                currentId=0
+                createPost(scrollView.getChildAt(0))
 
-                    createPost(scrollView.getChildAt(0))
-
-                }
             }
         }
+    }
 
-        fun handleClick(fragment: Fragment, arguments: Bundle) {
-            fragment.arguments = arguments
-            (activity as HomeActivity).moveToFragment(fragment)
+    fun handleClick(fragment: Fragment, arguments: Bundle) {
+        fragment.arguments = arguments
+        (activity as HomeActivity).moveToFragment(fragment)
 
-        }
-
-
-
-
+    }
 }
