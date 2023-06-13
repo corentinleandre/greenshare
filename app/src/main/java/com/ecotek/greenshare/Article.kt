@@ -3,7 +3,7 @@ package com.ecotek.greenshare
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 
-data class Article(
+data class   Article(
     val id: String = "",
     val title: String = "",
     val authorID: String = "",
@@ -12,7 +12,9 @@ data class Article(
     //val category: String = "",
     // TODO: like and comments
     //val likes: Int = 0,
+    val mediasID: String = "",
     val commentID: String = "" ){
+
 
     companion object {
         fun getArticle(id: String, callback: (Article?) -> Unit) {
@@ -48,6 +50,7 @@ data class Article(
                     }
                     highestId += 1
                     val article = Article(highestId.toString(),title,authorID,content,date,commentID)
+
                     mFirestore.collection("Article")
                         .document(article.id.toString())
                         .set(article, SetOptions.merge())
@@ -57,7 +60,6 @@ data class Article(
                     //
                 }
         }
-
     }
 }
 
