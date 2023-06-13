@@ -1,5 +1,6 @@
 package com.ecotek.greenshare
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -23,31 +24,41 @@ import android.widget.ImageView
 import java.io.File
 import java.io.FileOutputStream
 import android.graphics.Bitmap.Config.ARGB_8888
+import android.widget.LinearLayout
+import androidx.cardview.widget.CardView
+import com.bumptech.glide.Glide
+import com.google.firebase.firestore.Query
 import java.io.IOException
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ProfileFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class ProfileFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class ProfileFragment (email:String): Fragment() {
     var initials: String =""
+    //val currentUser = FirebaseAuth.getInstance().currentUser?.email
+    val currentUser = email
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    fun createCustomUserIcon(context: Context, initials: String): Drawable {
+        val size = 512 // Taille de l'icône (en pixels)
+
+        val bitmap = Bitmap.createBitmap(size, size, ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        paint.color = Color.BLACK // color for background
+        canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
+
+        val textSize = size / initials.length.toFloat()
+        paint.color = Color.WHITE // color for text
+        paint.textSize = textSize
+        paint.typeface = Typeface.DEFAULT_BOLD
+        paint.textAlign = Paint.Align.CENTER
+
+        val textBounds = Rect()
+        paint.getTextBounds(initials, 0, initials.length, textBounds)
+        val x = canvas.width / 2
+        val y = (canvas.height / 2) - (textBounds.top + textBounds.bottom) / 2
+
+        canvas.drawText(initials, x.toFloat(), y.toFloat(), paint)
+
+        return BitmapDrawable(context.resources, bitmap)
     }
 
     override fun onCreateView(
@@ -55,8 +66,10 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
         val logoutButton: ImageButton = view.findViewById(R.id.logoutButton)
+        val linearContainer: LinearLayout = view.findViewById(R.id.postHere)
 
         logoutButton.setOnClickListener{
             FirebaseAuth.getInstance().signOut()
@@ -64,35 +77,11 @@ class ProfileFragment : Fragment() {
             this.activity?.finish()
         }
         //add the user's personal data
-        val currentUser = FirebaseAuth.getInstance().currentUser?.email
+
         val mFirestore = FirebaseFirestore.getInstance()
 
         //creates icon User
-        fun createCustomUserIcon(context: Context, initials: String): Drawable {
-            val size = 512 // Taille de l'icône (en pixels)
 
-            val bitmap = Bitmap.createBitmap(size, size, ARGB_8888)
-            val canvas = Canvas(bitmap)
-
-            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-            paint.color = Color.BLACK // color for background
-            canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
-
-            val textSize = size / initials.length.toFloat()
-            paint.color = Color.WHITE // color for text
-            paint.textSize = textSize
-            paint.typeface = Typeface.DEFAULT_BOLD
-            paint.textAlign = Paint.Align.CENTER
-
-            val textBounds = Rect()
-            paint.getTextBounds(initials, 0, initials.length, textBounds)
-            val x = canvas.width / 2
-            val y = (canvas.height / 2) - (textBounds.top + textBounds.bottom) / 2
-
-            canvas.drawText(initials, x.toFloat(), y.toFloat(), paint)
-
-            return BitmapDrawable(context.resources, bitmap)
-        }
 
         mFirestore.collection("Users")
             .whereEqualTo("email", currentUser)
@@ -103,6 +92,8 @@ class ProfileFragment : Fragment() {
                 val phoneNumber = userDocument.getString("telephone")
                 val roleUser = userDocument.getString("role")
                 val groupUser = userDocument.getString("group")
+                val authorID = userDocument.getString("identification")
+                val userRights = userDocument.getString("rights")
 
                 var list = userDocument.getString("email")?.split(".", "@")
                 var firstname = list?.get(0)?.capitalize()
@@ -117,27 +108,102 @@ class ProfileFragment : Fragment() {
                 view.findViewById<TextView>(R.id.user_numero).text = "Phone Number: "+phoneNumber
                 view.findViewById<TextView>(R.id.user_email).text = "Email: "+currentUser
                 view.findViewById<TextView>(R.id.user_bureau).text = "Plus tard " //TODO : add to data base "bureau"
+
+                createPost(view,userRights!!,userIcon)
             }
         return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    @SuppressLint("MissingInflatedId")
+    private fun createPost(view: View,userRights:String,userIcon:Drawable){
+        if (!isAdded) {
+            return  // Vérifie si le fragment est attaché avant d'accéder au contexte
+        }
+
+        val linearContainer: LinearLayout = view.findViewById(R.id.postHere)
+
+        val mFirestore = FirebaseFirestore.getInstance()
+        val collection = mFirestore.collection("Article")
+        // Tri par ordre décroissant des IDs
+        collection
+            .orderBy("date", Query.Direction.DESCENDING).limit(8)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val articles = ArrayList<Article>()
+                for (document in querySnapshot) {
+                    val id = document.id.toString()
+                    Article.getArticle(id) { article ->
+                        if (article != null) {
+                            articles.add(article)
+                        }
+                        // Vérifie si tous les articles ont été récupérés
+                        if (articles.size == querySnapshot.documents.size) {
+                            articles.sortByDescending { it.date } // Trie les articles par ordre décroissant de la date
+
+
+                            for (article in articles) {
+
+                                val articleVerified=article.verified.toString()
+
+                                if (article != null && (articleVerified != "no" || (articleVerified == "no" && userRights != "0"))) {
+
+                                    val inflater = LayoutInflater.from(requireContext())
+                                    val postView = inflater.inflate(R.layout.post, null)
+                                    val cardView: CardView = postView.findViewById(R.id.touchCard)
+                                    postView.findViewById<ImageView>(R.id.profileImageView).setImageDrawable(userIcon)
+                                    linearContainer.addView(postView)
+                                    val flagImageView = postView.findViewById<ImageView>(R.id.redFlag)
+                                    if (userRights == "0" || articleVerified == "yes") {
+                                        flagImageView.visibility = View.INVISIBLE
+                                    }
+
+                                    val args = Bundle()
+
+                                    if (article.mediasID != "") {
+                                        val medias = FirebaseFirestore.getInstance().collection("Medias").document(article.id)
+                                        medias.get().addOnSuccessListener { documentSnapshot ->
+                                            val media1 = documentSnapshot.getString("media1")
+                                            if (media1 != null) {
+                                                val mediaView: ImageView = postView.findViewById(R.id.imageView)
+                                                mediaView.layoutParams = LinearLayout.LayoutParams(
+                                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                                    300
+                                                )
+                                                Glide.with(requireContext())
+                                                    .load(media1)
+                                                    .into(mediaView)
+                                            }
+                                        }
+                                    }
+
+                                    val textView: TextView = postView.findViewById(R.id.textView)
+                                    textView.text = article.title
+
+                                    cardView.setOnClickListener {
+                                        args.putString("index", article.id)
+                                        val readFragment = ReadFragment()
+                                        readFragment.arguments = args
+                                        handleClick(readFragment, args)
+                                    }
+                                }
+                            }
+
+                        }
+                    }
                 }
             }
+            .addOnFailureListener { exception ->
+                //
+            }
+
+    }
+
+    fun handleClick(fragment: Fragment, arguments: Bundle) {
+        fragment.arguments = arguments
+        (activity as HomeActivity).moveToFragment(fragment)
+    }
+
+    companion object {
+
     }
 }

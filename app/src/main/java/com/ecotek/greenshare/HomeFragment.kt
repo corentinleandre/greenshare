@@ -242,6 +242,5 @@ class HomeFragment : Fragment() {
     fun handleClick(fragment: Fragment, arguments: Bundle) {
         fragment.arguments = arguments
         (activity as HomeActivity).moveToFragment(fragment)
-
     }
 }
