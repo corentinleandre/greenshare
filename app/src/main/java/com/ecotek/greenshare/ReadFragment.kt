@@ -59,7 +59,7 @@ class ReadFragment : Fragment() {
         Article.getArticle(index.toString()) { article ->
             if (article != null) {
                 if (article.mediasID != "") {
-                    var medias = FirebaseFirestore.getInstance().collection("Medias")
+                    val medias = FirebaseFirestore.getInstance().collection("Medias")
                         .document(index.toString())
                     medias.get()
                         .addOnSuccessListener { documentSnapshot ->
@@ -71,8 +71,11 @@ class ReadFragment : Fragment() {
                             val buttonCheck = postView.findViewById<Button>(R.id.buttonCheck)
                             val mediaView1: ImageView = postView.findViewById(R.id.imageView1)
 //
-
-                            if (userRights == "0" || (userRights != "0" && article.verified == "yes")) {
+                            if (userRights=="0"){
+                                buttonCheck.visibility = View.GONE
+                                buttonCross.visibility = View.GONE
+                            }
+                            if ((userRights != "0" && article.verified == "yes")) {
                                 buttonCheck.visibility = View.GONE
                                 buttonCross.setOnClickListener {
                                     val mFirestore = FirebaseFirestore.getInstance()
