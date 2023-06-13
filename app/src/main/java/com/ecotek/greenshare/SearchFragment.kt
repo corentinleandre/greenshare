@@ -8,11 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -21,7 +20,7 @@ import com.google.firebase.firestore.Query
 class SearchFragment : Fragment() {
 
     private lateinit var searchView: SearchView
-    private lateinit var searchRecyclerView: RecyclerView
+    private lateinit var searchScrollView: ScrollView
     private lateinit var noResultsTextView: TextView
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var query: Query
@@ -32,7 +31,7 @@ class SearchFragment : Fragment() {
 
         noResultsTextView = view.findViewById(R.id.noResultsTextView)
         searchView = view.findViewById(R.id.searchView)
-        searchRecyclerView = view.findViewById(R.id.searchResultsRecyclerView)
+        searchScrollView = view.findViewById(R.id.searchResultsScrollView)
         searchView.setIconifiedByDefault(false)
         searchView.queryHint = "Search articles"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -46,8 +45,6 @@ class SearchFragment : Fragment() {
                 return true
             }
         })
-
-        searchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         return view
     }
@@ -63,29 +60,10 @@ class SearchFragment : Fragment() {
         // Réinitialise les résultats de la recherche précédente
         showNoResultsMessage(false)
 
+        searchView.clearFocus()
+
         startListening()
     }
-
-
-
-    //TODO permettre d'ignorer les majuscules et minucules
-    /*private fun performSearch(query: String) {
-        val lowercaseQuery = query.lowercase(Locale.ROOT)
-
-        this.query = firestore.collection("Article")
-            .orderBy("title")
-            .whereGreaterThanOrEqualTo("titleLowercase", lowercaseQuery)
-            .whereLessThanOrEqualTo("titleLowercase", lowercaseQuery + "\uf8ff")
-
-        Log.d("SearchFragment", "Performing search for query: $query")
-
-        // Réinitialise les résultats de la recherche précédente
-        showNoResultsMessage(false)
-
-        startListening()
-    }*/
-
-
 
     private fun startListening() {
         listener = query.addSnapshotListener { snapshot, exception ->
@@ -102,17 +80,18 @@ class SearchFragment : Fragment() {
                     document.getString("id")
                 }
 
-                view?.let { updateUIWithSearchResults(searchResults, it, ) }
+                updateUIWithSearchResults(searchResults)
             }
         }
     }
 
-    private fun updateUIWithSearchResults(searchResults: List<String>, view: View) {
+    private fun updateUIWithSearchResults(searchResults: List<String>) {
         if (!isAdded) {
             return  // Vérifie si le fragment est attaché avant d'accéder au contexte
         }
 
-        val linearContainer: LinearLayout = view.findViewById(R.id.search_fragment)
+        val linearContainer: LinearLayout = view?.findViewById(R.id.fil1) ?: return
+        linearContainer.removeAllViews()
 
         if (searchResults.isNotEmpty()) {
             for (articleId in searchResults) {
@@ -121,7 +100,7 @@ class SearchFragment : Fragment() {
                         val inflater = LayoutInflater.from(requireContext())
                         val postView = inflater.inflate(R.layout.post, null)
                         val cardView: CardView = postView.findViewById(R.id.touchCard)
-                        linearContainer.addView(postView, 1)
+                        linearContainer.addView(postView)
                         showNoResultsMessage(false)
 
                         val args = Bundle()
@@ -134,6 +113,10 @@ class SearchFragment : Fragment() {
                                 Glide.with(requireContext())
                                     .load(media1)
                                     .into(mediaView)
+                                mediaView.layoutParams = LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    300
+                                )
                             }
                         }
 
@@ -154,9 +137,6 @@ class SearchFragment : Fragment() {
         }
     }
 
-
-
-
     private fun showNoResultsMessage(noResults: Boolean) {
         if (noResults) {
             noResultsTextView.visibility = View.VISIBLE // Affiche le message d'absence de résultats
@@ -170,7 +150,6 @@ class SearchFragment : Fragment() {
         stopListening()
     }
 
-
     private fun stopListening() {
         if (::listener.isInitialized) {
             listener.remove()
@@ -180,7 +159,5 @@ class SearchFragment : Fragment() {
     fun handleClick(fragment: Fragment, arguments: Bundle) {
         fragment.arguments = arguments
         (activity as HomeActivity).moveToFragment(fragment)
-
     }
 }
-
