@@ -20,8 +20,8 @@
       "rights":0
     },
     {
-        "email":"denis.lienhardt@uha.fr",
-        "password":"routage",
+      "email":"denis.lienhardt@uha.fr",
+      "password":"routage",
       "id":0,
       "numero": "0",
       "role": true,
