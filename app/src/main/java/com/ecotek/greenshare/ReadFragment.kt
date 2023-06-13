@@ -79,7 +79,11 @@ class ReadFragment : Fragment() {
             }
         }
 
-
+        val inflater2 = LayoutInflater.from(requireContext())
+        val commentView = inflater2.inflate(R.layout.comment, null)
+        val cardView: CardView = commentView.findViewById(R.id.touchCard)
+        val commenterlayout = view.findViewById<LinearLayout>(R.id.commenter)
+        commenterlayout.addView(commentView)
 
 
         Article.getArticle(index.toString()){article ->
@@ -148,6 +152,8 @@ class ReadFragment : Fragment() {
 
             }
     }
+
+
 
 
 }
