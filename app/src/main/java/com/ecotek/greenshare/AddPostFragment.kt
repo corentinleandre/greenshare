@@ -438,7 +438,7 @@ class AddPostFragment : Fragment() {
                     group:String = "",
                     commentID: String = ""){
         val mFirestore = FirebaseFirestore.getInstance()
-        val collection = mFirestore.collection("Article")
+        val collection = mFirestore.collection("ArticleModerator")
         collection
             .get()
             .addOnSuccessListener { querySnapshot ->
