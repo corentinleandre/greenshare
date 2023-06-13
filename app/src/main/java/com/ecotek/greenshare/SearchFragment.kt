@@ -1,5 +1,6 @@
 package com.ecotek.greenshare
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -21,15 +22,14 @@ class SearchFragment : Fragment() {
 
     private lateinit var searchView: SearchView
     private lateinit var searchScrollView: ScrollView
-    private lateinit var noResultsTextView: TextView
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var query: Query
     private lateinit var listener: ListenerRegistration
+    private lateinit var linearContainer: LinearLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
-        noResultsTextView = view.findViewById(R.id.noResultsTextView)
         searchView = view.findViewById(R.id.searchView)
         searchScrollView = view.findViewById(R.id.searchResultsScrollView)
         searchView.setIconifiedByDefault(false)
@@ -46,6 +46,8 @@ class SearchFragment : Fragment() {
             }
         })
 
+        linearContainer = view.findViewById(R.id.fil1)
+
         return view
     }
 
@@ -56,9 +58,6 @@ class SearchFragment : Fragment() {
             .endAt(query + "\uf8ff")
 
         Log.d("SearchFragment", "Performing search for query: $query")
-
-        // Réinitialise les résultats de la recherche précédente
-        showNoResultsMessage(false)
 
         searchView.clearFocus()
 
@@ -90,7 +89,6 @@ class SearchFragment : Fragment() {
             return  // Vérifie si le fragment est attaché avant d'accéder au contexte
         }
 
-        val linearContainer: LinearLayout = view?.findViewById(R.id.fil1) ?: return
         linearContainer.removeAllViews()
 
         if (searchResults.isNotEmpty()) {
@@ -101,7 +99,6 @@ class SearchFragment : Fragment() {
                         val postView = inflater.inflate(R.layout.post, null)
                         val cardView: CardView = postView.findViewById(R.id.touchCard)
                         linearContainer.addView(postView)
-                        showNoResultsMessage(false)
 
                         val args = Bundle()
 
@@ -133,17 +130,15 @@ class SearchFragment : Fragment() {
                 }
             }
         } else {
-            showNoResultsMessage(true)
+            val alertDialog: AlertDialog? = AlertDialog.Builder(requireActivity()).create()
+            if (alertDialog != null) {
+                alertDialog.setTitle("Désolé")
+                alertDialog.setMessage("Aucun article n'a été trouvé avec votre recherche")
+                alertDialog.show()
+            }
         }
     }
 
-    private fun showNoResultsMessage(noResults: Boolean) {
-        if (noResults) {
-            noResultsTextView.visibility = View.VISIBLE // Affiche le message d'absence de résultats
-        } else {
-            noResultsTextView.visibility = View.GONE // Masque le message d'absence de résultats
-        }
-    }
 
     override fun onStop() {
         super.onStop()
