@@ -54,7 +54,9 @@ class SearchFragment : Fragment() {
 
     private fun performSearch(query: String) {
         this.query = firestore.collection("Article")
-            .whereEqualTo("title", query)
+            .orderBy("title")
+            .startAt(query)
+            .endAt(query + "\uf8ff")
 
         Log.d("SearchFragment", "Performing search for query: $query")
 
@@ -63,6 +65,26 @@ class SearchFragment : Fragment() {
 
         startListening()
     }
+
+
+
+    //TODO permettre d'ignorer les majuscules et minucules
+    /*private fun performSearch(query: String) {
+        val lowercaseQuery = query.lowercase(Locale.ROOT)
+
+        this.query = firestore.collection("Article")
+            .orderBy("title")
+            .whereGreaterThanOrEqualTo("titleLowercase", lowercaseQuery)
+            .whereLessThanOrEqualTo("titleLowercase", lowercaseQuery + "\uf8ff")
+
+        Log.d("SearchFragment", "Performing search for query: $query")
+
+        // Réinitialise les résultats de la recherche précédente
+        showNoResultsMessage(false)
+
+        startListening()
+    }*/
+
 
 
     private fun startListening() {
@@ -99,7 +121,7 @@ class SearchFragment : Fragment() {
                         val inflater = LayoutInflater.from(requireContext())
                         val postView = inflater.inflate(R.layout.post, null)
                         val cardView: CardView = postView.findViewById(R.id.touchCard)
-                        linearContainer.addView(postView)
+                        linearContainer.addView(postView, 1)
                         showNoResultsMessage(false)
 
                         val args = Bundle()
