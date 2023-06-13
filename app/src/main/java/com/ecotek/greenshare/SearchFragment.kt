@@ -92,39 +92,38 @@ class SearchFragment : Fragment() {
 
         val linearContainer: LinearLayout = view.findViewById(R.id.search_fragment)
 
-        val mFirestore = FirebaseFirestore.getInstance()
-
         if (searchResults.isNotEmpty()) {
-            val articleId = searchResults[0]
-            Article.getArticle(articleId) { article ->
-                if (article != null) {
-                    val inflater = LayoutInflater.from(requireContext())
-                    val postView = inflater.inflate(R.layout.post, null)
-                    val cardView: CardView = postView.findViewById(R.id.touchCard)
-                    linearContainer.addView(postView)
-                    showNoResultsMessage(false)
+            for (articleId in searchResults) {
+                Article.getArticle(articleId) { article ->
+                    if (article != null) {
+                        val inflater = LayoutInflater.from(requireContext())
+                        val postView = inflater.inflate(R.layout.post, null)
+                        val cardView: CardView = postView.findViewById(R.id.touchCard)
+                        linearContainer.addView(postView)
+                        showNoResultsMessage(false)
 
-                    val args = Bundle()
+                        val args = Bundle()
 
-                    if (article.mediasID != "") {
-                        val medias = FirebaseFirestore.getInstance().collection("Medias").document(article.id)
-                        medias.get().addOnSuccessListener { documentSnapshot ->
-                            val media1 = documentSnapshot.getString("media1")
-                            val mediaView: ImageView = postView.findViewById(R.id.imageView)
-                            Glide.with(requireContext())
-                                .load(media1)
-                                .into(mediaView)
+                        if (article.mediasID != "") {
+                            val medias = FirebaseFirestore.getInstance().collection("Medias").document(article.id)
+                            medias.get().addOnSuccessListener { documentSnapshot ->
+                                val media1 = documentSnapshot.getString("media1")
+                                val mediaView: ImageView = postView.findViewById(R.id.imageView)
+                                Glide.with(requireContext())
+                                    .load(media1)
+                                    .into(mediaView)
+                            }
                         }
-                    }
 
-                    val textView: TextView = postView.findViewById(R.id.textView)
-                    textView.text = article.title
+                        val textView: TextView = postView.findViewById(R.id.textView)
+                        textView.text = article.title
 
-                    cardView.setOnClickListener {
-                        args.putString("index", article.id)
-                        val readFragment = ReadFragment()
-                        readFragment.arguments = args
-                        handleClick(readFragment, args)
+                        cardView.setOnClickListener {
+                            args.putString("index", article.id)
+                            val readFragment = ReadFragment()
+                            readFragment.arguments = args
+                            handleClick(readFragment, args)
+                        }
                     }
                 }
             }
@@ -132,6 +131,7 @@ class SearchFragment : Fragment() {
             showNoResultsMessage(true)
         }
     }
+
 
 
 
