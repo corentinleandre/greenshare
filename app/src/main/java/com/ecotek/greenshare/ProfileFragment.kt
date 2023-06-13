@@ -1,6 +1,6 @@
 package com.ecotek.greenshare
 
-import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,15 +8,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ScrollView
+import android.widget.ImageButton
 import android.widget.TextView
-import com.bumptech.glide.Glide
-import androidx.cardview.widget.CardView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
+import android.content.Context
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import androidx.core.content.ContextCompat
+import android.graphics.Bitmap
+import android.os.Environment
+import android.widget.ImageView
+import java.io.File
+import java.io.FileOutputStream
+import android.graphics.Bitmap.Config.ARGB_8888
+import java.io.IOException
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,7 +40,8 @@ class ProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    var currentId=0
+    var initials: String =""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -47,206 +56,69 @@ class ProfileFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
+        val logoutButton: ImageButton = view.findViewById(R.id.logoutButton)
+
+        logoutButton.setOnClickListener{
+            FirebaseAuth.getInstance().signOut()
+            startActivity(Intent((activity as HomeActivity),LoginActivity::class.java))
+            this.activity?.finish()
+        }
         //add the user's personal data
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        val currentUserEmail = currentUser?.email
-        var currentUserID:String = ""
+        val currentUser = FirebaseAuth.getInstance().currentUser?.email
         val mFirestore = FirebaseFirestore.getInstance()
 
+        //creates icon User
+        fun createCustomUserIcon(context: Context, initials: String): Drawable {
+            val size = 512 // Taille de l'icône (en pixels)
+
+            val bitmap = Bitmap.createBitmap(size, size, ARGB_8888)
+            val canvas = Canvas(bitmap)
+
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+            paint.color = Color.BLACK // color for background
+            canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
+
+            val textSize = size / initials.length.toFloat()
+            paint.color = Color.WHITE // color for text
+            paint.textSize = textSize
+            paint.typeface = Typeface.DEFAULT_BOLD
+            paint.textAlign = Paint.Align.CENTER
+
+            val textBounds = Rect()
+            paint.getTextBounds(initials, 0, initials.length, textBounds)
+            val x = canvas.width / 2
+            val y = (canvas.height / 2) - (textBounds.top + textBounds.bottom) / 2
+
+            canvas.drawText(initials, x.toFloat(), y.toFloat(), paint)
+
+            return BitmapDrawable(context.resources, bitmap)
+        }
+
         mFirestore.collection("Users")
-            .whereEqualTo("email", currentUserEmail)
+            .whereEqualTo("email", currentUser)
             .get()
             .addOnSuccessListener { document ->
+                val context = requireContext()
                 val userDocument = document.documents[0]
                 val phoneNumber = userDocument.getString("telephone")
                 val roleUser = userDocument.getString("role")
                 val groupUser = userDocument.getString("group")
-                currentUserID = userDocument.getString("identification").toString()
+
                 var list = userDocument.getString("email")?.split(".", "@")
                 var firstname = list?.get(0)?.capitalize()
                 var lastname = list?.get(1)?.capitalize()
-              /*  view.findViewById<TextView>(R.id.user_name).text = "$firstname $lastname"
-                view.findViewById<TextView>(R.id.user_role).text = roleUser
-                view.findViewById<TextView>(R.id.user_group).text = groupUser
-                view.findViewById<TextView>(R.id.user_numero).text = phoneNumber
-                view.findViewById<TextView>(R.id.user_email).text = currentUserEmail
-                view.findViewById<TextView>(R.id.user_bureau).text = "Plus tard"*/ //TODO : add to data base "bureau"
+                initials=list?.get(0)?.capitalize()?.substring(0, 1) + list?.get(1)?.capitalize()?.substring(0,1)
+                val userIcon = createCustomUserIcon(context,initials)
 
-                Log.d("ProfileFragment","Current user :" + currentUserID)
-                createPost(view,currentUserID)
-                val scrollView: ScrollView = view.findViewById(R.id.scroller)
-                detectEndOfScroll(scrollView, currentUserID)
-                refreshScroll(scrollView, currentUserID)
-
+                view.findViewById<ImageView>(R.id.userImageView).setImageDrawable(userIcon)
+                view.findViewById<TextView>(R.id.user_name).text = "$firstname $lastname"
+                view.findViewById<TextView>(R.id.user_role).text = "Role: "+roleUser
+                view.findViewById<TextView>(R.id.user_group).text = "Group: "+groupUser
+                view.findViewById<TextView>(R.id.user_numero).text = "Phone Number: "+phoneNumber
+                view.findViewById<TextView>(R.id.user_email).text = "Email: "+currentUser
+                view.findViewById<TextView>(R.id.user_bureau).text = "Plus tard " //TODO : add to data base "bureau"
             }
         return view
-    }
-    @SuppressLint("MissingInflatedId")
-    private fun createPost(view: View,currentUserID:String?){
-        Log.d("ProfileFragment", "createPost called with currentUserID: $currentUserID")
-        if (!isAdded) {
-            return  // Vérifie si le fragment est attaché avant d'accéder au contexte
-        }
-
-        val linearContainer: LinearLayout = view.findViewById(R.id.scroller)
-
-        val mFirestore = FirebaseFirestore.getInstance()
-        val collection = mFirestore.collection("Article")
-        // Tri par ordre décroissant des IDs
-        collection
-            .whereEqualTo("authorID", currentUserID)
-            .orderBy("date", Query.Direction.DESCENDING).limit(8)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                val articles = ArrayList<Article>()
-                for (document in querySnapshot) {
-                    val id = document.id.toString()
-                    Article.getArticle(id) { article ->
-                        if (article != null) {
-                            articles.add(article)
-                        }
-                        // Vérifie si tous les articles ont été récupérés
-                        if (articles.size == querySnapshot.documents.size) {
-                            articles.sortByDescending { it.date } // Trie les articles par ordre décroissant de la date
-                            for (article in articles) {
-                                val inflater = LayoutInflater.from(requireContext())
-                                val postView = inflater.inflate(R.layout.post, null)
-                                val cardView: CardView = postView.findViewById(R.id.touchCard)
-                                linearContainer.addView(postView)
-
-                                val args = Bundle()
-
-                                if (article.mediasID != "") {
-                                    val medias = FirebaseFirestore.getInstance().collection("Medias").document(article.id)
-                                    medias.get().addOnSuccessListener { documentSnapshot ->
-                                        val media1 = documentSnapshot.getString("media1")
-                                        val mediaView: ImageView = postView.findViewById(R.id.imageView)
-                                        Glide.with(requireContext())
-                                            .load(media1)
-                                            .into(mediaView)
-                                    }
-                                }
-
-                                val textView: TextView = postView.findViewById(R.id.textView)
-                                textView.text = article.title
-
-                                cardView.setOnClickListener {
-                                    args.putString("index", article.id)
-                                    val readFragment = ReadFragment()
-                                    readFragment.arguments = args
-                                    handleClick(readFragment, args)
-                                }
-                                currentId = articles.lastOrNull()?.id?.toInt() ?: 0
-                            }
-                        }
-                    }
-                }
-            }
-            .addOnFailureListener { exception ->
-                //
-            }
-
-    }
-
-    private fun createnextPost(view: View, currentUserID: String?) {
-        Log.d("ProfileFragment", "Current user 2 :$currentUserID")
-
-        if (!isAdded) {
-            return  // Vérifie si le fragment est attaché avant d'accéder au contexte
-        }
-
-        val linearContainer: LinearLayout = view.findViewById(R.id.scroller)
-
-        val mFirestore = FirebaseFirestore.getInstance()
-        val collection = mFirestore.collection("Article")
-        collection
-            .whereEqualTo("authorID", currentUserID)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                val articles = ArrayList<Article>()
-                for (document in querySnapshot) {
-                    val id = document.id.toString()
-                    Article.getArticle(id) { article ->
-                        if (article != null) {
-                            articles.add(article)
-                        }
-                        // Vérifie si tous les articles ont été récupérés
-                        if (articles.size == querySnapshot.documents.size) {
-                            articles.sortByDescending { it.date } // Trie les articles par ordre décroissant de la date
-                            val smallestId = articles.lastOrNull()?.id?.toInt() ?: 0
-                            val idLimit = currentId - 5
-                            val articlesToDisplay = articles.filter { it.id.toInt() < currentId && it.id.toInt() > idLimit }
-                            for (article in articlesToDisplay) {
-                                val inflater = LayoutInflater.from(requireContext())
-                                val postView = inflater.inflate(R.layout.post, null)
-                                val cardView: CardView = postView.findViewById(R.id.touchCard)
-                                linearContainer.addView(postView)
-
-                                val args = Bundle()
-
-                                if (article.mediasID != "") {
-                                    val medias = FirebaseFirestore.getInstance().collection("Medias").document(article.id)
-                                    medias.get().addOnSuccessListener { documentSnapshot ->
-                                        val media1 = documentSnapshot.getString("media1")
-                                        val mediaView: ImageView = postView.findViewById(R.id.imageView)
-                                        Glide.with(requireContext())
-                                            .load(media1)
-                                            .into(mediaView)
-                                    }
-                                }
-
-                                val textView: TextView = postView.findViewById(R.id.textView)
-                                textView.text = article.title
-
-                                cardView.setOnClickListener {
-                                    args.putString("index", article.id)
-                                    val readFragment = ReadFragment()
-                                    readFragment.arguments = args
-                                    handleClick(readFragment, args)
-                                }
-                            }
-                            currentId = articlesToDisplay.lastOrNull()?.id?.toInt() ?: 0
-                        }
-                    }
-                }
-            }
-            .addOnFailureListener { exception ->
-                //
-            }
-    }
-
-
-
-
-
-    private fun detectEndOfScroll(scrollView: ScrollView, currentUserID: String?) {
-        Log.d("ProfileFragment", "detectEndOfScroll called with currentUserID: $currentUserID")
-        scrollView.viewTreeObserver.addOnScrollChangedListener {
-            val view = scrollView.getChildAt(scrollView.childCount - 1)
-            val diff = (view.bottom - (scrollView.height + scrollView.scrollY))
-            if (diff == 0) {
-                //changer la fonction create post par la fonction add other posts qui ajoute les posts des id suivants
-                createnextPost(view, currentUserID)
-            }
-        }
-    }
-
-    private fun refreshScroll(scrollView: ScrollView, currentUserID: String?) {
-        Log.d("ProfileFragment", "refreshScroll called with currentUserID: $currentUserID")
-        scrollView.viewTreeObserver.addOnScrollChangedListener {
-            if (scrollView.scrollY == 0) {
-                currentId=0
-
-                createPost(scrollView.getChildAt(0),currentUserID)
-
-            }
-        }
-    }
-
-    fun handleClick(fragment: Fragment, arguments: Bundle) {
-        fragment.arguments = arguments
-        (activity as HomeActivity).moveToFragment(fragment)
-
     }
 
     companion object {

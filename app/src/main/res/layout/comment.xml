@@ -26,22 +26,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                tools:ignore="Suspicious0dp" />
-
-            <VideoView
-                android:id="@+id/videoView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                tools:ignore="Suspicious0dp" />
-
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
@@ -51,14 +35,7 @@
                 android:paddingVertical="12dp"
                 android:textColor="@color/black"
                 android:textSize="22sp"
-
-                />
-            <ImageView
-                android:id="@+id/redFlag"
-                android:layout_width="24dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:src="@drawable/red_flag_24"
+                android:hint="Add a comment"
                 />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -73,7 +50,6 @@
             android:layout_height="50dp"
             android:layout_marginLeft="5dp"
             android:src="@drawable/ameen"
-            android:layout_toStartOf="@+id/textView"
             android:background="@drawable/round_image"
             android:scaleType="centerCrop"
             android:clipToOutline="true"

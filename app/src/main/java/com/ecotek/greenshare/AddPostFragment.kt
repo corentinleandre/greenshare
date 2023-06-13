@@ -16,14 +16,18 @@ import java.util.Locale
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.VideoView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +36,8 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import java.util.ArrayList
+import java.util.Collections
 
 
 //private const val ARG_PARAM1 = "param1"
@@ -39,7 +45,12 @@ import com.google.firebase.storage.StorageReference
 val listBlocked : List<String> = listOf("fuck","f*ck","con","abruti","batard","putain","connard","connasse","p*tain","c*n","c*nne","merde","nique","tg","fdp")
 class AddPostFragment : Fragment() {
 
-
+    private val MAX_IMAGE_SIZE = 1024 // Maximum image size in kilobytes (1MB)
+    private lateinit var audience: TextView
+    private lateinit var selectedAudience: BooleanArray
+    private val audienceList = ArrayList<String>(listOf("uha","professeurs","etudiants"))
+    private val selectedOptions = ArrayList<String>()
+    private lateinit var mediaType: String
     private lateinit var titleAreaTextInput: EditText
     private lateinit var contentAreaTextInput: EditText
     private lateinit var postButton: Button
@@ -54,6 +65,9 @@ class AddPostFragment : Fragment() {
     // Initialize as null
     private val selectedImageUris: MutableList<Uri> = mutableListOf()
 
+    private fun updateSelectedLanguageArray() {
+        selectedAudience = BooleanArray(audienceList.size)
+    }
 
     private val pickMediaLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -83,6 +97,78 @@ class AddPostFragment : Fragment() {
         imageView = view.findViewById<ImageView>(R.id.imageView2)
         mediaLayout = view.findViewById(R.id.mediaLayout)
         //videoView = view.findViewById<VideoView>(R.id.videoView2)
+
+
+        audience = view.findViewById(R.id.Audience)
+
+        audience.setOnClickListener {
+            val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext(), R.style.MyDialogTheme)
+            builder.setTitle("Select Audience")
+            builder.setCancelable(false)
+            builder.setMultiChoiceItems(
+                audienceList.toTypedArray(),
+                selectedAudience
+            ) { dialogInterface: DialogInterface, i: Int, b: Boolean ->
+                if (b) {
+                    selectedOptions.add(audienceList[i])
+                } else {
+                    selectedOptions.remove(audienceList[i])
+                }
+            }
+
+            builder.setPositiveButton("OK") { _: DialogInterface, _: Int ->
+                val stringBuilder = StringBuilder()
+                for (j in 0 until selectedOptions.size) {
+                    stringBuilder.append(selectedOptions[j])
+                    if (j != selectedOptions.size - 1) {
+                        stringBuilder.append(", ")
+                    }
+                }
+                audience.text = stringBuilder.toString()
+            }
+
+            builder.setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int ->
+                dialogInterface.dismiss()
+            }
+
+            builder.setNeutralButton("Clear All") { _: DialogInterface, _: Int ->
+                selectedAudience.fill(false)
+                selectedOptions.clear()
+                audience.text = ""
+            }
+
+            builder.setNeutralButton("Add New") { _: DialogInterface, _: Int ->
+                val inflater = LayoutInflater.from(requireContext())
+                val view = inflater.inflate(R.layout.audience_options, null)
+                val editText = view.findViewById<EditText>(R.id.editText)
+
+                val addLanguageDialog = androidx.appcompat.app.AlertDialog.Builder(requireContext(), R.style.MyDialogTheme)
+                    .setTitle("Add New Audience")
+                    .setView(view)
+                    .setPositiveButton("Add") { dialogInterface: DialogInterface, _: Int ->
+                        val newLanguage = editText.text.toString()
+                        if (newLanguage.isNotEmpty()) {
+                            audienceList.add(newLanguage)
+                            Collections.sort(audienceList)
+                            updateSelectedLanguageArray()
+                            selectedOptions.add(newLanguage)
+                            audience.text = selectedOptions.joinToString(", ")
+                        }
+                        dialogInterface.dismiss()
+                    }
+                    .setNegativeButton("Cancel") { dialogInterface: DialogInterface, _: Int ->
+                        dialogInterface.dismiss()
+                    }
+                    .create()
+
+                addLanguageDialog.show()
+            }
+
+            builder.show()
+        }
+
+
+        updateSelectedLanguageArray()
         displaySelectedMedia()
         imageButton.setOnClickListener{
 
@@ -115,15 +201,13 @@ class AddPostFragment : Fragment() {
                             for(element in list){
                                 for (f in listBlocked){
                                     if (element.toLowerCase()==f) {
-                                        println("MOT INTERDIT !")
                                         blockedWord=element
                                         allowed=false
                                         break //if the world isn't allowed, stop the verification
                                     }
                                 }
                                 if (!allowed) {
-                                    println("post bloqué")
-                                    blockedPost(blockedWord) //requests to user to delete the blockedWord
+                                    blockedPost(blockedWord)
                                     break
                                 }
                             }
@@ -133,12 +217,9 @@ class AddPostFragment : Fragment() {
                         val titleVerif = verificationPost(titleAreaTextInput.text.toString())
                         val contentVerif=verificationPost(contentAreaTextInput.text.toString())
                         if (titleVerif && contentVerif) {
-                            postArticle(titleAreaTextInput.text.toString(),userId.toString(),contentAreaTextInput.text.toString(),dateString,"")
+                            postArticle(titleAreaTextInput.text.toString(),userId.toString(),contentAreaTextInput.text.toString(),dateString,selectedOptions.joinToString(","),"")
                             (activity as HomeActivity).moveToFragment(HomeFragment())
                         }
-
-
-
                     } else { }
                 }
                 .addOnFailureListener { exception ->
@@ -155,12 +236,13 @@ class AddPostFragment : Fragment() {
             val mimeType = contentResolver.getType(mediaUri)
             if (mimeType?.startsWith("image") == true) {
                 mediaLayout.addView(createImageView(requireContext(), mediaUri))
-
+                mediaType = "image"
             } else if(mimeType?.startsWith("video") == true) {
                 mediaLayout.addView(createVideoView(requireContext(), mediaUri))
-
+                mediaType = "video"
             }else {
                 mediaLayout.addView(createVideoView(requireContext(), mediaUri))
+                mediaType = "video"
             }
             //mediaLayout.addView(mediaView)
         }
@@ -175,16 +257,16 @@ class AddPostFragment : Fragment() {
 
 
     private fun createImageView(context: Context, imageUri: Uri): ImageView {
+        val compressedBitmap = compressImage(imageUri)
         val imageView = ImageView(context)
         imageView.layoutParams = LinearLayout.LayoutParams(
             0,
             LinearLayout.LayoutParams.WRAP_CONTENT,
             1.0f
         )
-        imageView.setPadding(0, 0, 0, 0) // Optional: Remove padding if present
+        imageView.setPadding(0, 0, 0, 0)
         imageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
-
-        imageView.setImageURI(imageUri)
+        imageView.setImageBitmap(compressedBitmap)
 
         return imageView
     }
@@ -262,7 +344,7 @@ class AddPostFragment : Fragment() {
     fun uploadMediaFilesToFirebase(id: String) {
         // Check if there are any selected media URIs
         if (selectedMediaUris != null && selectedMediaUris!!.isNotEmpty()) {
-            val data = hashMapOf<String, Any>("id" to id)
+            val data = hashMapOf<String, Any>("type" to mediaType)
 
             selectedMediaUris!!.forEachIndexed { index, mediaUri ->
                 val number = index + 1
@@ -296,8 +378,46 @@ class AddPostFragment : Fragment() {
         }
     }
 
-    //private fun saveDataToFirestore(mediaUrl: String) {} //moved into uploadmedia function
+    private fun compressImage(imageUri: Uri): Bitmap? {
+        val imageStream = requireContext().contentResolver.openInputStream(imageUri)
+        val options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        BitmapFactory.decodeStream(imageStream, null, options)
+        imageStream?.close()
 
+        var bitmap: Bitmap? = null
+
+        // Calculate the sample size to resize the image while maintaining aspect ratio
+        val scaleFactor = calculateSampleSize(options)
+
+        // Reopen the input stream and decode the bitmap with the calculated sample size
+        val inputStream = requireContext().contentResolver.openInputStream(imageUri)
+        options.inJustDecodeBounds = false
+        options.inSampleSize = scaleFactor
+        bitmap = BitmapFactory.decodeStream(inputStream, null, options)
+        inputStream?.close()
+
+        return bitmap
+    }
+
+    private fun calculateSampleSize(options: BitmapFactory.Options): Int {
+        val imageHeight = options.outHeight
+        val imageWidth = options.outWidth
+        var scaleFactor = 1
+
+        if (imageHeight > MAX_IMAGE_SIZE || imageWidth > MAX_IMAGE_SIZE) {
+            val heightRatio = Math.round(imageHeight.toFloat() / MAX_IMAGE_SIZE.toFloat())
+            val widthRatio = Math.round(imageWidth.toFloat() / MAX_IMAGE_SIZE.toFloat())
+            scaleFactor = if (heightRatio < widthRatio) heightRatio else widthRatio
+        }
+
+        return scaleFactor
+    }
+
+
+
+    //private fun saveDataToFirestore(mediaUrl: String) {} //moved into uploadmedia function
+    //requests to user to delete the blockedWord. It is like a prevention
     fun blockedPost(mot:String){
         val alertDialog: AlertDialog? =AlertDialog.Builder(requireActivity()).create()
         if (alertDialog != null) {
@@ -315,6 +435,7 @@ class AddPostFragment : Fragment() {
                     authorID: String = "",
                     content: String = "",
                     date: String = "",
+                    group:String = "",
                     commentID: String = ""){
         val mFirestore = FirebaseFirestore.getInstance()
         val collection = mFirestore.collection("Article")
@@ -331,7 +452,7 @@ class AddPostFragment : Fragment() {
                 highestId += 1
                 var imageID : String
                 if (selectedMediaUris == null){imageID= ""} else{imageID=highestId.toString()}
-                val article = Article(highestId.toString(),title,authorID,content,date,imageID,commentID)
+                val article = Article(highestId.toString(),title,authorID,content,date,group,"",imageID,commentID,"no")
                 uploadMediaFilesToFirebase(highestId.toString())
                 mFirestore.collection("Article")
                     .document(article.id.toString())
