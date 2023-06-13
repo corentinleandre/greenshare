@@ -53,6 +53,13 @@
                 android:textSize="22sp"
 
                 />
+            <ImageView
+                android:id="@+id/redFlag"
+                android:layout_width="24dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/red_flag_24"
+                />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
     <LinearLayout
