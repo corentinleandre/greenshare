@@ -30,8 +30,6 @@ data class   Article(
             }
     }
 
-    fun deleteArticle(id :String){
-    }
 
     companion object {
         fun getArticle(id: String, callback: (Article?) -> Unit) {
