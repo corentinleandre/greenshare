@@ -97,21 +97,23 @@ class HomeFragment : Fragment() {
                                         val args = Bundle()
 
                                         if (article.mediasID != "") {
-                                            val medias =
-                                                FirebaseFirestore.getInstance().collection("Medias")
-                                                    .document(article.id)
+                                            val medias = FirebaseFirestore.getInstance().collection("Medias").document(article.id)
                                             medias.get().addOnSuccessListener { documentSnapshot ->
                                                 val media1 = documentSnapshot.getString("media1")
-                                                val mediaView: ImageView =
-                                                    postView.findViewById(R.id.imageView)
-                                                Glide.with(requireContext())
-                                                    .load(media1)
-                                                    .into(mediaView)
+                                                if (media1 != null) {
+                                                    val mediaView: ImageView = postView.findViewById(R.id.imageView)
+                                                    mediaView.layoutParams = LinearLayout.LayoutParams(
+                                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                                        300
+                                                    )
+                                                    Glide.with(requireContext())
+                                                        .load(media1)
+                                                        .into(mediaView)
+                                                }
                                             }
                                         }
 
-                                        val textView: TextView =
-                                            postView.findViewById(R.id.textView)
+                                        val textView: TextView = postView.findViewById(R.id.textView)
                                         textView.text = article.title
 
                                         cardView.setOnClickListener {
@@ -164,8 +166,7 @@ class HomeFragment : Fragment() {
                             for (article in articlesToDisplay) {
                                 val inflater = LayoutInflater.from(requireContext())
                                 val postView = inflater.inflate(R.layout.post, null)
-                                val cardView: CardView =
-                                    postView.findViewById(R.id.touchCard)
+                                val cardView: CardView = postView.findViewById(R.id.touchCard)
                                 linearContainer.addView(postView)
                                 val flagImageView = postView.findViewById<ImageView>(R.id.redFlag)
                                 if (userRights == "0" || articleVerified == "yes") {
@@ -178,10 +179,16 @@ class HomeFragment : Fragment() {
                                     val medias = FirebaseFirestore.getInstance().collection("Medias").document(article.id)
                                     medias.get().addOnSuccessListener { documentSnapshot ->
                                         val media1 = documentSnapshot.getString("media1")
-                                        val mediaView: ImageView = postView.findViewById(R.id.imageView)
-                                        Glide.with(requireContext())
-                                            .load(media1)
-                                            .into(mediaView)
+                                        if (media1 != null) {
+                                            val mediaView: ImageView = postView.findViewById(R.id.imageView)
+                                            mediaView.layoutParams = LinearLayout.LayoutParams(
+                                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                                300
+                                            )
+                                            Glide.with(requireContext())
+                                                .load(media1)
+                                                .into(mediaView)
+                                        }
                                     }
                                 }
 
@@ -223,8 +230,9 @@ class HomeFragment : Fragment() {
     private fun refreshScroll(scrollView: ScrollView) {
         scrollView.viewTreeObserver.addOnScrollChangedListener {
             if (scrollView.scrollY == 0) {
+                val linearContainer: LinearLayout = scrollView.findViewById(R.id.fil)
+                linearContainer.removeAllViews()
                 currentId=0
-
                 createPost(scrollView.getChildAt(0))
 
             }
@@ -236,8 +244,4 @@ class HomeFragment : Fragment() {
         (activity as HomeActivity).moveToFragment(fragment)
 
     }
-
-
-
-
 }

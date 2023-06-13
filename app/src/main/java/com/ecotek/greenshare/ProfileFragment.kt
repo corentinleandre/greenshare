@@ -103,21 +103,20 @@ class ProfileFragment : Fragment() {
                 val phoneNumber = userDocument.getString("telephone")
                 val roleUser = userDocument.getString("role")
                 val groupUser = userDocument.getString("group")
-                val idUser= userDocument.getString("identification")
 
-                val list = userDocument.getString("email")?.split(".", "@")
-                val firstname = list?.get(0)?.capitalize()
-                val lastname = list?.get(1)?.capitalize()
+                var list = userDocument.getString("email")?.split(".", "@")
+                var firstname = list?.get(0)?.capitalize()
+                var lastname = list?.get(1)?.capitalize()
                 initials=list?.get(0)?.capitalize()?.substring(0, 1) + list?.get(1)?.capitalize()?.substring(0,1)
                 val userIcon = createCustomUserIcon(context,initials)
 
                 view.findViewById<ImageView>(R.id.userImageView).setImageDrawable(userIcon)
                 view.findViewById<TextView>(R.id.user_name).text = "$firstname $lastname"
-                view.findViewById<TextView>(R.id.user_role).text = roleUser
-                view.findViewById<TextView>(R.id.user_group).text = groupUser
-                view.findViewById<TextView>(R.id.user_numero).text = phoneNumber
-                view.findViewById<TextView>(R.id.user_email).text = currentUser
-                view.findViewById<TextView>(R.id.user_bureau).text = "Plus tard" //TODO : add to data base "bureau"
+                view.findViewById<TextView>(R.id.user_role).text = "Role: "+roleUser
+                view.findViewById<TextView>(R.id.user_group).text = "Group: "+groupUser
+                view.findViewById<TextView>(R.id.user_numero).text = "Phone Number: "+phoneNumber
+                view.findViewById<TextView>(R.id.user_email).text = "Email: "+currentUser
+                view.findViewById<TextView>(R.id.user_bureau).text = "Plus tard " //TODO : add to data base "bureau"
             }
         return view
     }

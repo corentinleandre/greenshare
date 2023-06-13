@@ -42,7 +42,7 @@ import java.util.Collections
 
 //private const val ARG_PARAM1 = "param1"
 //private const val ARG_PARAM2 = "param2"
-val listBlocked : List<String> = listOf("fuck","f*ck","con","abruti","batard","putain","connard","connasse","p*tain","c*n","c*nne","merde","nique","tg","fdp","bite")
+val listBlocked : List<String> = listOf("fuck","f*ck","con","abruti","batard","putain","connard","connasse","p*tain","c*n","c*nne","merde","nique","tg","fdp")
 class AddPostFragment : Fragment() {
 
     private val MAX_IMAGE_SIZE = 1024 // Maximum image size in kilobytes (1MB)
@@ -98,13 +98,13 @@ class AddPostFragment : Fragment() {
         mediaLayout = view.findViewById(R.id.mediaLayout)
         //videoView = view.findViewById<VideoView>(R.id.videoView2)
 
+
         audience = view.findViewById(R.id.Audience)
 
         audience.setOnClickListener {
-            val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext(), R.style.MyDialogTheme)
             builder.setTitle("Select Audience")
             builder.setCancelable(false)
-
             builder.setMultiChoiceItems(
                 audienceList.toTypedArray(),
                 selectedAudience
@@ -142,8 +142,8 @@ class AddPostFragment : Fragment() {
                 val view = inflater.inflate(R.layout.audience_options, null)
                 val editText = view.findViewById<EditText>(R.id.editText)
 
-                val addLanguageDialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                    .setTitle("Add New Language")
+                val addLanguageDialog = androidx.appcompat.app.AlertDialog.Builder(requireContext(), R.style.MyDialogTheme)
+                    .setTitle("Add New Audience")
                     .setView(view)
                     .setPositiveButton("Add") { dialogInterface: DialogInterface, _: Int ->
                         val newLanguage = editText.text.toString()

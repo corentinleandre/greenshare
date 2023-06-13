@@ -5,13 +5,13 @@ import com.google.firebase.firestore.SetOptions
 
 data class   Article(
     val id: String = "",
-    var title: String = "",
-    var authorID: String = "",
-    var content: String = "",
-    var date: String = "",
+    val title: String = "",
+    val authorID: String = "",
+    val content: String = "",
+    val date: String = "",
     var group: String = "",
     var likes: String = "",
-    var mediasID: String = "",
+    val mediasID: String = "",
     var commentID: String = "",
     var verified: String = ""
     ){
