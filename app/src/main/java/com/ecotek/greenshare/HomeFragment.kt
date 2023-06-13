@@ -200,6 +200,7 @@ class HomeFragment : Fragment() {
 
 
 
+
     private fun detectEndOfScroll(scrollView: ScrollView) {
         scrollView.viewTreeObserver.addOnScrollChangedListener {
             val view = scrollView.getChildAt(scrollView.childCount - 1)
