@@ -98,7 +98,10 @@ class ReadFragment : Fragment() {
                             val media3 = documentSnapshot.getString("media3")
                             val media4 = documentSnapshot.getString("media4")
                             val mediaView1: ImageView = postView.findViewById(R.id.imageView1)
-//
+                            mediaView1.layoutParams = LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT
+                            )
                             Glide.with(requireContext())
                                 .load(media1)
                                 .into(mediaView1)
@@ -131,10 +134,31 @@ class ReadFragment : Fragment() {
                             }
                         }
                 }
+                val comments = article.commentID.split(",").toMutableList()
+                println(comments)
+                println("here")
+                for (comment in comments){
+                    println("hello")
+                    val inflater = LayoutInflater.from(requireContext())
+                    val commentView = inflater.inflate(R.layout.comment, null)
+                    val cardView: CardView = commentView.findViewById(R.id.touchCard)
+                    val commenterlayout = view.findViewById<LinearLayout>(R.id.commentLayout)
+                    commenterlayout.layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    FirebaseFirestore.getInstance().collection("Comment").document(comment)
+                        .get()
+                        .addOnSuccessListener {it ->
+                            val com = it.toObject(Comment::class.java)
+                            val commentTextView: TextView = commentView.findViewById(R.id.textView)
+                            commentTextView.text = com?.content
+                        }
+                    commenterlayout.addView(commentView)
+                }
+
             }
         }
-
-
 
         val textView: TextView = postView.findViewById(R.id.textView)
         Article.getArticle(index.toString()) { article ->
