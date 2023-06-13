@@ -15,10 +15,13 @@ import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.Toast
+import android.widget.VideoView
 import androidx.cardview.widget.CardView
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -35,7 +38,7 @@ class HomeFragment : Fragment() {
         val scrollView: ScrollView = view.findViewById(R.id.scroll)
 
         detectEndOfScroll(scrollView)
-        refreshScroll(scrollView)
+        //refreshScroll(scrollView)
 
         return view
     }
@@ -50,9 +53,10 @@ class HomeFragment : Fragment() {
 
         val mFirestore = FirebaseFirestore.getInstance()
         val collection = mFirestore.collection("Article")
+        val mediaCollection =mFirestore.collection("Medias")
         // Tri par ordre décroissant des IDs
         collection
-            .orderBy("date", Query.Direction.DESCENDING).limit(8)
+            .orderBy("date", Query.Direction.DESCENDING).limit(15)
             .get()
             .addOnSuccessListener { querySnapshot ->
                 val articles = ArrayList<Article>()
@@ -74,26 +78,33 @@ class HomeFragment : Fragment() {
                                 val args = Bundle()
 
                                 if (article.mediasID != "") {
-                                    val medias = FirebaseFirestore.getInstance().collection("Medias").document(article.id)
-                                    medias.get().addOnSuccessListener { documentSnapshot ->
-                                        val media1 = documentSnapshot.getString("media1")
-                                        if (media1 != null) {
-                                            val mediaView: ImageView = postView.findViewById(R.id.imageView)
-                                            mediaView.layoutParams = LinearLayout.LayoutParams(
-                                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                                300
-                                            )
-                                            Glide.with(requireContext())
-                                                .load(media1)
-                                                .into(mediaView)
+                                    val mediaDocRef = mediaCollection.document(article.mediasID)
+                                    mediaDocRef.get().addOnSuccessListener { mediaSnapshot ->
+                                        val mediaType = mediaSnapshot.getString("type")
+                                        if (mediaType == "image") {
+                                            val medias = FirebaseFirestore.getInstance().collection("Medias").document(article.id)
+                                            medias.get().addOnSuccessListener { documentSnapshot ->
+                                                val media1 = documentSnapshot.getString("media1")
+                                                if (media1 != null) {
+                                                    val mediaView: ImageView = postView.findViewById(R.id.imageView)
+                                                    mediaView.layoutParams = LinearLayout.LayoutParams(
+                                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                                        300
+                                                    )
+                                                    Glide.with(requireContext())
+                                                        .load(media1)
+                                                        .into(mediaView)
+                                                }
+                                            }
+
+
+                                        } else if (mediaType == "video") {
+
                                         }
-                                    }
-                                }
 
 
                                 val textView: TextView = postView.findViewById(R.id.textView)
                                 textView.text = article.title
-
                                 cardView.setOnClickListener {
                                     args.putString("index", article.id)
                                     val readFragment = ReadFragment()
@@ -101,6 +112,8 @@ class HomeFragment : Fragment() {
                                     handleClick(readFragment, args)
                                 }
                                 currentId = articles.lastOrNull()?.id?.toInt() ?: 0
+                            }
+                        }
                             }
                         }
                     }
@@ -198,17 +211,17 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun refreshScroll(scrollView: ScrollView) {
-        scrollView.viewTreeObserver.addOnScrollChangedListener {
-            if (scrollView.scrollY == 0) {
-                val linearContainer: LinearLayout = scrollView.findViewById(R.id.fil)
-                linearContainer.removeAllViews()
-                currentId=0
-                createPost(scrollView.getChildAt(0))
-
-            }
-        }
-    }
+//    private fun refreshScroll(scrollView: ScrollView) {
+//        scrollView.viewTreeObserver.addOnScrollChangedListener {
+//            if (scrollView.scrollY == 0) {
+//                val linearContainer: LinearLayout = scrollView.findViewById(R.id.fil)
+//                linearContainer.removeAllViews()
+//                currentId=0
+//                createPost(scrollView.getChildAt(0))
+//
+//            }
+//        }
+//    }
 
     fun handleClick(fragment: Fragment, arguments: Bundle) {
         fragment.arguments = arguments
