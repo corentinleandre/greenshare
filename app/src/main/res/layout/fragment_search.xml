@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/search_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,15 +8,26 @@
     android:paddingTop="30dp">
 
     <!-- Widget de recherche -->
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:iconifiedByDefault="false"
-        android:imeOptions="actionSearch"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/border"
-        android:padding="5dp" />
+        android:background="#ffffff"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="4dp"
+        >
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:imeOptions="actionSearch"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="20dp"
+            />
+    </androidx.cardview.widget.CardView>
 
     <!--<androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchResultsRecyclerView"

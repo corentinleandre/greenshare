@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="20dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="#404040">
 
-        <ImageButton
-            android:id="@+id/backButton"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@null"
-            android:src="@drawable/baseline_keyboard_return_24" />
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@null"
+        android:src="@drawable/baseline_keyboard_return_24" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,15 +21,17 @@
         android:text=" où peut-on vous trouver facilement?"
         android:textColor="@color/white"/>
     <EditText
-            android:id="@+id/bureauEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:padding="5dp"
-            android:hint="Bureau "
-            android:background="@drawable/border"
-            android:textColor="@color/white"
-            android:textColorHint="#80FFFFFF"/>
+        android:id="@+id/bureauEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:hint="Bureau "
+        
+        android:paddingHorizontal="12dp"
+        android:background="@drawable/border"
+        android:textColor="@color/white"
+        android:textColorHint="#80FFFFFF"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,11 +46,15 @@
 
         <EditText
             android:id="@+id/telephoneEditText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="phone"
             android:layout_marginTop="10dp"
             android:padding="5dp"
             android:hint="+336123456789"
+            android:paddingHorizontal="12dp"
             android:background="@drawable/border"
             android:textColor="@color/white"
             android:textColorHint="#80FFFFFF"/>
@@ -68,90 +75,106 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Attribution des droits"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="30dp"
-                android:layout_gravity="center"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:textColor="@color/white"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="Ajouter un modérateur :"
-                android:textColor="@color/white"/>
-
-            <EditText
-                android:id="@+id/moderatorAddText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
-                android:background="@drawable/border"
-                android:padding="5dp"
-                android:textColor="@color/white"
-                android:textColorHint="#80FFFFFF"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="Supprimer un modérateur :"
-                android:textColor="@color/white"/>
-
-            <EditText
-                android:id="@+id/moderatorDelText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
-                android:background="@drawable/border"
-                android:padding="5dp"
-                android:textColorHint="#80FFFFFF"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="Ajouter un admin :"
-                android:textColor="@color/white"/>
-
-            <EditText
-                android:id="@+id/adminAddText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
-                android:background="@drawable/border"
-                android:padding="5dp"
-                android:textColorHint="#80FFFFFF"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="Supprimer un admin :"
-                android:textColor="@color/white"/>
-
-            <EditText
-                android:id="@+id/adminDelText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
-                android:background="@drawable/border"
-                android:padding="5dp"
-                android:textColorHint="#80FFFFFF"/>
-    </LinearLayout>
-
-
-        <Button
-            android:id="@+id/saveButton"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Enregistrer"
-            android:layout_marginTop="5dp"
-            android:textSize="18sp"
+            android:text="Attribution des droits"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="30dp"
             android:layout_gravity="center"
-            android:backgroundTint="#25985C"/>
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="Ajouter un modérateur :"
+            android:textColor="@color/white"/>
+
+        <EditText
+            android:id="@+id/moderatorAddText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="12dp"
+            android:hint="Email"
+            android:background="@drawable/border"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:textColorHint="#80FFFFFF"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="Supprimer un modérateur :"
+            android:textColor="@color/white"/>
+
+        <EditText
+            android:id="@+id/moderatorDelText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="12dp"
+            android:hint="Email"
+            android:background="@drawable/border"
+            android:padding="5dp"
+            android:textColorHint="#80FFFFFF"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="Ajouter un admin :"
+            android:textColor="@color/white"/>
+
+        <EditText
+            android:id="@+id/adminAddText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="12dp"
+            android:hint="Email"
+            android:background="@drawable/border"
+            android:padding="5dp"
+            android:textColorHint="#80FFFFFF"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="Supprimer un admin :"
+            android:textColor="@color/white"/>
+
+        <EditText
+            android:id="@+id/adminDelText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="12dp"
+            android:hint="Email"
+            android:background="@drawable/border"
+            android:padding="5dp"
+            android:textColorHint="#80FFFFFF"/>
     </LinearLayout>
+
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enregistrer"
+        android:layout_marginTop="5dp"
+        android:textSize="18sp"
+        android:layout_gravity="center"
+        android:backgroundTint="#25985C"/>
+</LinearLayout>

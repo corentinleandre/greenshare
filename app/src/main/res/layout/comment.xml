@@ -48,8 +48,9 @@
                     android:layout_width="191dp"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
-                    android:textColor="#A4FFFFFF"
-                    android:textSize="20sp" />
+                    android:textColor="#77FFFFFF"
+                    android:layout_marginLeft="30dp"
+                    android:textSize="12sp" />
 
                 <ImageButton
                     android:id="@+id/deleteComment"

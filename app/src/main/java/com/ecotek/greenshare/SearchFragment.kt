@@ -145,6 +145,12 @@ class SearchFragment : Fragment() {
                         }
 
                         val profileImageView: ImageView = postView.findViewById(R.id.profileImageView)
+                        HomeFragment().getUserInitials(article.authorID) { userInitials ->
+                            val userIcon = HomeFragment().createCustomUserIcon(requireContext(), userInitials)
+                            profileImageView.setImageDrawable(userIcon)
+                        }
+
+
                         profileImageView.setOnClickListener {
                             (activity as HomeActivity).moveToFragment(UserFragment(article.authorID))
                         }

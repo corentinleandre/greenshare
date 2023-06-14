@@ -34,7 +34,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var progressBar: ProgressBar
 
-    private fun getUserInitials(authorID: String, onComplete: (String) -> Unit) {
+    fun getUserInitials(authorID: String, onComplete: (String) -> Unit) {
         val mFirestore = FirebaseFirestore.getInstance()
         val userRef = mFirestore.collection("Users").document(authorID)
         userRef.get().addOnSuccessListener { document ->
@@ -55,7 +55,7 @@ class HomeFragment : Fragment() {
     }
 
 
-    private fun createCustomUserIcon(context: Context, initials: String): Drawable {
+    fun createCustomUserIcon(context: Context, initials: String): Drawable {
         val size = 512 // Taille de l'icône (en pixels)
 
         val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
@@ -138,6 +138,15 @@ class HomeFragment : Fragment() {
                                         val profileImageView = postView.findViewById<ImageView>(R.id.profileImageView)
                                         profileImageView.setImageDrawable(userIcon)
                                     }
+                                    FirebaseFirestore.getInstance().collection("Users").document(article.authorID)
+                                        .get()
+                                        .addOnSuccessListener {
+                                            val fname = it.getString("firstname")
+                                            val lname = it.getString("lastname")
+                                            val authorname = postView.findViewById<TextView>(R.id.author)
+                                            authorname.text = "by "+fname+" "+lname
+                                        }
+
 
                                     val cardView: CardView =
                                         postView.findViewById(R.id.touchCard)
@@ -238,6 +247,14 @@ class HomeFragment : Fragment() {
                                     val profileImageView = postView.findViewById<ImageView>(R.id.profileImageView)
                                     profileImageView.setImageDrawable(userIcon)
                                 }
+                                FirebaseFirestore.getInstance().collection("Users").document(article.authorID)
+                                    .get()
+                                    .addOnSuccessListener {
+                                        val fname = it.getString("firstname")
+                                        val lname = it.getString("lastname")
+                                        val authorname = postView.findViewById<TextView>(R.id.author)
+                                        authorname.text = "by "+fname+" "+lname
+                                    }
                                 if (userRights == "0" || articleVerified == "yes") {
                                     flagImageView.visibility = View.INVISIBLE
                                 }
