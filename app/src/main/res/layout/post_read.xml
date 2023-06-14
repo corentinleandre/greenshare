@@ -30,12 +30,22 @@
                 android:id="@+id/videoLayoutHere"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                tools:ignore="Suspicious0dp">
 
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:maxHeight="700dp"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="10dp"
+                />
+            <ImageView
+                android:id="@+id/imageViewv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
