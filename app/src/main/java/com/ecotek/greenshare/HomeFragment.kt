@@ -74,14 +74,8 @@ class HomeFragment : Fragment() {
                                 val postView = inflater.inflate(R.layout.post, null)
                                 val cardView: CardView = postView.findViewById(R.id.touchCard)
                                 linearContainer.addView(postView)
-
                                 val args = Bundle()
-
                                 if (article.mediasID != "") {
-                                    val mediaDocRef = mediaCollection.document(article.mediasID)
-                                    mediaDocRef.get().addOnSuccessListener { mediaSnapshot ->
-                                        val mediaType = mediaSnapshot.getString("type")
-                                        if (mediaType == "image") {
                                             val medias = FirebaseFirestore.getInstance().collection("Medias").document(article.id)
                                             medias.get().addOnSuccessListener { documentSnapshot ->
                                                 val media1 = documentSnapshot.getString("media1")
@@ -96,12 +90,6 @@ class HomeFragment : Fragment() {
                                                         .into(mediaView)
                                                 }
                                             }
-
-
-                                        } else if (mediaType == "video") {
-
-                                        }
-
 
                                 val textView: TextView = postView.findViewById(R.id.textView)
                                 textView.text = article.title
@@ -118,12 +106,8 @@ class HomeFragment : Fragment() {
                         }
                     }
                 }
+            .addOnFailureListener { exception ->}
             }
-            .addOnFailureListener { exception ->
-                //
-            }
-
-    }
 
     private fun createnextPost(view: View) {
         if (!isAdded) {
