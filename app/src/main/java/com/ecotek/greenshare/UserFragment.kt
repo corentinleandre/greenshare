@@ -1,38 +1,28 @@
 package com.ecotek.greenshare
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
 import android.widget.TextView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import androidx.core.content.ContextCompat
 import android.graphics.Bitmap
-import android.os.Environment
 import android.widget.ImageView
-import java.io.File
-import java.io.FileOutputStream
 import android.graphics.Bitmap.Config.ARGB_8888
 import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
 import com.bumptech.glide.Glide
-import com.google.firebase.firestore.Query
-import java.io.IOException
 
-class ProfileFragment (email:String): Fragment() {
+class UserFragment (authorID: String): Fragment() {
     var initials: String =""
     //val currentUser = FirebaseAuth.getInstance().currentUser?.email
-    val currentUser = email
+    val currentUser = authorID
 
     fun createCustomUserIcon(context: Context, initials: String): Drawable {
         val size = 512 // Taille de l'icône (en pixels)
@@ -67,15 +57,8 @@ class ProfileFragment (email:String): Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        val view = inflater.inflate(R.layout.fragment_profile, container, false)
-        val logoutButton: ImageButton = view.findViewById(R.id.logoutButton)
-        val linearContainer: LinearLayout = view.findViewById(R.id.postHere)
+        val view = inflater.inflate(R.layout.fragment_user, container, false)
 
-        logoutButton.setOnClickListener{
-            FirebaseAuth.getInstance().signOut()
-            startActivity(Intent((activity as HomeActivity),LoginActivity::class.java))
-            this.activity?.finish()
-        }
         //add the user's personal data
 
         val mFirestore = FirebaseFirestore.getInstance()
@@ -84,7 +67,7 @@ class ProfileFragment (email:String): Fragment() {
 
 
         mFirestore.collection("Users")
-            .whereEqualTo("email", currentUser)
+            .whereEqualTo("identification", currentUser)
             .get()
             .addOnSuccessListener { document ->
                 val context = requireContext()
@@ -92,6 +75,7 @@ class ProfileFragment (email:String): Fragment() {
                 val phoneNumber = userDocument.getString("telephone")
                 val roleUser = userDocument.getString("role")
                 val groupUser = userDocument.getString("group")
+                val email = userDocument.getString("email")
                 val authorID = userDocument.getString("identification")
                 val userRights = userDocument.getString("rights")
 
@@ -106,7 +90,7 @@ class ProfileFragment (email:String): Fragment() {
                 view.findViewById<TextView>(R.id.user_role).text = "Role: "+roleUser
                 view.findViewById<TextView>(R.id.user_group).text = "Group: "+groupUser
                 view.findViewById<TextView>(R.id.user_numero).text = "Phone Number: "+phoneNumber
-                view.findViewById<TextView>(R.id.user_email).text = "Email: "+currentUser
+                view.findViewById<TextView>(R.id.user_email).text = "Email: "+email
                 view.findViewById<TextView>(R.id.user_bureau).text = "Bureau : Plus tard " //TODO : add to data base "bureau"
 
                 createPost(view,userRights!!,userIcon,authorID!!)
@@ -131,7 +115,7 @@ class ProfileFragment (email:String): Fragment() {
             .addOnSuccessListener { querySnapshot ->
                 val articles = ArrayList<Article>()
                 for (document in querySnapshot) {
-                    val id = document.id.toString()
+                    val id = document.id
                     Article.getArticle(id) { article ->
                         if (article != null) {
                             articles.add(article)
@@ -143,7 +127,7 @@ class ProfileFragment (email:String): Fragment() {
 
                             for (article in articles) {
 
-                                val articleVerified=article.verified.toString()
+                                val articleVerified= article.verified
 
                                 if (article != null && (articleVerified != "no" || (articleVerified == "no" && userRights != "0"))) {
 

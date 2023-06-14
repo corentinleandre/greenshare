@@ -217,7 +217,7 @@ class AddPostFragment : Fragment() {
                         val titleVerif = verificationPost(titleAreaTextInput.text.toString())
                         val contentVerif=verificationPost(contentAreaTextInput.text.toString())
                         if (titleVerif && contentVerif) {
-                            postArticle(titleAreaTextInput.text.toString(),userId.toString(),contentAreaTextInput.text.toString(),dateString,selectedOptions.joinToString(","),"")
+                            postArticle(titleAreaTextInput.text.toString(),userId.toString(),contentAreaTextInput.text.toString(),dateString,selectedOptions.joinToString(","))
                             (activity as HomeActivity).moveToFragment(HomeFragment())
                         }
                     } else { }
@@ -435,8 +435,8 @@ class AddPostFragment : Fragment() {
                     authorID: String = "",
                     content: String = "",
                     date: String = "",
-                    group:String = "",
-                    commentID: String = ""){
+                    group:String = ""
+                    ){
         val mFirestore = FirebaseFirestore.getInstance()
         val collection = mFirestore.collection("Article")
         collection
@@ -452,7 +452,7 @@ class AddPostFragment : Fragment() {
                 highestId += 1
                 var imageID : String
                 if (selectedMediaUris == null){imageID= ""} else{imageID=highestId.toString()}
-                val article = Article(highestId.toString(),title,authorID,content,date,group,"",imageID,commentID,"no")
+                val article = Article(highestId.toString(),title,authorID,content,date,group,"",imageID,"default","no")
                 uploadMediaFilesToFirebase(highestId.toString())
                 mFirestore.collection("Article")
                     .document(article.id.toString())
