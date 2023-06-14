@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.LinearLayout
@@ -17,6 +18,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 
 
 class ReadFragment : Fragment() {
@@ -97,10 +99,51 @@ class ReadFragment : Fragment() {
         }
 
         val inflater2 = LayoutInflater.from(requireContext())
-        val commentView = inflater2.inflate(R.layout.comment, null)
+        val commentView = inflater2.inflate(R.layout.comment_input, null)
         val cardView: CardView = commentView.findViewById(R.id.touchCard)
         val commenterlayout = view.findViewById<LinearLayout>(R.id.commenter)
         commenterlayout.addView(commentView)
+        val addCommentButton: Button = commentView.findViewById(R.id.addCommentButton)
+        val commentInput: EditText = commentView.findViewById(R.id.commentInput)
+        addCommentButton.setOnClickListener {
+            val newComment = commentInput.text.toString().trim()
+            if (newComment.isNotEmpty()) {
+                val sender = Comment(currentUser.toString(),newComment,"")
+                val collection = FirebaseFirestore.getInstance().collection("Comment")
+                collection
+                    .get()
+                    .addOnSuccessListener {
+                        var highestId = 0
+                        for (document in it) {
+                            val id = document.id.toIntOrNull()
+                            if (id != null && id > highestId) {
+                                highestId = id
+                            }
+                        }
+                        highestId += 1
+                        collection
+                            .document(highestId.toString())
+                            .set(sender, SetOptions.merge())
+                        FirebaseFirestore.getInstance().collection("Article")
+                            .document(index.toString())
+                            .get()
+                            .addOnSuccessListener {
+                                val existingcomments = it.getString("commentID")?.split(",")?.toMutableList()
+                                existingcomments?.add(highestId.toString())
+                                val commentRef = FirebaseFirestore.getInstance().collection("Article").document(index.toString())
+                                commentRef.update("commentID", existingcomments?.joinToString(","))
+                            }
+                    }
+
+                val inflater = LayoutInflater.from(requireContext())
+                val newCommentView = inflater.inflate(R.layout.comment, null)
+                val newCommentTextView: TextView = newCommentView.findViewById(R.id.textView)
+                newCommentTextView.text = newComment
+                val commentslayout = view.findViewById<LinearLayout>(R.id.commentLayout)
+                commentslayout.addView(newCommentView)
+                commentInput.text = null
+            }
+        }
 
 
         Article.getArticle(index.toString()){article ->
