@@ -119,6 +119,34 @@
                     android:layout_marginStart="8dp" />
 
             </LinearLayout>
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:maxHeight="400dp"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="10dp"
+                />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:maxHeight="400dp"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="10dp"
+                />
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:maxHeight="400dp"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="10dp"
+                />
 
             <LinearLayout
                 android:id="@+id/commentLayout"
@@ -151,34 +179,7 @@
                 android:orientation="horizontal">
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:maxHeight="400dp"
-                android:scaleType="centerCrop"
-                android:layout_marginBottom="10dp"
-                />
 
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:maxHeight="400dp"
-                android:scaleType="centerCrop"
-                android:layout_marginBottom="10dp"
-                />
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:maxHeight="400dp"
-                android:scaleType="centerCrop"
-                android:layout_marginBottom="10dp"
-                />
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
