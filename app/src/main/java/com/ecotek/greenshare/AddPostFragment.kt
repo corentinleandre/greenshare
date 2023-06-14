@@ -435,7 +435,8 @@ class AddPostFragment : Fragment() {
                     authorID: String = "",
                     content: String = "",
                     date: String = "",
-                    group:String = ""){
+                    group:String = ""
+                    ){
         val mFirestore = FirebaseFirestore.getInstance()
         val collection = mFirestore.collection("Article")
         collection
