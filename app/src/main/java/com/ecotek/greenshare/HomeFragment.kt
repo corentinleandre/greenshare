@@ -1,7 +1,16 @@
 package com.ecotek.greenshare
 
 import android.annotation.SuppressLint
+import java.util.Locale
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.Typeface
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -32,6 +41,52 @@ class HomeFragment : Fragment() {
 
     private lateinit var progressBar: ProgressBar
 
+    private fun getUserInitials(authorID: String, onComplete: (String) -> Unit) {
+        val mFirestore = FirebaseFirestore.getInstance()
+        val userRef = mFirestore.collection("Users").document(authorID)
+        userRef.get().addOnSuccessListener { document ->
+            val firstName = document.getString("firstname") ?: ""
+            val lastName = document.getString("lastname") ?: ""
+
+            val initials = buildString {
+                if (firstName.isNotEmpty()) {
+                    append(firstName[0].uppercase())
+                }
+                if (lastName.isNotEmpty()) {
+                    append(lastName[0].uppercase())
+                }
+            }
+
+            onComplete(initials)
+        }
+    }
+
+
+    private fun createCustomUserIcon(context: Context, initials: String): Drawable {
+        val size = 512 // Taille de l'icône (en pixels)
+
+        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        paint.color = Color.BLACK // color for background
+        canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
+
+        val textSize = size / initials.length.toFloat()
+        paint.color = Color.WHITE // color for text
+        paint.textSize = textSize
+        paint.typeface = Typeface.DEFAULT_BOLD
+        paint.textAlign = Paint.Align.CENTER
+
+        val textBounds = Rect()
+        paint.getTextBounds(initials, 0, initials.length, textBounds)
+        val x = canvas.width / 2
+        val y = (canvas.height / 2) - (textBounds.top + textBounds.bottom) / 2
+
+        canvas.drawText(initials, x.toFloat(), y.toFloat(), paint)
+
+        return BitmapDrawable(context.resources, bitmap)
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         createPost(view)
@@ -85,6 +140,12 @@ class HomeFragment : Fragment() {
 
                                     val inflater = LayoutInflater.from(requireContext())
                                     val postView = inflater.inflate(R.layout.post, null)
+                                    getUserInitials(article.authorID) { userInitials ->
+                                        val userIcon = createCustomUserIcon(requireContext(), userInitials)
+                                        val profileImageView = postView.findViewById<ImageView>(R.id.profileImageView)
+                                        profileImageView.setImageDrawable(userIcon)
+                                    }
+
                                     val cardView: CardView =
                                         postView.findViewById(R.id.touchCard)
                                     linearContainer.addView(postView)
@@ -112,6 +173,7 @@ class HomeFragment : Fragment() {
                                                 Glide.with(requireContext())
                                                     .load(media1)
                                                     .into(mediaView)
+
                                             }
                                         }
                                     }
@@ -125,8 +187,12 @@ class HomeFragment : Fragment() {
                                         readFragment.arguments = args
                                         handleClick(readFragment, args)
                                     }
+
                                     currentId = articles.lastOrNull()?.id?.toInt() ?: 0
+
                                 }
+
+
                             }
 
                         }
@@ -169,6 +235,11 @@ class HomeFragment : Fragment() {
                                 val cardView: CardView = postView.findViewById(R.id.touchCard)
                                 linearContainer.addView(postView)
                                 val flagImageView = postView.findViewById<ImageView>(R.id.redFlag)
+                                getUserInitials(article.authorID) { userInitials ->
+                                    val userIcon = createCustomUserIcon(requireContext(), userInitials)
+                                    val profileImageView = postView.findViewById<ImageView>(R.id.profileImageView)
+                                    profileImageView.setImageDrawable(userIcon)
+                                }
                                 if (userRights == "0" || articleVerified == "yes") {
                                     flagImageView.visibility = View.INVISIBLE
                                 }
@@ -216,7 +287,7 @@ class HomeFragment : Fragment() {
 
 
 
-    private fun detectEndOfScroll(scrollView: ScrollView) {
+     fun detectEndOfScroll(scrollView: ScrollView) {
         scrollView.viewTreeObserver.addOnScrollChangedListener {
             val view = scrollView.getChildAt(scrollView.childCount - 1)
             val diff = (view.bottom - (scrollView.height + scrollView.scrollY))
@@ -227,7 +298,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun refreshScroll(scrollView: ScrollView) {
+     fun refreshScroll(scrollView: ScrollView) {
         scrollView.viewTreeObserver.addOnScrollChangedListener {
             if (scrollView.scrollY == 0) {
                 val linearContainer: LinearLayout = scrollView.findViewById(R.id.fil)

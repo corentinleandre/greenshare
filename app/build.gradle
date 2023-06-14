@@ -62,7 +62,6 @@ tasks.named("detekt").configure {
         }
     }
 }
-
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.8.0'
