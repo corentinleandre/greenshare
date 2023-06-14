@@ -125,6 +125,23 @@ class ReadFragment : Fragment() {
         val numlikes = view.findViewById<TextView>(R.id.likeCount)
         val liker = view.findViewById<ImageButton>(R.id.likeButton)
 
+        val textView: TextView = postView.findViewById(R.id.textView)
+        val textView2: TextView = postView.findViewById(R.id.authorName)
+        val description:TextView=postView.findViewById(R.id.description)
+        Article.getArticle(index.toString()) { article ->
+            if (article != null) {
+                description.text = article.content
+                textView.text = article.title
+                FirebaseFirestore.getInstance().collection("Users").document(article.authorID)
+                    .get()
+                    .addOnSuccessListener {
+                        val fname = it.getString("firstname")
+                        val lname = it.getString("lastname")
+                        textView2.text = "posted by: "+fname+" "+lname
+                    }
+            }
+        }
+
         fun showlikes(){
             Article.getArticle(index.toString()) { article ->
                 if (article != null){
@@ -207,8 +224,15 @@ class ReadFragment : Fragment() {
                 val newCommentTextView: TextView = newCommentView.findViewById(R.id.textView)
                 newCommentTextView.text = newComment
                 val commentslayout = view.findViewById<LinearLayout>(R.id.commentLayout)
-                val photo = view.findViewById<ImageView>(R.id.profileImageView)
+                var listname = currentUser?.split(".", "@")
+                var firstname = listname?.get(0)?.capitalize()
+                var lastname = listname?.get(1)?.capitalize()
+                val initials = listname?.get(0)?.capitalize()?.substring(0, 1) + listname?.get(1)?.capitalize()?.substring(0,1)
+                val userIcon = createCustomUserIcon(requireContext(),initials)
+                val photo = newCommentView.findViewById<ImageView>(R.id.profileImageView)
                 photo.setImageDrawable(userIcon)
+                val commentAuthorView: TextView = newCommentView.findViewById(R.id.author)
+                commentAuthorView.text = "by "+firstname+" "+lastname
                 commentslayout.addView(newCommentView)
                 commentInput.text = null
             }
@@ -372,27 +396,17 @@ class ReadFragment : Fragment() {
                             val commentTextView: TextView = commentView.findViewById(R.id.textView)
                             commentTextView.text = com?.content
                             var listname = com?.authorEmail?.split(".", "@")
+                            var firstname = listname?.get(0)?.capitalize()
+                            var lastname = listname?.get(1)?.capitalize()
                             val initials = listname?.get(0)?.capitalize()?.substring(0, 1) + listname?.get(1)?.capitalize()?.substring(0,1)
                             val userIcon = createCustomUserIcon(requireContext(),initials)
                             val photo = commentView.findViewById<ImageView>(R.id.profileImageView)
                             photo.setImageDrawable(userIcon)
+                            val commentAuthorView: TextView = commentView.findViewById(R.id.author)
+                            commentAuthorView.text = "by "+firstname+" "+lastname
                         }
                     commenterlayout.addView(commentView)
                 }
-            }
-        }
-
-        val textView: TextView = postView.findViewById(R.id.textView)
-        Article.getArticle(index.toString()) { article ->
-            if (article != null) {
-                textView.text = article.title
-            }
-        }
-
-        val description:TextView=postView.findViewById(R.id.description)
-        Article.getArticle(index.toString()) { article ->
-            if (article != null) {
-                description.text = article.content
             }
         }
     }
