@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.cardview.widget.CardView
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
@@ -26,10 +27,21 @@ class SearchFragment : Fragment() {
     private lateinit var query: Query
     private lateinit var listener: ListenerRegistration
     private lateinit var linearContainer: LinearLayout
+    var userRights="0"
+    val currentUser = FirebaseAuth.getInstance().currentUser?.email
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_search, container, false)
-
+        val mFirestore = FirebaseFirestore.getInstance()
+        val collectionuser = mFirestore.collection("Users")
+        collectionuser
+            .whereEqualTo("email", currentUser)
+            .get()
+            .addOnSuccessListener { document ->
+                val userDocument = document.documents[0]
+                userRights = userDocument.getString("rights").toString()
+            }
         searchView = view.findViewById(R.id.searchView)
         searchScrollView = view.findViewById(R.id.searchResultsScrollView)
         searchView.setIconifiedByDefault(false)
@@ -98,6 +110,11 @@ class SearchFragment : Fragment() {
                         val inflater = LayoutInflater.from(requireContext())
                         val postView = inflater.inflate(R.layout.post, null)
                         val cardView: CardView = postView.findViewById(R.id.touchCard)
+                        val articleVerified=article.verified.toString()
+                        val flagImageView = postView.findViewById<ImageView>(R.id.redFlag)
+                        if (userRights == "0" || articleVerified == "yes") {
+                            flagImageView.visibility = View.INVISIBLE
+                        }
                         linearContainer.addView(postView)
 
                         val args = Bundle()
