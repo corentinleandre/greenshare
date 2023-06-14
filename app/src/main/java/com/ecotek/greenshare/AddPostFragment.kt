@@ -271,7 +271,7 @@ class AddPostFragment : Fragment() {
         return imageView
     }
 
-    private fun createVideoView(context: Context, videoUri: Uri): VideoView {
+     fun createVideoView(context: Context, videoUri: Uri): VideoView {
         val videoView = VideoView(context)
         videoView.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,

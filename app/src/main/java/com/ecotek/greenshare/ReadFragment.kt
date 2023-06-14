@@ -1,22 +1,27 @@
 package com.ecotek.greenshare
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.LinearLayout
 import android.widget.ImageView
-import android.widget.ScrollView
+import android.widget.MediaController
+import android.widget.VideoView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 
 
 class ReadFragment : Fragment() {
@@ -24,6 +29,24 @@ class ReadFragment : Fragment() {
     val currentUser = FirebaseAuth.getInstance().currentUser?.email
     var userId=""
     var userRights = ""
+    private lateinit var videoLayout: LinearLayout
+
+    fun createVideoView(context: Context, videoUri: Uri): VideoView {
+        val videoView = VideoView(context)
+        videoView.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        videoView.setVideoURI(videoUri)
+        videoView.setOnPreparedListener { mediaPlayer ->
+            mediaPlayer.setVolume(0f, 0f)
+            mediaPlayer.isLooping = true
+            mediaPlayer.start()
+        }
+
+        return videoView!!
+    }
+
 
 
 
@@ -50,6 +73,16 @@ class ReadFragment : Fragment() {
         if (!isAdded) {
             return  // Vérifie si le fragment est attaché avant d'accéder au contexte
         }
+        var userRights = "0"
+        val mFirestore = FirebaseFirestore.getInstance()
+        val collectionuser = mFirestore.collection("Users")
+        collectionuser
+            .whereEqualTo("email", currentUser)
+            .get()
+            .addOnSuccessListener { document ->
+                val userDocument = document.documents[0]
+                userRights = userDocument.getString("rights").toString()
+            }
 
         val linearContainer: LinearLayout = view.findViewById(R.id.fil)
         val inflater = LayoutInflater.from(requireContext())
@@ -97,10 +130,53 @@ class ReadFragment : Fragment() {
         }
 
         val inflater2 = LayoutInflater.from(requireContext())
-        val commentView = inflater2.inflate(R.layout.comment, null)
+        val commentView = inflater2.inflate(R.layout.comment_input, null)
         val cardView: CardView = commentView.findViewById(R.id.touchCard)
+        var mediaControls: MediaController? = null
+
         val commenterlayout = view.findViewById<LinearLayout>(R.id.commenter)
         commenterlayout.addView(commentView)
+        val addCommentButton: Button = commentView.findViewById(R.id.addCommentButton)
+        val commentInput: EditText = commentView.findViewById(R.id.commentInput)
+        addCommentButton.setOnClickListener {
+            val newComment = commentInput.text.toString().trim()
+            if (newComment.isNotEmpty()) {
+                val sender = Comment(currentUser.toString(),newComment,"")
+                val collection = FirebaseFirestore.getInstance().collection("Comment")
+                collection
+                    .get()
+                    .addOnSuccessListener {
+                        var highestId = 0
+                        for (document in it) {
+                            val id = document.id.toIntOrNull()
+                            if (id != null && id > highestId) {
+                                highestId = id
+                            }
+                        }
+                        highestId += 1
+                        collection
+                            .document(highestId.toString())
+                            .set(sender, SetOptions.merge())
+                        FirebaseFirestore.getInstance().collection("Article")
+                            .document(index.toString())
+                            .get()
+                            .addOnSuccessListener {
+                                val existingcomments = it.getString("commentID")?.split(",")?.toMutableList()
+                                existingcomments?.add(highestId.toString())
+                                val commentRef = FirebaseFirestore.getInstance().collection("Article").document(index.toString())
+                                commentRef.update("commentID", existingcomments?.joinToString(","))
+                            }
+                    }
+
+                val inflater = LayoutInflater.from(requireContext())
+                val newCommentView = inflater.inflate(R.layout.comment, null)
+                val newCommentTextView: TextView = newCommentView.findViewById(R.id.textView)
+                newCommentTextView.text = newComment
+                val commentslayout = view.findViewById<LinearLayout>(R.id.commentLayout)
+                commentslayout.addView(newCommentView)
+                commentInput.text = null
+            }
+        }
 
 
         Article.getArticle(index.toString()){article ->
@@ -205,30 +281,31 @@ class ReadFragment : Fragment() {
                             val media3 = documentSnapshot.getString("media3")
                             val media4 = documentSnapshot.getString("media4")
                             val mediaView1: ImageView = postView.findViewById(R.id.imageView1)
-                            mediaView1.layoutParams = LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT
-                            )
-                            Glide.with(requireContext())
-                              .load(media1)
-                              .into(mediaView1)
+
+                            val type = documentSnapshot.getString("type")
+                            if(type=="image"){
+                                Glide.with(requireContext())
+                                    .load(media1)
+                                    .into(mediaView1)}
+                            if(type == "video") {
+                                val mediaUri: Uri = Uri.parse(media1)
+                                val videoLayout = view.findViewById<LinearLayout>(R.id.videoLayoutHere)
+                                videoLayout.removeAllViews()
+                                videoLayout.layoutParams = LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    600
+                                )
+                                videoLayout.addView(createVideoView(requireContext(),mediaUri))
+                                videoLayout.setOnClickListener{
+                                    (activity as HomeActivity).moveToFragment(MediaPlayer(mediaUri))
+                                }
+                            }
 
                             mediaView1.setOnClickListener {
                                 val mediaView2: ImageView = postView.findViewById(R.id.imageView2)
                                 val mediaView3: ImageView = postView.findViewById(R.id.imageView3)
                                 val mediaView4: ImageView = postView.findViewById(R.id.imageView4)
-                                mediaView2.layoutParams = LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                                )
-                                mediaView3.layoutParams = LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                                )
-                                mediaView4.layoutParams = LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                                )
+
                                 Glide.with(requireContext())
                                     .load(media2)
                                     .into(mediaView2)
