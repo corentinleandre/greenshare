@@ -332,6 +332,9 @@ class ReadFragment : Fragment() {
                                     .load(media1)
                                     .into(mediaView1)}
                             if(type == "video") {
+                                mediaCountTextView.text = "  Clic to play  "
+                                mediaCountTextView.textSize =
+                                    20F
                                 Glide.with(requireContext())
                                     .load(media1)
                                     .into(mediaView2)
@@ -346,6 +349,7 @@ class ReadFragment : Fragment() {
                                 val mediaView2: ImageView = postView.findViewById(R.id.imageView2)
                                 val mediaView3: ImageView = postView.findViewById(R.id.imageView3)
                                 val mediaView4: ImageView = postView.findViewById(R.id.imageView4)
+                                mediaCountTextView.visibility = View.GONE
 
                                 Glide.with(requireContext())
                                     .load(media2)
