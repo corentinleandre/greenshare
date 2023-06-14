@@ -2,6 +2,7 @@ package com.ecotek.greenshare
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 class ReadFragment : Fragment() {
     val im = 10 // Nombre d'ViewImage et ViewText à ajouter
     val currentUser = FirebaseAuth.getInstance().currentUser?.email
-
+    var userId=""
 
 
     @SuppressLint("MissingInflatedId")
@@ -45,6 +46,7 @@ class ReadFragment : Fragment() {
             .addOnSuccessListener { document ->
                 val userDocument = document.documents[0]
                 userRights = userDocument.getString("rights").toString()
+                userId= userDocument.getString("identification").toString()
             }
 
         val linearContainer: LinearLayout = view.findViewById(R.id.fil)
@@ -120,11 +122,8 @@ class ReadFragment : Fragment() {
                             Glide.with(requireContext())
                               .load(media1)
                               .into(mediaView1)
-                            if (userRights != "0") {
-                                buttonCheck.visibility = View.VISIBLE
-                                buttonCross.visibility = View.VISIBLE
-                            }
-                            if ((userRights != "0" && article.verified == "yes")) {
+                            Log.d("marie",userRights)
+                            if ((userRights != "0" && article.verified == "yes") || (userRights == "0" && article.authorID==userId)) {
                                 buttonCross.visibility=View.VISIBLE
                                 buttonCross.setOnClickListener {
                                     val mFirestore = FirebaseFirestore.getInstance()
@@ -154,7 +153,8 @@ class ReadFragment : Fragment() {
                                             }
                                         }
                                 }
-                            } else {
+                            } else if (userRights != "0" && article.verified == "no") {
+                                Log.d("marie","COUCOU")
                                 buttonCross.visibility = View.VISIBLE
                                 buttonCheck.visibility = View.VISIBLE
                                 buttonCross.setOnClickListener {
