@@ -60,7 +60,6 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="5dp"
-            android:src="@drawable/ameen"
             android:background="@drawable/round_image"
             android:scaleType="centerCrop"
             android:clipToOutline="true"

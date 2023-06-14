@@ -2,6 +2,14 @@ package com.ecotek.greenshare
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.Typeface
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -30,7 +38,6 @@ class ReadFragment : Fragment() {
     var userId=""
     var userRights = ""
     private lateinit var videoLayout: LinearLayout
-
     fun createVideoView(context: Context, videoUri: Uri): VideoView {
         val videoView = VideoView(context)
         videoView.layoutParams = LinearLayout.LayoutParams(
@@ -47,8 +54,31 @@ class ReadFragment : Fragment() {
         return videoView!!
     }
 
+    private fun createCustomUserIcon(context: Context, initials: String): Drawable {
+        val size = 512 // Taille de l'icône (en pixels)
 
+        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
 
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+        paint.color = Color.rgb(37,152,92)// color for background
+        canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
+        val textSize = size / initials.length.toFloat()
+        paint.color = Color.WHITE // color for text
+        paint.textSize = textSize
+        paint.typeface = Typeface.DEFAULT_BOLD
+        paint.textAlign = Paint.Align.CENTER
+
+        val textBounds = Rect()
+        paint.getTextBounds(initials, 0, initials.length, textBounds)
+        val x = canvas.width / 2
+        val y = (canvas.height / 2) - (textBounds.top + textBounds.bottom) / 2
+
+        canvas.drawText(initials, x.toFloat(), y.toFloat(), paint)
+
+        return BitmapDrawable(context.resources, bitmap)
+    }
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -133,7 +163,11 @@ class ReadFragment : Fragment() {
         val commentView = inflater2.inflate(R.layout.comment_input, null)
         val cardView: CardView = commentView.findViewById(R.id.touchCard)
         var mediaControls: MediaController? = null
-
+        var listname = currentUser?.split(".", "@")
+        val initials = listname?.get(0)?.capitalize()?.substring(0, 1) + listname?.get(1)?.capitalize()?.substring(0,1)
+        val userIcon = createCustomUserIcon(requireContext(),initials)
+        val photo = commentView.findViewById<ImageView>(R.id.profileImageView)
+        photo.setImageDrawable(userIcon)
         val commenterlayout = view.findViewById<LinearLayout>(R.id.commenter)
         commenterlayout.addView(commentView)
         val addCommentButton: Button = commentView.findViewById(R.id.addCommentButton)
@@ -173,6 +207,8 @@ class ReadFragment : Fragment() {
                 val newCommentTextView: TextView = newCommentView.findViewById(R.id.textView)
                 newCommentTextView.text = newComment
                 val commentslayout = view.findViewById<LinearLayout>(R.id.commentLayout)
+                val photo = view.findViewById<ImageView>(R.id.profileImageView)
+                photo.setImageDrawable(userIcon)
                 commentslayout.addView(newCommentView)
                 commentInput.text = null
             }
@@ -335,6 +371,11 @@ class ReadFragment : Fragment() {
                             val com = it.toObject(Comment::class.java)
                             val commentTextView: TextView = commentView.findViewById(R.id.textView)
                             commentTextView.text = com?.content
+                            var listname = com?.authorEmail?.split(".", "@")
+                            val initials = listname?.get(0)?.capitalize()?.substring(0, 1) + listname?.get(1)?.capitalize()?.substring(0,1)
+                            val userIcon = createCustomUserIcon(requireContext(),initials)
+                            val photo = commentView.findViewById<ImageView>(R.id.profileImageView)
+                            photo.setImageDrawable(userIcon)
                         }
                     commenterlayout.addView(commentView)
                 }
