@@ -345,6 +345,7 @@ class ReadFragment : Fragment() {
                             val media4 = documentSnapshot.getString("media4")
                             val mediaView1: ImageView = postView.findViewById(R.id.imageView1)
                             val mediaView2:ImageView=postView.findViewById(R.id.imageViewv)
+
                             val mediaCountTextView: TextView = postView.findViewById(R.id.mediaCountTextView)
                             val mediaCount = getMediaCount(media2, media3, media4) // Fonction pour compter le nombre de médias
                             mediaCountTextView.text = " +$mediaCount "
@@ -362,12 +363,16 @@ class ReadFragment : Fragment() {
                                 Glide.with(requireContext())
                                     .load(media1)
                                     .into(mediaView2)
+                                val mediaUri = Uri.parse(media1)
+                                mediaView2.setOnClickListener{
+                                    println("bonjour")
+                                    (activity as HomeActivity).moveToFragment(MediaPlayer(mediaUri))
+                                }
+
+
                             }
-                            val mediaUri: Uri = Uri.parse(media1)
-                            mediaView2.setOnClickListener{
-                                println("bonjour")
-                                (activity as HomeActivity).moveToFragment(MediaPlayer(mediaUri))
-                            }
+
+
 
                             mediaView1.setOnClickListener {
                                 val mediaView2: ImageView = postView.findViewById(R.id.imageView2)
