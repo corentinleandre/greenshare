@@ -43,7 +43,7 @@ class HomeFragment : Fragment() {
     }
 
     @SuppressLint("MissingInflatedId")
-    private fun createPost(view: View){
+    private fun createPost(view: View) {
         if (!isAdded) {
             return  // Vérifie si le fragment est attaché avant d'accéder au contexte
         }
@@ -83,6 +83,10 @@ class HomeFragment : Fragment() {
 
                                 if (article != null && (articleVerified != "no" || (articleVerified == "no" && userRights != "0"))) {
 
+                                    if (!isAdded || context == null) {
+                                        return@getArticle  // Vérifier si le fragment est attaché et si le contexte est disponible
+                                    }
+
                                     val inflater = LayoutInflater.from(requireContext())
                                     val postView = inflater.inflate(R.layout.post, null)
                                     val cardView: CardView =
@@ -109,7 +113,7 @@ class HomeFragment : Fragment() {
                                                     LinearLayout.LayoutParams.MATCH_PARENT,
                                                     300
                                                 )
-                                                Glide.with(requireContext())
+                                                Glide.with(this)
                                                     .load(media1)
                                                     .into(mediaView)
                                             }
