@@ -36,7 +36,6 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         createPost(view)
         val scrollView: ScrollView = view.findViewById(R.id.scroll)
-
         detectEndOfScroll(scrollView)
         refreshScroll(scrollView)
 

@@ -61,6 +61,7 @@ class ProfileFragment (email:String): Fragment() {
         return BitmapDrawable(context.resources, bitmap)
     }
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
