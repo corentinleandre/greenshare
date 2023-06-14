@@ -69,7 +69,7 @@
                     android:id="@+id/redFlag"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="10dp"
                     android:src="@drawable/red_flag_24" />
             </LinearLayout>
 

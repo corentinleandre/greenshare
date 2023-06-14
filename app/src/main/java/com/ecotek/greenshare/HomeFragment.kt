@@ -247,6 +247,14 @@ class HomeFragment : Fragment() {
                                     val profileImageView = postView.findViewById<ImageView>(R.id.profileImageView)
                                     profileImageView.setImageDrawable(userIcon)
                                 }
+                                FirebaseFirestore.getInstance().collection("Users").document(article.authorID)
+                                    .get()
+                                    .addOnSuccessListener {
+                                        val fname = it.getString("firstname")
+                                        val lname = it.getString("lastname")
+                                        val authorname = postView.findViewById<TextView>(R.id.author)
+                                        authorname.text = "by "+fname+" "+lname
+                                    }
                                 if (userRights == "0" || articleVerified == "yes") {
                                     flagImageView.visibility = View.INVISIBLE
                                 }
