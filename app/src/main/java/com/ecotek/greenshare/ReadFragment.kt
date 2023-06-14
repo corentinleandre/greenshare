@@ -1,16 +1,18 @@
 package com.ecotek.greenshare
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.LinearLayout
 import android.widget.ImageView
-import android.widget.ScrollView
+import android.widget.MediaController
+import android.widget.VideoView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -21,12 +23,31 @@ import com.google.firebase.firestore.FirebaseFirestore
 class ReadFragment : Fragment() {
     val im = 10 // Nombre d'ViewImage et ViewText à ajouter
     val currentUser = FirebaseAuth.getInstance().currentUser?.email
+    private lateinit var videoLayout: LinearLayout
+
+    fun createVideoView(context: Context, videoUri: Uri): VideoView {
+        val videoView = VideoView(context)
+        videoView.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        videoView.setVideoURI(videoUri)
+        videoView.setOnPreparedListener { mediaPlayer ->
+            mediaPlayer.setVolume(0f, 0f)
+            mediaPlayer.isLooping = true
+            mediaPlayer.start()
+        }
+
+        return videoView!!
+    }
+
 
 
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_read, container, false)
+
         createPost(view)
         return view
     }
@@ -95,6 +116,8 @@ class ReadFragment : Fragment() {
         val inflater2 = LayoutInflater.from(requireContext())
         val commentView = inflater2.inflate(R.layout.comment, null)
         val cardView: CardView = commentView.findViewById(R.id.touchCard)
+        var mediaControls: MediaController? = null
+
         val commenterlayout = view.findViewById<LinearLayout>(R.id.commenter)
         commenterlayout.addView(commentView)
 
@@ -107,19 +130,36 @@ class ReadFragment : Fragment() {
                     medias.get()
                         .addOnSuccessListener { documentSnapshot ->
                             val media1 = documentSnapshot.getString("media1")
+                            println(media1)
                             val media2 = documentSnapshot.getString("media2")
                             val media3 = documentSnapshot.getString("media3")
                             val media4 = documentSnapshot.getString("media4")
+                            val type = documentSnapshot.getString("type")
                             val buttonCross = postView.findViewById<ImageButton>(R.id.buttonCross)
                             val buttonCheck = postView.findViewById<ImageButton>(R.id.buttonCheck)
+                            //var videoView: VideoView = postView.findViewById(R.id.videoView)
                             val mediaView1: ImageView = postView.findViewById(R.id.imageView1)
-                            mediaView1.layoutParams = LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT
-                            )
-                            Glide.with(requireContext())
-                              .load(media1)
-                              .into(mediaView1)
+                            if(type=="image"){
+
+                                Glide.with(requireContext())
+                                  .load(media1)
+                                  .into(mediaView1)}
+                            if(type == "video") {
+                                println("ici")
+
+
+
+                                val mediaUri: Uri = Uri.parse(media1)
+                                val videoLayout = view.findViewById<LinearLayout>(R.id.videoLayoutHere)
+                                videoLayout.removeAllViews()
+                                videoLayout.addView(createVideoView(requireContext(),mediaUri))
+                                videoLayout.setOnClickListener{
+                                    (activity as HomeActivity).moveToFragment(MediaPlayer(mediaUri))
+                                }
+
+
+
+                            }
                             if (userRights != "0") {
                                 buttonCheck.visibility = View.VISIBLE
                                 buttonCross.visibility = View.VISIBLE
@@ -212,18 +252,8 @@ class ReadFragment : Fragment() {
                                 val mediaView2: ImageView = postView.findViewById(R.id.imageView2)
                                 val mediaView3: ImageView = postView.findViewById(R.id.imageView3)
                                 val mediaView4: ImageView = postView.findViewById(R.id.imageView4)
-                                mediaView2.layoutParams = LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                                )
-                                mediaView3.layoutParams = LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                                )
-                                mediaView4.layoutParams = LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                                )
+
+
                                 Glide.with(requireContext())
                                     .load(media2)
                                     .into(mediaView2)
