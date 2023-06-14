@@ -23,6 +23,7 @@ import android.widget.ImageView
 import java.io.File
 import java.io.FileOutputStream
 import android.graphics.Bitmap.Config.ARGB_8888
+import android.util.Log
 import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
 import com.bumptech.glide.Glide
@@ -70,13 +71,18 @@ class ProfileFragment (email:String): Fragment() {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
         val logoutButton: ImageButton = view.findViewById(R.id.logoutButton)
         val linearContainer: LinearLayout = view.findViewById(R.id.postHere)
+        val settingsButton=view.findViewById<ImageButton>(R.id.settingsButton)
 
         logoutButton.setOnClickListener{
             FirebaseAuth.getInstance().signOut()
             startActivity(Intent((activity as HomeActivity),LoginActivity::class.java))
             this.activity?.finish()
         }
-        //add the user's personal data
+
+        settingsButton.setOnClickListener {
+            val settingsFragment = SettingsFragment(currentUser)
+            (activity as? HomeActivity)?.moveToFragment(settingsFragment)
+        }
 
         val mFirestore = FirebaseFirestore.getInstance()
 
@@ -91,9 +97,9 @@ class ProfileFragment (email:String): Fragment() {
                 val userDocument = document.documents[0]
                 val phoneNumber = userDocument.getString("telephone")
                 val roleUser = userDocument.getString("role")
-                val groupUser = userDocument.getString("group")
                 val authorID = userDocument.getString("identification")
                 val userRights = userDocument.getString("rights")
+                val userBureau= userDocument.getString("bureau")
 
                 var list = userDocument.getString("email")?.split(".", "@")
                 var firstname = list?.get(0)?.capitalize()
@@ -104,10 +110,19 @@ class ProfileFragment (email:String): Fragment() {
                 view.findViewById<ImageView>(R.id.userImageView).setImageDrawable(userIcon)
                 view.findViewById<TextView>(R.id.user_name).text = "$firstname $lastname"
                 view.findViewById<TextView>(R.id.user_role).text = "Role: "+roleUser
-                view.findViewById<TextView>(R.id.user_group).text = "Group: "+groupUser
-                view.findViewById<TextView>(R.id.user_numero).text = "Phone Number: "+phoneNumber
                 view.findViewById<TextView>(R.id.user_email).text = "Email: "+currentUser
-                view.findViewById<TextView>(R.id.user_bureau).text = "Bureau : Plus tard " //TODO : add to data base "bureau"
+                if ( phoneNumber != ""){
+                    view.findViewById<TextView>(R.id.user_numero).text = "Phone Number: "+phoneNumber
+                }
+                else{
+                    view.findViewById<TextView>(R.id.user_numero).text = "Phone Number: "+"Non renseigné"
+                }
+                if ( userBureau != ""){
+                    view.findViewById<TextView>(R.id.user_bureau).text = "Bureau: "+userBureau
+                }
+                else{
+                    view.findViewById<TextView>(R.id.user_bureau).text = "Bureau: "+"Non renseigné"
+                }
 
                 createPost(view,userRights!!,userIcon,authorID!!)
             }
