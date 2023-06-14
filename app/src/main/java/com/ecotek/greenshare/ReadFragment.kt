@@ -237,10 +237,8 @@ class ReadFragment : Fragment() {
                         }
                 }
                 val comments = article.commentID.split(",").toMutableList()
-                println(comments)
-                println("here")
+                comments.remove("default")
                 for (comment in comments){
-                    println("hello")
                     val inflater = LayoutInflater.from(requireContext())
                     val commentView = inflater.inflate(R.layout.comment, null)
                     val cardView: CardView = commentView.findViewById(R.id.touchCard)
