@@ -173,20 +173,17 @@
                     android:gravity="center"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
-                    android:textColor="@color/white"
-                    android:textSize="22sp"
                     android:text="Comments"
-                    />
+                    android:textColor="@color/white"
+                    android:textSize="22sp" />
+
+                <LinearLayout
+                    android:id="@+id/commenter"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"></LinearLayout>
 
 
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/commenter"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
             </LinearLayout>
 
 
