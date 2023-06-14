@@ -9,12 +9,27 @@ data class   Article(
     val authorID: String = "",
     val content: String = "",
     val date: String = "",
-    val group: String = "",
-    val likes: String = "",
+    var group: String = "",
+    var likes: String = "",
     val mediasID: String = "",
-    val commentID: String = "",
-    val verified: String = ""
+    var commentID: String = "",
+    var verified: String = ""
     ){
+
+    //when moderator validate article
+    fun validateModo(user: User, id:String){
+        val mFirestore = FirebaseFirestore.getInstance()
+
+        mFirestore.collection("Article")
+            .document(id)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (user.rights!="0"){
+                    verified="1"
+                }
+            }
+    }
+
 
     companion object {
         fun getArticle(id: String, callback: (Article?) -> Unit) {
