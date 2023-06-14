@@ -113,6 +113,10 @@ class ReadFragment : Fragment() {
                             val buttonCross = postView.findViewById<ImageButton>(R.id.buttonCross)
                             val buttonCheck = postView.findViewById<ImageButton>(R.id.buttonCheck)
                             val mediaView1: ImageView = postView.findViewById(R.id.imageView1)
+                            mediaView1.layoutParams = LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT
+                            )
                             Glide.with(requireContext())
                               .load(media1)
                               .into(mediaView1)
