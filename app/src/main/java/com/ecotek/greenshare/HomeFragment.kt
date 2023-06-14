@@ -200,7 +200,7 @@ class HomeFragment : Fragment() {
                 }
             }
             .addOnFailureListener { exception ->}
-            }
+    }
 
     private fun createnextPost(view: View) {
         if (!isAdded) {

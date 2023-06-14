@@ -26,8 +26,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView"
+            <EditText
+                android:id="@+id/commentInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
@@ -35,7 +35,17 @@
                 android:paddingVertical="12dp"
                 android:textColor="@color/black"
                 android:textSize="22sp"
+                android:hint="Add a comment"
+                style="@style/EditTextNoUnderline"
                 />
+            <Button
+                android:id="@+id/addCommentButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:backgroundTint="#25985C"
+                android:text="comment" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
     <LinearLayout
