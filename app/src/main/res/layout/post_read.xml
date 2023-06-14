@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="#303030">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/touchCard"
@@ -22,12 +23,13 @@
             android:id="@+id/layoutvideo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="#303030">
 
             <LinearLayout
                 android:id="@+id/videoLayoutHere"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="0dp"
                 android:orientation="vertical">
 
             </LinearLayout>
@@ -51,7 +53,7 @@
                 android:gravity="center"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="12dp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
 
                 android:textSize="22sp" />
             <TextView
@@ -61,7 +63,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="12dp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="15sp"
 
                 />
@@ -85,8 +87,8 @@
                     android:layout_width="30dp"
                     android:layout_height="match_parent"
                     android:fontFamily="sans-serif-medium"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
                     android:layout_marginStart="8dp" />
 
             </LinearLayout>
@@ -106,7 +108,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="22sp"
                     android:text="Comments"
                     />

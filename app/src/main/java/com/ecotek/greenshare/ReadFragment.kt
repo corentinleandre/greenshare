@@ -290,6 +290,10 @@ class ReadFragment : Fragment() {
                                 val mediaUri: Uri = Uri.parse(media1)
                                 val videoLayout = view.findViewById<LinearLayout>(R.id.videoLayoutHere)
                                 videoLayout.removeAllViews()
+                                videoLayout.layoutParams = LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    600
+                                )
                                 videoLayout.addView(createVideoView(requireContext(),mediaUri))
                                 videoLayout.setOnClickListener{
                                     (activity as HomeActivity).moveToFragment(MediaPlayer(mediaUri))
