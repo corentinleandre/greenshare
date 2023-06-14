@@ -60,4 +60,7 @@ class HomeActivity : AppCompatActivity() {
             is AddPostFragment -> bottomNavigationView.menu.findItem(R.id.nav_New_content).isChecked = false
         }
     }
+    companion object{
+
+    }
 }
