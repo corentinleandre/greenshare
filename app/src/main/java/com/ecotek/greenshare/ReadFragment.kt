@@ -116,12 +116,12 @@ class ReadFragment : Fragment() {
                             Glide.with(requireContext())
                               .load(media1)
                               .into(mediaView1)
-                            if (userRights == "0") {
-                                buttonCheck.visibility = View.GONE
-                                buttonCross.visibility = View.GONE
+                            if (userRights != "0") {
+                                buttonCheck.visibility = View.VISIBLE
+                                buttonCross.visibility = View.VISIBLE
                             }
                             if ((userRights != "0" && article.verified == "yes")) {
-                                buttonCheck.visibility = View.GONE
+                                buttonCross.visibility=View.VISIBLE
                                 buttonCross.setOnClickListener {
                                     val mFirestore = FirebaseFirestore.getInstance()
                                     val collection = mFirestore.collection("Article")
@@ -151,6 +151,8 @@ class ReadFragment : Fragment() {
                                         }
                                 }
                             } else {
+                                buttonCross.visibility = View.VISIBLE
+                                buttonCheck.visibility = View.VISIBLE
                                 buttonCross.setOnClickListener {
                                     val mFirestore = FirebaseFirestore.getInstance()
                                     val collection = mFirestore.collection("Article")
