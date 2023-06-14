@@ -40,6 +40,7 @@ class ReadFragment : Fragment() {
     private lateinit var videoLayout: LinearLayout
     fun createVideoView(context: Context, videoUri: Uri): VideoView {
         val videoView = VideoView(context)
+
         videoView.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -49,10 +50,12 @@ class ReadFragment : Fragment() {
             mediaPlayer.setVolume(0f, 0f)
             mediaPlayer.isLooping = true
             mediaPlayer.start()
+
         }
 
         return videoView!!
     }
+
 
     private fun createCustomUserIcon(context: Context, initials: String): Drawable {
         val size = 512 // Taille de l'icône (en pixels)
@@ -341,6 +344,11 @@ class ReadFragment : Fragment() {
                             val media3 = documentSnapshot.getString("media3")
                             val media4 = documentSnapshot.getString("media4")
                             val mediaView1: ImageView = postView.findViewById(R.id.imageView1)
+                            val mediaView2:ImageView=postView.findViewById(R.id.imageViewv)
+                            val mediaCountTextView: TextView = postView.findViewById(R.id.mediaCountTextView)
+                            val mediaCount = getMediaCount(media2, media3, media4) // Fonction pour compter le nombre de médias
+                            mediaCountTextView.text = " +$mediaCount "
+
 
                             val type = documentSnapshot.getString("type")
                             if(type=="image"){
@@ -348,23 +356,24 @@ class ReadFragment : Fragment() {
                                     .load(media1)
                                     .into(mediaView1)}
                             if(type == "video") {
-                                val mediaUri: Uri = Uri.parse(media1)
-                                val videoLayout = view.findViewById<LinearLayout>(R.id.videoLayoutHere)
-                                videoLayout.removeAllViews()
-                                videoLayout.layoutParams = LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    600
-                                )
-                                videoLayout.addView(createVideoView(requireContext(),mediaUri))
-                                videoLayout.setOnClickListener{
-                                    (activity as HomeActivity).moveToFragment(MediaPlayer(mediaUri))
-                                }
+                                mediaCountTextView.text = "  Clic to play  "
+                                mediaCountTextView.textSize =
+                                    20F
+                                Glide.with(requireContext())
+                                    .load(media1)
+                                    .into(mediaView2)
+                            }
+                            val mediaUri: Uri = Uri.parse(media1)
+                            mediaView2.setOnClickListener{
+                                println("bonjour")
+                                (activity as HomeActivity).moveToFragment(MediaPlayer(mediaUri))
                             }
 
                             mediaView1.setOnClickListener {
                                 val mediaView2: ImageView = postView.findViewById(R.id.imageView2)
                                 val mediaView3: ImageView = postView.findViewById(R.id.imageView3)
                                 val mediaView4: ImageView = postView.findViewById(R.id.imageView4)
+                                mediaCountTextView.visibility = View.GONE
 
                                 Glide.with(requireContext())
                                     .load(media2)
@@ -410,4 +419,13 @@ class ReadFragment : Fragment() {
             }
         }
     }
+}
+private fun getMediaCount(vararg media: String?): Int {
+    var count = 0
+    for (m in media) {
+        if (!m.isNullOrEmpty()) {
+            count++
+        }
+    }
+    return count
 }
