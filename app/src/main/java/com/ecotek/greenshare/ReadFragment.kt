@@ -253,8 +253,8 @@ class ReadFragment : Fragment() {
                                 LinearLayout.LayoutParams.WRAP_CONTENT
                             )
                             Glide.with(requireContext())
-                              .load(media1)
-                              .into(mediaView1)
+                                .load(media1)
+                                .into(mediaView1)
 
                             mediaView1.setOnClickListener {
                                 val mediaView2: ImageView = postView.findViewById(R.id.imageView2)

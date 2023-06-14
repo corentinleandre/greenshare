@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/background">
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/imageView2"
@@ -112,7 +111,7 @@
         android:layout_width="152dp"
         android:layout_height="69dp"
         android:layout_gravity="center"
-        android:backgroundTint="#7FDA48"
+        android:backgroundTint="#5E8447"
         android:layout_marginTop="10dp"
         android:text="Share"
         android:textColor="@color/black"
