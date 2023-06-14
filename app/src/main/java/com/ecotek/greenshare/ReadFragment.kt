@@ -321,6 +321,10 @@ class ReadFragment : Fragment() {
                             val media4 = documentSnapshot.getString("media4")
                             val mediaView1: ImageView = postView.findViewById(R.id.imageView1)
                             val mediaView2:ImageView=postView.findViewById(R.id.imageViewv)
+                            val mediaCountTextView: TextView = postView.findViewById(R.id.mediaCountTextView)
+                            val mediaCount = getMediaCount(media2, media3, media4) // Fonction pour compter le nombre de médias
+                            mediaCountTextView.text = " +$mediaCount "
+
 
                             val type = documentSnapshot.getString("type")
                             if(type=="image"){
@@ -397,4 +401,13 @@ class ReadFragment : Fragment() {
             }
         }
     }
+}
+private fun getMediaCount(vararg media: String?): Int {
+    var count = 0
+    for (m in media) {
+        if (!m.isNullOrEmpty()) {
+            count++
+        }
+    }
+    return count
 }
