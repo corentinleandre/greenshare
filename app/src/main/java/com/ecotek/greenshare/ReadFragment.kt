@@ -23,6 +23,8 @@ class ReadFragment : Fragment() {
     val im = 10 // Nombre d'ViewImage et ViewText à ajouter
     val currentUser = FirebaseAuth.getInstance().currentUser?.email
     var userId=""
+    var userRights = ""
+
 
 
     @SuppressLint("MissingInflatedId")
@@ -37,7 +39,6 @@ class ReadFragment : Fragment() {
         if (!isAdded) {
             return  // Vérifie si le fragment est attaché avant d'accéder au contexte
         }
-        var userRights = "0"
         val mFirestore = FirebaseFirestore.getInstance()
         val collectionuser = mFirestore.collection("Users")
         collectionuser
@@ -103,6 +104,94 @@ class ReadFragment : Fragment() {
 
         Article.getArticle(index.toString()){article ->
             if (article != null) {
+                val buttonCross = postView.findViewById<ImageButton>(R.id.buttonCross)
+                val buttonCheck = postView.findViewById<ImageButton>(R.id.buttonCheck)
+                Log.d("marie", userRights)
+                if ((userRights != "0") || (userRights == "0" && userId == article.authorID)) {
+                    buttonCross.visibility=View.VISIBLE
+                    buttonCross.setOnClickListener {
+                        val mFirestore = FirebaseFirestore.getInstance()
+                        val collection = mFirestore.collection("Article")
+                        collection
+                            .get()
+                            .addOnSuccessListener { querySnapshot ->
+                                for (document in querySnapshot) {
+                                    if (document.getString("id") == index.toString()) {
+                                        document.reference.delete()
+                                            .addOnSuccessListener {
+                                                // Suppression réussie, retourner sur la page d'accueil
+                                                val homeFragment = HomeFragment()
+                                                val fragmentManager =
+                                                    requireActivity().supportFragmentManager
+                                                fragmentManager.beginTransaction()
+                                                    .replace(
+                                                        R.id.container_view,
+                                                        homeFragment
+                                                    )
+                                                    .commit()
+                                            }.addOnFailureListener { exception ->
+                                                // Gérer les erreurs de suppression ici
+                                            }
+                                        break  // Sortir de la boucle après la suppression de l'article
+                                    }
+                                }
+                            }
+                    }
+                }
+                if (userRights != "0" && article.verified == "no") {
+                    buttonCross.visibility = View.VISIBLE
+                    buttonCheck.visibility = View.VISIBLE
+                    buttonCross.setOnClickListener {
+                        val mFirestore = FirebaseFirestore.getInstance()
+                        val collection = mFirestore.collection("Article")
+                        collection
+                            .get()
+                            .addOnSuccessListener { querySnapshot ->
+                                for (document in querySnapshot) {
+                                    if (document.getString("id") == index.toString()) {
+                                        document.reference.delete()
+                                            .addOnSuccessListener {
+                                                // Suppression réussie, retourner sur la page d'accueil
+                                                val homeFragment = HomeFragment()
+                                                val fragmentManager =
+                                                    requireActivity().supportFragmentManager
+                                                fragmentManager.beginTransaction()
+                                                    .replace(
+                                                        R.id.container_view,
+                                                        homeFragment
+                                                    )
+                                                    .commit()
+                                            }.addOnFailureListener { exception ->
+                                                // Gérer les erreurs de suppression ici
+                                            }
+                                        break  // Sortir de la boucle après la suppression de l'article
+                                    }
+                                }
+                            }
+                    }
+                    buttonCheck.setOnClickListener {
+                        val mFirestore = FirebaseFirestore.getInstance()
+                        val collection = mFirestore.collection("Article")
+                        collection
+                            .get()
+                            .addOnSuccessListener { querySnapshot ->
+                                for (document in querySnapshot) {
+                                    if (document.getString("id") == index.toString()) {
+                                        document.reference.update("verified", "yes")
+                                    }
+                                }
+                                // Retour à la page d'accueil
+                                val homeFragment = HomeFragment()
+                                val fragmentManager =
+                                    requireActivity().supportFragmentManager
+                                fragmentManager.beginTransaction()
+                                    .replace(R.id.container_view, homeFragment)
+                                    .commit()
+                            }.addOnFailureListener { exception ->
+                                // Gérer les erreurs de suppression ici
+                            }
+                    }
+                }
                 if (article.mediasID != "") {
                     var medias = FirebaseFirestore.getInstance().collection("Medias")
                         .document(index.toString())
@@ -112,8 +201,6 @@ class ReadFragment : Fragment() {
                             val media2 = documentSnapshot.getString("media2")
                             val media3 = documentSnapshot.getString("media3")
                             val media4 = documentSnapshot.getString("media4")
-                            val buttonCross = postView.findViewById<ImageButton>(R.id.buttonCross)
-                            val buttonCheck = postView.findViewById<ImageButton>(R.id.buttonCheck)
                             val mediaView1: ImageView = postView.findViewById(R.id.imageView1)
                             mediaView1.layoutParams = LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -122,92 +209,7 @@ class ReadFragment : Fragment() {
                             Glide.with(requireContext())
                               .load(media1)
                               .into(mediaView1)
-                            Log.d("marie",userRights)
-                            if ((userRights != "0" && article.verified == "yes") || (userRights == "0" && article.authorID==userId)) {
-                                buttonCross.visibility=View.VISIBLE
-                                buttonCross.setOnClickListener {
-                                    val mFirestore = FirebaseFirestore.getInstance()
-                                    val collection = mFirestore.collection("Article")
-                                    collection
-                                        .get()
-                                        .addOnSuccessListener { querySnapshot ->
-                                            for (document in querySnapshot) {
-                                                if (document.getString("id") == index.toString()) {
-                                                    document.reference.delete()
-                                                        .addOnSuccessListener {
-                                                            // Suppression réussie, retourner sur la page d'accueil
-                                                            val homeFragment = HomeFragment()
-                                                            val fragmentManager =
-                                                                requireActivity().supportFragmentManager
-                                                            fragmentManager.beginTransaction()
-                                                                .replace(
-                                                                    R.id.container_view,
-                                                                    homeFragment
-                                                                )
-                                                                .commit()
-                                                        }.addOnFailureListener { exception ->
-                                                            // Gérer les erreurs de suppression ici
-                                                        }
-                                                    break  // Sortir de la boucle après la suppression de l'article
-                                                }
-                                            }
-                                        }
-                                }
-                            } else if (userRights != "0" && article.verified == "no") {
-                                Log.d("marie","COUCOU")
-                                buttonCross.visibility = View.VISIBLE
-                                buttonCheck.visibility = View.VISIBLE
-                                buttonCross.setOnClickListener {
-                                    val mFirestore = FirebaseFirestore.getInstance()
-                                    val collection = mFirestore.collection("Article")
-                                    collection
-                                        .get()
-                                        .addOnSuccessListener { querySnapshot ->
-                                            for (document in querySnapshot) {
-                                                if (document.getString("id") == index.toString()) {
-                                                    document.reference.delete()
-                                                        .addOnSuccessListener {
-                                                            // Suppression réussie, retourner sur la page d'accueil
-                                                            val homeFragment = HomeFragment()
-                                                            val fragmentManager =
-                                                                requireActivity().supportFragmentManager
-                                                            fragmentManager.beginTransaction()
-                                                                .replace(
-                                                                    R.id.container_view,
-                                                                    homeFragment
-                                                                )
-                                                                .commit()
-                                                        }.addOnFailureListener { exception ->
-                                                            // Gérer les erreurs de suppression ici
-                                                        }
-                                                    break  // Sortir de la boucle après la suppression de l'article
-                                                }
-                                            }
-                                        }
-                                }
-                                buttonCheck.setOnClickListener {
-                                    val mFirestore = FirebaseFirestore.getInstance()
-                                    val collection = mFirestore.collection("Article")
-                                    collection
-                                        .get()
-                                        .addOnSuccessListener { querySnapshot ->
-                                            for (document in querySnapshot) {
-                                                if (document.getString("id") == index.toString()) {
-                                                    document.reference.update("verified", "yes")
-                                                }
-                                            }
-                                            // Retour à la page d'accueil
-                                            val homeFragment = HomeFragment()
-                                            val fragmentManager =
-                                                requireActivity().supportFragmentManager
-                                            fragmentManager.beginTransaction()
-                                                .replace(R.id.container_view, homeFragment)
-                                                .commit()
-                                        }.addOnFailureListener { exception ->
-                                            // Gérer les erreurs de suppression ici
-                                        }
-                                }
-                            }
+
                             mediaView1.setOnClickListener {
                                 val mediaView2: ImageView = postView.findViewById(R.id.imageView2)
                                 val mediaView3: ImageView = postView.findViewById(R.id.imageView3)
