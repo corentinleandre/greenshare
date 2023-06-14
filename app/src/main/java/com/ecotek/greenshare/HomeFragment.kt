@@ -1,7 +1,6 @@
 package com.ecotek.greenshare
 
 import android.annotation.SuppressLint
-import java.util.Locale
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -11,9 +10,7 @@ import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,15 +18,11 @@ import android.widget.TextView
 import android.widget.LinearLayout
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.RelativeLayout
 import android.widget.ScrollView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -188,6 +181,11 @@ class HomeFragment : Fragment() {
                                         handleClick(readFragment, args)
                                     }
 
+                                    val profileImageView: ImageView = postView.findViewById(R.id.profileImageView)
+                                    profileImageView.setOnClickListener {
+                                        (activity as HomeActivity).moveToFragment(UserFragment(article.authorID))
+                                    }
+
                                     currentId = articles.lastOrNull()?.id?.toInt() ?: 0
 
                                 }
@@ -271,6 +269,11 @@ class HomeFragment : Fragment() {
                                     val readFragment = ReadFragment()
                                     readFragment.arguments = args
                                     handleClick(readFragment, args)
+                                }
+
+                                val profileImageView: ImageView = postView.findViewById(R.id.profileImageView)
+                                profileImageView.setOnClickListener {
+                                    (activity as HomeActivity).moveToFragment(UserFragment(article.authorID))
                                 }
                             }
                             currentId = articlesToDisplay.lastOrNull()?.id?.toInt() ?: 0
