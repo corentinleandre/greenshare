@@ -59,7 +59,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/linearLayout3"
-                android:layout_width="353dp"
+                android:layout_width="329dp"
                 android:layout_height="243dp"
                 android:layout_margin="10dp"
                 android:layout_marginHorizontal="16dp"
@@ -98,69 +98,69 @@
 
                 <TextView
                     android:id="@+id/user_role"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="262dp"
+                    android:layout_height="28dp"
                     android:text="role: "
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.107"
+                    app:layout_constraintHorizontal_bias="0.395"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.448" />
+                    app:layout_constraintVertical_bias="0.511" />
 
                 <TextView
                     android:id="@+id/user_email"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="257dp"
+                    android:layout_height="32dp"
                     android:layout_marginTop="8dp"
                     android:text="Email: john.doe@uha.fr "
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.208"
+                    app:layout_constraintHorizontal_bias="0.364"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.316" />
+                    app:layout_constraintVertical_bias="0.344" />
 
                 <TextView
                     android:id="@+id/user_bureau"
-                    android:layout_width="122dp"
-                    android:layout_height="28dp"
+                    android:layout_width="254dp"
+                    android:layout_height="27dp"
                     android:text="Bureau: "
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.146"
+                    app:layout_constraintHorizontal_bias="0.36"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.726" />
+                    app:layout_constraintVertical_bias="0.8" />
 
                 <TextView
                     android:id="@+id/user_group"
-                    android:layout_width="112dp"
-                    android:layout_height="25dp"
+                    android:layout_width="267dp"
+                    android:layout_height="31dp"
                     android:text="Group: "
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.14"
+                    app:layout_constraintHorizontal_bias="0.451"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.86" />
+                    app:layout_constraintVertical_bias="0.966" />
 
                 <TextView
                     android:id="@+id/user_numero"
-                    android:layout_width="106dp"
-                    android:layout_height="32dp"
+                    android:layout_width="260dp"
+                    android:layout_height="34dp"
                     android:text="numero : 06"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.136"
+                    app:layout_constraintHorizontal_bias="0.387"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.581" />
+                    app:layout_constraintVertical_bias="0.66" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
