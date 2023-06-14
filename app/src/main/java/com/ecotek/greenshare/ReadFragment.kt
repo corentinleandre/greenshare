@@ -30,15 +30,6 @@ class ReadFragment : Fragment() {
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_read, container, false)
-        createPost(view)
-        return view
-    }
-
-    @SuppressLint("MissingInflatedId", "SuspiciousIndentation")
-    private fun createPost(view: View) {
-        if (!isAdded) {
-            return  // Vérifie si le fragment est attaché avant d'accéder au contexte
-        }
         val mFirestore = FirebaseFirestore.getInstance()
         val collectionuser = mFirestore.collection("Users")
         collectionuser
@@ -48,7 +39,17 @@ class ReadFragment : Fragment() {
                 val userDocument = document.documents[0]
                 userRights = userDocument.getString("rights").toString()
                 userId= userDocument.getString("identification").toString()
+                createPost(view)
             }
+
+        return view
+    }
+
+    @SuppressLint("MissingInflatedId", "SuspiciousIndentation")
+    private fun createPost(view: View) {
+        if (!isAdded) {
+            return  // Vérifie si le fragment est attaché avant d'accéder au contexte
+        }
 
         val linearContainer: LinearLayout = view.findViewById(R.id.fil)
         val inflater = LayoutInflater.from(requireContext())
@@ -106,8 +107,10 @@ class ReadFragment : Fragment() {
             if (article != null) {
                 val buttonCross = postView.findViewById<ImageButton>(R.id.buttonCross)
                 val buttonCheck = postView.findViewById<ImageButton>(R.id.buttonCheck)
-                Log.d("marie", userRights)
                 if ((userRights != "0") || (userRights == "0" && userId == article.authorID)) {
+                    Log.d("marie",userRights)
+                    Log.d("marie",userId)
+                    Log.d("marie",article.authorID)
                     buttonCross.visibility=View.VISIBLE
                     buttonCross.setOnClickListener {
                         val mFirestore = FirebaseFirestore.getInstance()
