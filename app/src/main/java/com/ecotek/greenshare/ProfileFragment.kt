@@ -110,9 +110,19 @@ class ProfileFragment (email:String): Fragment() {
                 view.findViewById<ImageView>(R.id.userImageView).setImageDrawable(userIcon)
                 view.findViewById<TextView>(R.id.user_name).text = "$firstname $lastname"
                 view.findViewById<TextView>(R.id.user_role).text = "Role: "+roleUser
-                view.findViewById<TextView>(R.id.user_numero).text = "Phone Number: "+phoneNumber
                 view.findViewById<TextView>(R.id.user_email).text = "Email: "+currentUser
-                view.findViewById<TextView>(R.id.user_bureau).text = "Bureau : "+userBureau //TODO : add to data base "bureau"
+                if ( phoneNumber != ""){
+                    view.findViewById<TextView>(R.id.user_numero).text = "Phone Number: "+phoneNumber
+                }
+                else{
+                    view.findViewById<TextView>(R.id.user_numero).text = "Phone Number: "+"Non renseigné"
+                }
+                if ( userBureau != ""){
+                    view.findViewById<TextView>(R.id.user_bureau).text = "Bureau: "+userBureau
+                }
+                else{
+                    view.findViewById<TextView>(R.id.user_bureau).text = "Bureau: "+"Non renseigné"
+                }
 
                 createPost(view,userRights!!,userIcon,authorID!!)
             }

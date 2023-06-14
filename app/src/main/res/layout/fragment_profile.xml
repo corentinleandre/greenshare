@@ -155,19 +155,6 @@
                     app:layout_constraintVertical_bias="0.8" />
 
                 <TextView
-                    android:id="@+id/user_group"
-                    android:layout_width="267dp"
-                    android:layout_height="31dp"
-                    android:text="Group: "
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.451"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.966" />
-
-                <TextView
                     android:id="@+id/user_numero"
                     android:layout_width="260dp"
                     android:layout_height="34dp"
