@@ -62,8 +62,8 @@ class HomeFragment : Fragment() {
         val canvas = Canvas(bitmap)
 
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
         paint.color = Color.rgb(37,152,92)// color for background
-        canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
 
         val textSize = size / initials.length.toFloat()
         paint.color = Color.WHITE // color for text

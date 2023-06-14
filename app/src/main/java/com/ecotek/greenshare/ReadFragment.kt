@@ -281,6 +281,7 @@ class ReadFragment : Fragment() {
                             val media3 = documentSnapshot.getString("media3")
                             val media4 = documentSnapshot.getString("media4")
                             val mediaView1: ImageView = postView.findViewById(R.id.imageView1)
+
                             val type = documentSnapshot.getString("type")
                             if(type=="image"){
                                 Glide.with(requireContext())
