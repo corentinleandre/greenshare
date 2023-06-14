@@ -1,14 +1,14 @@
 package com.ecotek.greenshare
 
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.TextView
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.ecotek.greenshare.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -38,7 +38,7 @@ class HomeActivity : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
                 R.id.nav_profile -> {
-                    moveToFragment(ProfileFragment())
+                    moveToFragment(ProfileFragment(FirebaseAuth.getInstance().currentUser?.email.toString()))
                     return@setOnItemSelectedListener true
                 }
                 R.id.nav_search -> {

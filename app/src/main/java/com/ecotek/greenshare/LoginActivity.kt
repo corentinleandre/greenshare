@@ -19,7 +19,6 @@ open class LoginActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         //binding = ActivityMainBinding.inflate(layoutInflater)
-
         setContentView(R.layout.login_activity)
         //FireStore().getJsonDataFromAsset(this, "prof_data.json")
         //FireStore().getJsonDataFromAsset(this, "student_data.json")
