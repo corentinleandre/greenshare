@@ -110,7 +110,7 @@ class SearchFragment : Fragment() {
                         val inflater = LayoutInflater.from(requireContext())
                         val postView = inflater.inflate(R.layout.post, null)
                         val cardView: CardView = postView.findViewById(R.id.touchCard)
-                        val articleVerified= article.verified
+                        val articleVerified=article.verified.toString()
                         val flagImageView = postView.findViewById<ImageView>(R.id.redFlag)
                         if (userRights == "0" || articleVerified == "yes") {
                             flagImageView.visibility = View.INVISIBLE
@@ -142,11 +142,6 @@ class SearchFragment : Fragment() {
                             val readFragment = ReadFragment()
                             readFragment.arguments = args
                             handleClick(readFragment, args)
-                        }
-
-                        val profileImageView: ImageView = postView.findViewById(R.id.profileImageView)
-                        profileImageView.setOnClickListener {
-                            (activity as HomeActivity).moveToFragment(UserFragment(article.authorID))
                         }
                     }
                 }

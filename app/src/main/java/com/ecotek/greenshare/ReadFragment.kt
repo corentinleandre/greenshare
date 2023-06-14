@@ -303,12 +303,6 @@ class ReadFragment : Fragment() {
                             commentTextView.text = com?.content
                         }
                     commenterlayout.addView(commentView)
-
-                    //TODO click profile author comment
-                    /*val profileImageView: ImageView = postView.findViewById(R.id.profileImageView)
-                    profileImageView.setOnClickListener {
-                        (activity as HomeActivity).moveToFragment(UserFragment(article.authorID))
-                    }*/
                 }
             }
         }
@@ -326,6 +320,5 @@ class ReadFragment : Fragment() {
                 description.text = article.content
             }
         }
-
     }
 }

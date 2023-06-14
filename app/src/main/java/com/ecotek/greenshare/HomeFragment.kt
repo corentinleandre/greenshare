@@ -13,6 +13,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,15 +21,24 @@ import android.widget.TextView
 import android.widget.LinearLayout
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.RelativeLayout
 import android.widget.ScrollView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
+
 class HomeFragment : Fragment() {
-    var currentId = 0
+    var currentId=0
+    var userRights="0"
+    val currentUser = FirebaseAuth.getInstance().currentUser?.email
+
     private lateinit var progressBar: ProgressBar
 
     private fun getUserInitials(authorID: String, onComplete: (String) -> Unit) {
@@ -80,41 +90,54 @@ class HomeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         createPost(view)
-
         val scrollView: ScrollView = view.findViewById(R.id.scroll)
-
         detectEndOfScroll(scrollView)
+        refreshScroll(scrollView)
 
         return view
     }
 
     @SuppressLint("MissingInflatedId")
-    private fun createPost(view: View) {
+    private fun createPost(view: View){
         if (!isAdded) {
             return  // Vérifie si le fragment est attaché avant d'accéder au contexte
-        } else {
+        }
 
-            val linearContainer: LinearLayout = view.findViewById(R.id.fil)
+        val linearContainer: LinearLayout = view.findViewById(R.id.fil)
 
-            val mFirestore = FirebaseFirestore.getInstance()
-            val collection = mFirestore.collection("Article")
-            val mediaCollection = mFirestore.collection("Medias")
-            // Tri par ordre décroissant des IDs
-            collection
-                .orderBy("date", Query.Direction.DESCENDING).limit(15)
-                .get()
-                .addOnSuccessListener { querySnapshot ->
-                    val articles = ArrayList<Article>()
-                    for (document in querySnapshot) {
-                        val id = document.id.toString()
-                        Article.getArticle(id) { article ->
-                            if (article != null) {
-                                articles.add(article)
-                            }
-                            // Vérifie si tous les articles ont été récupérés
-                            if (articles.size == querySnapshot.documents.size) {
-                                articles.sortByDescending { it.date } // Trie les articles par ordre décroissant de la date
-                                for (article in articles) {
+        val mFirestore = FirebaseFirestore.getInstance()
+        val collectionuser = mFirestore.collection("Users")
+        collectionuser
+            .whereEqualTo("email", currentUser)
+            .get()
+            .addOnSuccessListener { document ->
+                val userDocument = document.documents[0]
+                userRights = userDocument.getString("rights").toString()
+            }
+        val collection = mFirestore.collection("Article")
+        // Tri par ordre décroissant des IDs
+        collection
+            .orderBy("date", Query.Direction.DESCENDING).limit(8)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val articles = ArrayList<Article>()
+                for (document in querySnapshot) {
+                    val id = document.id.toString()
+                    Article.getArticle(id) { article ->
+                        if (article != null) {
+                            articles.add(article)
+                        }
+                        // Vérifie si tous les articles ont été récupérés
+                        if (articles.size == querySnapshot.documents.size) {
+                            articles.sortByDescending { it.date } // Trie les articles par ordre décroissant de la date
+
+
+                            for (article in articles) {
+
+                                val articleVerified = article.verified.toString()
+
+                                if (article != null && (articleVerified != "no" || (articleVerified == "no" && userRights != "0"))) {
+
                                     val inflater = LayoutInflater.from(requireContext())
                                     val postView = inflater.inflate(R.layout.post, null)
                                     getUserInitials(article.authorID) { userInitials ->
@@ -126,6 +149,11 @@ class HomeFragment : Fragment() {
                                     val cardView: CardView =
                                         postView.findViewById(R.id.touchCard)
                                     linearContainer.addView(postView)
+                                    val flagImageView =
+                                        postView.findViewById<ImageView>(R.id.redFlag)
+                                    if (userRights == "0" || articleVerified == "yes") {
+                                        flagImageView.visibility = View.INVISIBLE
+                                    }
 
                                     val args = Bundle()
 
@@ -147,14 +175,17 @@ class HomeFragment : Fragment() {
                                                     .into(mediaView)
 
                                             }
-
-                                            val profileImageView: ImageView = postView.findViewById(R.id.profileImageView)
-                                            profileImageView.setOnClickListener {
-                                                handleClick(UserFragment(article.authorID))
-                                            }
-
-                                            currentId = articles.lastOrNull()?.id?.toInt() ?: 0
                                         }
+                                    }
+
+                                    val textView: TextView = postView.findViewById(R.id.textView)
+                                    textView.text = article.title
+
+                                    cardView.setOnClickListener {
+                                        args.putString("index", article.id)
+                                        val readFragment = ReadFragment()
+                                        readFragment.arguments = args
+                                        handleClick(readFragment, args)
                                     }
 
                                     currentId = articles.lastOrNull()?.id?.toInt() ?: 0
@@ -163,13 +194,12 @@ class HomeFragment : Fragment() {
 
 
                             }
+
                         }
                     }
                 }
-                .addOnFailureListener { exception ->
-                    //
-                }
-        }
+            }
+            .addOnFailureListener { exception ->}
     }
 
     private fun createnextPost(view: View) {
@@ -188,9 +218,11 @@ class HomeFragment : Fragment() {
                 for (document in querySnapshot) {
                     val id = document.id.toString()
                     Article.getArticle(id) { article ->
+                        val articleVerified=article?.verified.toString()
                         if (article != null) {
                             articles.add(article)
                         }
+
                         // Vérifie si tous les articles ont été récupérés
                         if (articles.size == querySnapshot.documents.size) {
                             articles.sortByDescending { it.date } // Trie les articles par ordre décroissant de la date
@@ -238,12 +270,7 @@ class HomeFragment : Fragment() {
                                     args.putString("index", article.id)
                                     val readFragment = ReadFragment()
                                     readFragment.arguments = args
-                                    handleClick(readFragment)
-                                }
-
-                                val profileImageView: ImageView = postView.findViewById(R.id.profileImageView)
-                                profileImageView.setOnClickListener {
-                                    handleClick(UserFragment(article.authorID))
+                                    handleClick(readFragment, args)
                                 }
                             }
                             currentId = articlesToDisplay.lastOrNull()?.id?.toInt() ?: 0
@@ -256,11 +283,16 @@ class HomeFragment : Fragment() {
             }
     }
 
-    private fun detectEndOfScroll(scrollView: ScrollView) {
+
+
+
+
+     fun detectEndOfScroll(scrollView: ScrollView) {
         scrollView.viewTreeObserver.addOnScrollChangedListener {
             val view = scrollView.getChildAt(scrollView.childCount - 1)
             val diff = (view.bottom - (scrollView.height + scrollView.scrollY))
             if (diff == 0) {
+                //changer la fonction create post par la fonction add other posts qui ajoute les posts des id suivants
                 createnextPost(view)
             }
         }
