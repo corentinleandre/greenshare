@@ -19,7 +19,6 @@
         android:layout_height="wrap_content"
         android:background="#25985C"
         android:layout_alignParentBottom="true"
-        android:background="#5E8447"
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
         app:labelVisibilityMode="auto"
