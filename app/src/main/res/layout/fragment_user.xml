@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="15dp"
-    android:background="#834DAC67"
+    android:background="#404040"
     android:orientation="vertical"
     android:padding="0dp"
     tools:context=".MainActivity">
@@ -17,7 +17,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="19dp"
         android:background="@drawable/round_image"
-        android:contentDescription="@string/profile_picture"
+        android:contentDescription="Profile Picture"
         />
 
     <TextView
@@ -28,6 +28,7 @@
         android:layout_margin="16dp"
         android:layout_marginTop="16dp"
         android:baselineAligned="false"
+        android:textColor="@color/white"
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -35,38 +36,27 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#CEFEFEFE"
+        android:background="#6A6A6A"
         android:paddingHorizontal="10dp"
-        android:paddingVertical="10dp">
+        android:paddingVertical="10dp"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center">
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:id="@+id/linearLayout3"
                 android:layout_width="329dp"
-                android:layout_height="243dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_marginHorizontal="16dp"
                 android:background="@drawable/border"
-                android:padding="5dp">
-
-
-                <ImageView
-                    android:id="@+id/icon_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:src="@drawable/baseline_info_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/info"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.121" />
+                android:padding="5dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/info"
@@ -74,21 +64,28 @@
                     android:layout_height="55dp"
                     android:baselineAligned="false"
                     android:padding="10dp"
-                    android:text="@string/info"
+                    android:text="Info:"
                     android:textSize="24sp"
                     android:textStyle="bold"
+                    android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.16"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.067" />
+                    app:layout_constraintVertical_bias="0.067"
+                    android:drawableLeft="@drawable/baseline_info_24"
+                    android:drawablePadding="10dp"/>
 
                 <TextView
                     android:id="@+id/user_role"
-                    android:layout_width="262dp"
-                    android:layout_height="28dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:text="role: "
                     android:textSize="18sp"
+                    android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.395"
@@ -98,10 +95,13 @@
 
                 <TextView
                     android:id="@+id/user_email"
-                    android:layout_width="257dp"
-                    android:layout_height="32dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:text="Email:"
                     android:textSize="18sp"
+                    android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.364"
@@ -111,9 +111,13 @@
 
                 <TextView
                     android:id="@+id/user_bureau"
-                    android:layout_width="254dp"
-                    android:layout_height="27dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:text="Bureau: "
                     android:textSize="18sp"
+                    android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.36"
@@ -122,39 +126,31 @@
                     app:layout_constraintVertical_bias="0.8" />
 
                 <TextView
-                    android:id="@+id/user_group"
-                    android:layout_width="267dp"
-                    android:layout_height="31dp"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.451"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.966" />
-
-                <TextView
                     android:id="@+id/user_numero"
-                    android:layout_width="260dp"
-                    android:layout_height="34dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="numero :"
                     android:textSize="18sp"
+                    android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.387"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.66" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/Posts"
-                android:layout_width="176dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:padding="10dp"
-                android:text="@string/posts"
+                android:text="Posts"
+                android:textColor="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 

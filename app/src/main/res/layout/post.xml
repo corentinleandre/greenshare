@@ -52,7 +52,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="left">
 
@@ -60,14 +60,15 @@
                     android:id="@+id/author"
                     android:layout_width="191dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
                     android:fontFamily="sans-serif-medium"
-                    android:textColor="@color/white"
-                    android:textSize="22sp" />
+                    android:textColor="#77FFFFFF"
+                    android:textSize="12sp" />
 
                 <ImageView
                     android:id="@+id/redFlag"
                     android:layout_width="24dp"
-                    android:layout_height="30dp"
+                    android:layout_height="24dp"
                     android:layout_marginLeft="50dp"
                     android:src="@drawable/red_flag_24" />
             </LinearLayout>

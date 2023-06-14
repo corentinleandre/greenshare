@@ -26,6 +26,7 @@
             android:layout_width="270dp"
             android:layout_height="60dp"
             android:background="@drawable/border"
+            android:textColor="@color/white"
             android:hint="Add a title"
             android:paddingHorizontal="12dp"
             android:textColorHint="#ffffff" />
@@ -67,6 +68,7 @@
         android:layout_marginBottom="12dp"
         android:background="@drawable/border"
         android:hint="Set Audience"
+        android:textColor="@color/white"
         android:padding="10dp"
         android:textColorHint="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -86,6 +88,7 @@
         android:layout_marginHorizontal="10dp"
         android:background="@drawable/border"
         android:hint="Write your publication"
+        android:textColor="@color/white"
         android:textColorHint="#ffffff"
         android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -116,7 +119,6 @@
         android:layout_marginTop="10dp"
         android:text="Share"
         android:textColor="@color/white"
-        android:textColorHint="#87EB4B"
         android:textSize="21dp"
         android:textStyle="bold" />
 

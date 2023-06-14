@@ -31,7 +31,7 @@ class UserFragment (authorID: String): Fragment() {
         val canvas = Canvas(bitmap)
 
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-        paint.color = Color.BLACK // color for background
+        paint.color = Color.rgb(37,152,92) // color for background
         canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
 
         val textSize = size / initials.length.toFloat()
@@ -88,7 +88,6 @@ class UserFragment (authorID: String): Fragment() {
                 view.findViewById<ImageView>(R.id.userImageView).setImageDrawable(userIcon)
                 view.findViewById<TextView>(R.id.user_name).text = "$firstname $lastname"
                 view.findViewById<TextView>(R.id.user_role).text = "Role: "+roleUser
-                view.findViewById<TextView>(R.id.user_group).text = "Group: "+groupUser
                 view.findViewById<TextView>(R.id.user_numero).text = "Phone Number: "+phoneNumber
                 view.findViewById<TextView>(R.id.user_email).text = "Email: "+email
                 view.findViewById<TextView>(R.id.user_bureau).text = "Bureau : Plus tard " //TODO : add to data base "bureau"
