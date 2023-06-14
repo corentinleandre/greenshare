@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -17,7 +18,6 @@
         android:layout_marginRight="15dp"
         android:layout_marginBottom="10dp"
         android:background="#424242"
-
         app:cardCornerRadius="30dp"
         app:cardElevation="4dp"
         >
@@ -53,7 +53,8 @@
                 android:id="@+id/redFlag"
                 android:layout_width="24dp"
                 android:layout_height="30dp"
-                android:layout_gravity="center"
+                android:layout_gravity="right"
+                android:layout_marginRight="20dp"
                 android:src="@drawable/red_flag_24"
                 />
         </LinearLayout>

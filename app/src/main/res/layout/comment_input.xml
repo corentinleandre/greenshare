@@ -24,7 +24,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="#424242">
 
             <EditText
                 android:id="@+id/commentInput"
@@ -33,9 +34,10 @@
                 android:fontFamily="sans-serif-medium"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="12dp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="22sp"
                 android:hint="Add a comment"
+                android:textColorHint="#ffffff"
                 style="@style/EditTextNoUnderline"
                 />
             <Button
