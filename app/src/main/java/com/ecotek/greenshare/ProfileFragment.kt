@@ -107,15 +107,15 @@ class ProfileFragment (email:String): Fragment() {
                 view.findViewById<TextView>(R.id.user_group).text = "Group: "+groupUser
                 view.findViewById<TextView>(R.id.user_numero).text = "Phone Number: "+phoneNumber
                 view.findViewById<TextView>(R.id.user_email).text = "Email: "+currentUser
-                view.findViewById<TextView>(R.id.user_bureau).text = "Plus tard " //TODO : add to data base "bureau"
+                view.findViewById<TextView>(R.id.user_bureau).text = "Bureau : Plus tard " //TODO : add to data base "bureau"
 
-                createPost(view,userRights!!,userIcon)
+                createPost(view,userRights!!,userIcon,authorID!!)
             }
         return view
     }
 
     @SuppressLint("MissingInflatedId")
-    private fun createPost(view: View,userRights:String,userIcon:Drawable){
+    private fun createPost(view: View,userRights:String,userIcon:Drawable,authorID:String){
         if (!isAdded) {
             return  // Vérifie si le fragment est attaché avant d'accéder au contexte
         }
@@ -126,7 +126,7 @@ class ProfileFragment (email:String): Fragment() {
         val collection = mFirestore.collection("Article")
         // Tri par ordre décroissant des IDs
         collection
-            .orderBy("date", Query.Direction.DESCENDING).limit(8)
+            .whereEqualTo("authorID",authorID)
             .get()
             .addOnSuccessListener { querySnapshot ->
                 val articles = ArrayList<Article>()
