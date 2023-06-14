@@ -18,7 +18,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="Bureau / où peut-on vous trouver facilement" />
+            android:padding="5dp"
+            android:hint="Bureau / où peut-on vous trouver facilement"
+            android:background="@drawable/border"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -30,7 +34,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="Téléphone (non obligatoire)" />
+            android:padding="5dp"
+            android:hint="Téléphone (non obligatoire)"
+            android:background="@drawable/border"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"/>
 
         <ImageButton
             android:id="@+id/delTelephoneButton"
@@ -56,54 +64,72 @@
                 android:layout_marginBottom="30dp"
                 android:layout_gravity="center"
                 android:textStyle="bold"
-                android:textSize="20dp"/>
+                android:textSize="20dp"
+                android:textColor="@color/white"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="Ajouter un modérateur :" />
+                android:text="Ajouter un modérateur :"
+                android:textColor="@color/white"/>
 
             <EditText
                 android:id="@+id/moderatorAddText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email" />
+                android:hint="Email"
+                android:background="@drawable/border"
+                android:padding="5dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="Supprimer un modérateur :" />
+                android:text="Supprimer un modérateur :"
+                android:textColor="@color/white"/>
 
             <EditText
                 android:id="@+id/moderatorDelText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email" />
+                android:hint="Email"
+                android:background="@drawable/border"
+                android:padding="5dp"
+                android:textColorHint="@color/white"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="Ajouter un admin :" />
+                android:text="Ajouter un admin :"
+                android:textColor="@color/white"/>
 
             <EditText
                 android:id="@+id/adminAddText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email" />
+                android:hint="Email"
+                android:background="@drawable/border"
+                android:padding="5dp"
+                android:textColorHint="@color/white"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="Supprimer un admin :" />
+                android:text="Supprimer un admin :"
+                android:textColor="@color/white"/>
 
             <EditText
                 android:id="@+id/adminDelText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email" />
+                android:hint="Email"
+                android:background="@drawable/border"
+                android:padding="5dp"
+                android:textColorHint="@color/white"/>
     </LinearLayout>
 
 
@@ -114,5 +140,6 @@
             android:text="Enregistrer"
             android:layout_marginTop="5dp"
             android:textSize="18sp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:backgroundTint="#25985C"/>
     </LinearLayout>
