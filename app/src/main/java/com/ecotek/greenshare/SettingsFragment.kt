@@ -70,7 +70,7 @@ class SettingsFragment(email:String) : Fragment() {
             val addAdmin = addAdmin.text.toString()
             val delAdmin = delAdmin.text.toString()
 
-            val pattern = Pattern.compile("^(03|06|07)\\d{8}$")
+            val pattern = Pattern.compile("^(03|06|07|09)\\d{8}$")
             val match=pattern.matcher(telephone)
             if(match.matches() || bureau.isNotEmpty() || addModo.isNotEmpty() || delModo.isNotEmpty() || addAdmin.isNotEmpty() || delAdmin.isNotEmpty()){
                 val mFirestore = FirebaseFirestore.getInstance()
