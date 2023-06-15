@@ -12,7 +12,9 @@ import androidx.fragment.app.commit
 import com.ecotek.greenshare.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-
+/**
+ * The main activity of the application.
+ */
 class MainActivity : AppCompatActivity() {
 
 

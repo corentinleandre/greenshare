@@ -10,6 +10,9 @@ import com.ecotek.greenshare.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 
+/**
+ * The class HomeActivity represents the home screen of the application.
+ */
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
@@ -23,10 +26,14 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         bottomNavigationView = findViewById(R.id.bottom_nav)
+        // Set the initial fragment as HomeFragment
+
         supportFragmentManager.commit {
             setReorderingAllowed(true)
             add(R.id.container_view, HomeFragment())
         }
+        // Handle the item selection events in the bottom navigation view
+
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when(menuItem.itemId){
                 R.id.nav_home -> {
@@ -49,12 +56,17 @@ class HomeActivity : AppCompatActivity() {
             false
         }
     }
-
+    /**
+     * This moveToFragment Moves to the specified fragment and updates the bottom navigation view accordingly.
+     *
+     * @param fragment The fragment to navigate to.
+     */
     fun moveToFragment(fragment: Fragment) {
         supportFragmentManager.commit {
             setReorderingAllowed(true)
             replace(R.id.container_view, fragment)
         }
+        // Update the selected item in the bottom navigation view
         when(fragment){
             is HomeFragment -> bottomNavigationView.menu.findItem(R.id.nav_home).isChecked = true
             is AddPostFragment -> bottomNavigationView.menu.findItem(R.id.nav_New_content).isChecked = false
