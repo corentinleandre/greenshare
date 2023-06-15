@@ -1,6 +1,7 @@
 package com.ecotek.greenshare
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -23,6 +24,7 @@ import android.widget.TextView
 import android.widget.LinearLayout
 import android.widget.ImageView
 import android.widget.MediaController
+import android.widget.Toast
 import android.widget.VideoView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
@@ -195,50 +197,63 @@ class ReadFragment : Fragment() {
         addCommentButton.setOnClickListener {
             val newComment = commentInput.text.toString().trim()
             if (newComment.isNotEmpty()) {
-                val sender = Comment(currentUser.toString(),newComment,"")
-                val collection = FirebaseFirestore.getInstance().collection("Comment")
-                collection
-                    .get()
-                    .addOnSuccessListener {
-                        var highestId = 0
-                        for (document in it) {
-                            val id = document.id.toIntOrNull()
-                            if (id != null && id > highestId) {
-                                highestId = id
+                if (verificationComment(newComment)) {
+                    val sender = Comment(currentUser.toString(), newComment, "")
+                    val collection = FirebaseFirestore.getInstance().collection("Comment")
+                    collection
+                        .get()
+                        .addOnSuccessListener {
+                            var highestId = 0
+                            for (document in it) {
+                                val id = document.id.toIntOrNull()
+                                if (id != null && id > highestId) {
+                                    highestId = id
+                                }
                             }
+                            highestId += 1
+                            collection
+                                .document(highestId.toString())
+                                .set(sender, SetOptions.merge())
+                            FirebaseFirestore.getInstance().collection("Article")
+                                .document(index.toString())
+                                .get()
+                                .addOnSuccessListener {
+                                    val existingcomments =
+                                        it.getString("commentID")?.split(",")?.toMutableList()
+                                    existingcomments?.add(highestId.toString())
+                                    val commentRef =
+                                        FirebaseFirestore.getInstance().collection("Article")
+                                            .document(index.toString())
+                                    commentRef.update(
+                                        "commentID",
+                                        existingcomments?.joinToString(",")
+                                    )
+                                }
                         }
-                        highestId += 1
-                        collection
-                            .document(highestId.toString())
-                            .set(sender, SetOptions.merge())
-                        FirebaseFirestore.getInstance().collection("Article")
-                            .document(index.toString())
-                            .get()
-                            .addOnSuccessListener {
-                                val existingcomments = it.getString("commentID")?.split(",")?.toMutableList()
-                                existingcomments?.add(highestId.toString())
-                                val commentRef = FirebaseFirestore.getInstance().collection("Article").document(index.toString())
-                                commentRef.update("commentID", existingcomments?.joinToString(","))
-                            }
-                    }
 
-                val inflater = LayoutInflater.from(requireContext())
-                val newCommentView = inflater.inflate(R.layout.comment, null)
-                val newCommentTextView: TextView = newCommentView.findViewById(R.id.textView)
-                newCommentTextView.text = newComment
-                val commentslayout = view.findViewById<LinearLayout>(R.id.commentLayout)
-                var listname = currentUser?.split(".", "@")
-                var firstname = listname?.get(0)?.capitalize()
-                var lastname = listname?.get(1)?.capitalize()
-                val initials = listname?.get(0)?.capitalize()?.substring(0, 1) + listname?.get(1)?.capitalize()?.substring(0,1)
-                val userIcon = createCustomUserIcon(requireContext(),initials)
-                val photo = newCommentView.findViewById<ImageView>(R.id.profileImageView)
-                photo.setImageDrawable(userIcon)
-                val commentAuthorView: TextView = newCommentView.findViewById(R.id.author)
-                commentAuthorView.text = "by "+firstname+" "+lastname
-                commentslayout.addView(newCommentView)
-                commentInput.text = null
+                    //les comments qui vient d'être ajouté
+                    val inflater = LayoutInflater.from(requireContext())
+                    val newCommentView = inflater.inflate(R.layout.comment, null)
+                    val newCommentTextView: TextView = newCommentView.findViewById(R.id.textView)
+                    newCommentTextView.text = newComment
+                    val commentslayout = view.findViewById<LinearLayout>(R.id.commentLayout)
+                    var listname = currentUser?.split(".", "@")
+                    var firstname = listname?.get(0)?.capitalize()
+                    var lastname = listname?.get(1)?.capitalize()
+                    val initials =
+                        listname?.get(0)?.capitalize()?.substring(0, 1) + listname?.get(1)
+                            ?.capitalize()
+                            ?.substring(0, 1)
+                    val userIcon = createCustomUserIcon(requireContext(), initials)
+                    val photo = newCommentView.findViewById<ImageView>(R.id.profileImageView)
+                    photo.setImageDrawable(userIcon)
+                    val commentAuthorView: TextView = newCommentView.findViewById(R.id.author)
+                    commentAuthorView.text = "by " + firstname + " " + lastname
+                    commentslayout.addView(newCommentView)
+                    commentInput.text = null
+                }
             }
+
         }
 
 
@@ -394,6 +409,8 @@ class ReadFragment : Fragment() {
                             }
                         }
                 }
+
+                // AUTRES GENS qui ont commenté
                 val comments = article.commentID.split(",").toMutableList()
                 comments.remove("default")
                 for (comment in comments){
@@ -426,7 +443,35 @@ class ReadFragment : Fragment() {
             }
         }
     }
+    fun verificationComment(message : String):Boolean{
+        var allowed=true
+        val list = message.split(" ",",",".",":",";")
+        var blockedWord=""
+        for(element in list){
+            for (f in listBlocked){
+                if (element.toLowerCase()==f) {
+                    blockedWord=element
+                    allowed=false
+                    break //if the world isn't allowed, stop the verification
+                }
+            }
+            if (!allowed) {
+                blockedComment(blockedWord)
+                break
+            }
+        }
+        return allowed
+    }fun blockedComment(mot:String){
+        val alertDialog: AlertDialog? = AlertDialog.Builder(requireActivity()).create()
+        if (alertDialog != null) {
+            alertDialog.setTitle("Attention !")
+            alertDialog.setMessage("Veuillez supprimer le mot '$mot' de votre post, ce mot n'est pas autorisé. Merci d'adopter un comportement adapté et respectueux !")
+            alertDialog.show()
+        }
+    }
 }
+
+
 private fun getMediaCount(vararg media: String?): Int {
     var count = 0
     for (m in media) {
