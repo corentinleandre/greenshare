@@ -9,16 +9,31 @@ import org.json.JSONException
 import java.io.IOException
 
 var GeneralId=1
+
+/**
+ * This Class representes the Firestore operations management.
+ */
 class FireStore {
 
     private val mFirestore = FirebaseFirestore.getInstance()
-
+    /**
+     * Sends user data to Firestore.
+     *
+     * @param userInfo The user information to send.
+     */
     fun senddata(userInfo: User){
         mFirestore.collection("Users")
             .document(userInfo.identification.toString())
             .set(userInfo, SetOptions.merge())
         //.addOnSuccessListener { }
     }
+    /**
+     * Retrieves JSON data from a file in the application's resources.
+     *
+     * @param context  The application context.
+     * @param fileName The name of the JSON file.
+     * @return A list of users if reading is successful, otherwise null.
+     */
     fun getJsonDataFromAsset(context: Context, fileName: String): List<User>? {
         val jsonString: String
         try {
@@ -61,5 +76,24 @@ class FireStore {
             jsonException.printStackTrace()
             return null
         }
+    }
+    /**
+     * The function "getname" retrieves the user's name based on their identification.
+     *
+     * @param activity       The relevant activity.
+     * @param identification The user's identification.
+     */
+    fun getname(activity: FirstFragment,identification : String){
+
+        mFirestore.collection("Users")
+            .document(identification)
+            .get()
+            .addOnSuccessListener { document ->
+                val user = document.toObject(User::class.java)
+                if (user != null) {
+                    // TODO: Perform operations with the user's name
+
+                }
+            }
     }
 }
