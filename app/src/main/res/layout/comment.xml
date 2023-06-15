@@ -60,6 +60,7 @@
                     android:layout_gravity="right"
                     android:layout_marginTop="15dp"
                     android:scaleType="fitCenter"
+                    android:visibility="gone"
                     app:srcCompat="@drawable/red_close_24" />
             </LinearLayout>
         </LinearLayout>

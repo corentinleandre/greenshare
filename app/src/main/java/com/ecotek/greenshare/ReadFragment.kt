@@ -176,7 +176,7 @@ class ReadFragment : Fragment() {
             val newComment = commentInput.text.toString().trim()
             if (newComment.isNotEmpty()) {
                 if (verificationComment(newComment)) {
-                    val sender = Comment(currentUser.toString(), newComment, "")
+
                     val collection = FirebaseFirestore.getInstance().collection("Comment")
                     collection
                         .get()
@@ -189,6 +189,7 @@ class ReadFragment : Fragment() {
                                 }
                             }
                             highestId += 1
+                            val sender = Comment(currentUser.toString(), newComment, "",highestId.toString())
                             collection
                                 .document(highestId.toString())
                                 .set(sender, SetOptions.merge())
@@ -390,6 +391,7 @@ class ReadFragment : Fragment() {
 
                 // AUTRES GENS qui ont commenté
                 val comments = article.commentID.split(",").toMutableList()
+                Log.d("Test", comments.toString())
                 comments.remove("default")
                 for (comment in comments){
                     val inflater = LayoutInflater.from(requireContext())
@@ -417,6 +419,35 @@ class ReadFragment : Fragment() {
                             commentAuthorView.text = "by "+firstname+" "+lastname
                         }
                     commenterlayout.addView(commentView)
+                    if (userRights!="0"){
+                        val deleteComment = cardView.findViewById<ImageButton>(R.id.deleteComment)
+                        deleteComment.visibility = View.VISIBLE
+                        deleteComment.setOnClickListener{
+                            //supprimer le comment de la base de données
+                            val mFirestore = FirebaseFirestore.getInstance()
+                            val collection = mFirestore.collection("Comment")
+                            collection
+                                .get()
+                                .addOnSuccessListener { querySnapshot ->
+                                    for (document in querySnapshot) {
+                                        if (document.getString("id") == comment) {
+                                            document.reference.delete()
+                                                .addOnSuccessListener {
+                                                    commenterlayout.removeView(commentView)
+                                                    comments.remove(comment)
+                                                    comments.add("default")
+                                                    FirebaseFirestore.getInstance().collection("Article").document(index.toString())
+                                                        .update("commentID", comments.joinToString(","))
+                                                    return@addOnSuccessListener
+
+                                                }.addOnFailureListener { exception ->
+                                                    // Gérer les erreurs de suppression ici
+                                                }
+                                        }
+                                    }
+                                }
+                        }
+                    }
                 }
             }
         }

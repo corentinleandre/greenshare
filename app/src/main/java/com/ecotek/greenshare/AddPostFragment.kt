@@ -37,7 +37,7 @@ import com.google.firebase.storage.StorageReference
 import java.util.ArrayList
 import java.util.Collections
 
-val listBlocked : List<String> = listOf("fuck","f*ck","con","abruti","batard","putain","connard","connasse","p*tain","c*n","c*nne","merde","nique","tg","fdp")
+val listBlocked : List<String> = listOf("fuck","f*ck","con","abruti","batard","putain","connard","connasse","p*tain","c*n","c*nne","merde","nique","tg","fdp","bite")
 class AddPostFragment : Fragment() {
 
     private val MAX_IMAGE_SIZE = 1024 // Maximum image size in kilobytes (1MB)
