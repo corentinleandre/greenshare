@@ -1,11 +1,17 @@
 package com.ecotek.greenshare
 
+import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+
 
 open class LoginActivity : AppCompatActivity() {
 
@@ -61,6 +67,14 @@ open class LoginActivity : AppCompatActivity() {
                     if (it.isSuccessful) {
                         startActivity(Intent(this@LoginActivity,HomeActivity::class.java))
                         finish()
+                    }
+
+                }
+                .addOnFailureListener { e ->
+                    if (e is FirebaseAuthInvalidCredentialsException) {
+                        Toast.makeText(this@LoginActivity, "Invalid email or password", Toast.LENGTH_SHORT).show()
+                    }  else {
+                        Toast.makeText(this@LoginActivity, e.localizedMessage, Toast.LENGTH_SHORT).show()
                     }
                 }
         }
