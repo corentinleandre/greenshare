@@ -26,9 +26,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
 class HomeFragment : Fragment() {
-    var currentId=0
-    var userRights="0"
-    val currentUser = FirebaseAuth.getInstance().currentUser?.email
+    private var currentId=0
+    private var userRights="0"
+    private val currentUser = FirebaseAuth.getInstance().currentUser?.email
 
     fun getUserInitials(authorID: String, onComplete: (String) -> Unit) {
         val mFirestore = FirebaseFirestore.getInstance()
@@ -125,7 +125,7 @@ class HomeFragment : Fragment() {
 
                                 val articleVerified = article.verified
 
-                                if (article != null && (articleVerified != "no" || (articleVerified == "no" && userRights != "0"))) {
+                                if (articleVerified != "no" || (articleVerified == "no" && userRights != "0")) {
 
                                     val inflater = LayoutInflater.from(requireContext())
                                     val postView = inflater.inflate(R.layout.post, null)
@@ -202,7 +202,6 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
-            .addOnFailureListener { exception ->}
     }
 
     private fun createnextPost(view: View) {
@@ -219,7 +218,7 @@ class HomeFragment : Fragment() {
             .addOnSuccessListener { querySnapshot ->
                 val articles = ArrayList<Article>()
                 for (document in querySnapshot) {
-                    val id = document.id.toString()
+                    val id = document.id
                     Article.getArticle(id) { article ->
                         val articleVerified=article?.verified.toString()
                         if (article != null) {
@@ -229,7 +228,6 @@ class HomeFragment : Fragment() {
                         // Vérifie si tous les articles ont été récupérés
                         if (articles.size == querySnapshot.documents.size) {
                             articles.sortByDescending { it.date } // Trie les articles par ordre décroissant de la date
-                            val smallestId = articles.lastOrNull()?.id?.toInt() ?: 0
                             val idLimit = currentId - 5
                             val articlesToDisplay = articles.filter { it.id.toInt() < currentId && it.id.toInt() > idLimit }
                             for (article in articlesToDisplay) {
