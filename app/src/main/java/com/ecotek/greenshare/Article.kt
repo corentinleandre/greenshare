@@ -62,35 +62,6 @@ data class Article(
                     callback(null)
                 }
         }
-//        fun postArticle(title: String = "",
-//                        authorID: String = "",
-//                        content: String = "",
-//                        date: String = "",
-//                        commentID: String = ""){
-//            val mFirestore = FirebaseFirestore.getInstance()
-//            val collection = mFirestore.collection("Article")
-//            collection
-//                .get()
-//                .addOnSuccessListener { querySnapshot ->
-//                    var highestId = 0
-//                    for (document in querySnapshot) {
-//                        val id = document.id.toIntOrNull()
-//                        if (id != null && id > highestId) {
-//                            highestId = id
-//                        }
-//                    }
-//                    highestId += 1
-//                    val article = Article(highestId.toString(),title,authorID,content,date,commentID)
-//
-//                    mFirestore.collection("Article")
-//                        .document(article.id.toString())
-//                        .set(article, SetOptions.merge())
-//                    //.addOnSuccessListener { }
-//                }
-//                .addOnFailureListener { exception ->
-//                    //
-//                }
-//        }
     }
 }
 
