@@ -30,18 +30,13 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.VideoView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.util.ArrayList
 import java.util.Collections
 
-
-//private const val ARG_PARAM1 = "param1"
-//private const val ARG_PARAM2 = "param2"
 val listBlocked : List<String> = listOf("fuck","f*ck","con","abruti","batard","putain","connard","connasse","p*tain","c*n","c*nne","merde","nique","tg","fdp")
 class AddPostFragment : Fragment() {
 
@@ -62,8 +57,6 @@ class AddPostFragment : Fragment() {
 
     //private lateinit var selectedMediaUris: List<Uri> = emptyList()
     private var selectedMediaUris: List<Uri> = listOf()
-    // Initialize as null
-    private val selectedImageUris: MutableList<Uri> = mutableListOf()
 
     private fun updateSelectedLanguageArray() {
         selectedAudience = BooleanArray(audienceList.size)
@@ -91,14 +84,11 @@ class AddPostFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_add_post, container, false)
         titleAreaTextInput = view.findViewById<TextInputEditText>(R.id.titleArea)
         contentAreaTextInput = view.findViewById<TextInputEditText>(R.id.contentArea)
-        postButton = view.findViewById<Button>(R.id.postbtn)
+        postButton = view.findViewById(R.id.postbtn)
         imageButton = view.findViewById(R.id.add_pic)
         videoButton = view.findViewById(R.id.add_vid)
-        imageView = view.findViewById<ImageView>(R.id.imageView2)
+        imageView = view.findViewById(R.id.imageView2)
         mediaLayout = view.findViewById(R.id.mediaLayout)
-        //videoView = view.findViewById<VideoView>(R.id.videoView2)
-
-
         audience = view.findViewById(R.id.Audience)
 
         audience.setOnClickListener {
@@ -167,7 +157,6 @@ class AddPostFragment : Fragment() {
             builder.show()
         }
 
-
         updateSelectedLanguageArray()
         displaySelectedMedia()
         imageButton.setOnClickListener{
@@ -228,6 +217,7 @@ class AddPostFragment : Fragment() {
         }
         return view
     }
+
     private fun displaySelectedMedia() {
         mediaLayout.removeAllViews()
 
@@ -247,14 +237,6 @@ class AddPostFragment : Fragment() {
             //mediaLayout.addView(mediaView)
         }
     }
-
-
-    private fun isImageUri(uri: Uri): Boolean {
-        val contentResolver = requireContext().contentResolver
-        val mimeType = contentResolver.getType(uri)
-        return mimeType?.startsWith("image") == true || mimeType?.startsWith("video") == true
-    }
-
 
     private fun createImageView(context: Context, imageUri: Uri): ImageView {
         val compressedBitmap = compressImage(imageUri)
@@ -318,13 +300,13 @@ class AddPostFragment : Fragment() {
         ActivityCompat.requestPermissions(
             requireActivity(),
             arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-            AddPostFragment.PERMISSION_REQUEST_CODE
+            PERMISSION_REQUEST_CODE
         )
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == AddPostFragment.PERMISSION_REQUEST_CODE) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openMediaPicker("image/*")
             } else {
@@ -414,8 +396,6 @@ class AddPostFragment : Fragment() {
         return scaleFactor
     }
 
-
-
     //private fun saveDataToFirestore(mediaUrl: String) {} //moved into uploadmedia function
     //requests to user to delete the blockedWord. It is like a prevention
     fun blockedPost(mot:String){
@@ -464,5 +444,3 @@ class AddPostFragment : Fragment() {
             }
     }
 }
-
-

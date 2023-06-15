@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
@@ -16,19 +15,12 @@ import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import androidx.core.content.ContextCompat
 import android.graphics.Bitmap
-import android.os.Environment
 import android.widget.ImageView
-import java.io.File
-import java.io.FileOutputStream
 import android.graphics.Bitmap.Config.ARGB_8888
-import android.util.Log
 import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
 import com.bumptech.glide.Glide
-import com.google.firebase.firestore.Query
-import java.io.IOException
 
 class ProfileFragment (email:String): Fragment() {
     var initials: String =""
@@ -70,7 +62,6 @@ class ProfileFragment (email:String): Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
         val logoutButton: ImageButton = view.findViewById(R.id.logoutButton)
-        val linearContainer: LinearLayout = view.findViewById(R.id.postHere)
         val settingsButton=view.findViewById<ImageButton>(R.id.settingsButton)
 
         logoutButton.setOnClickListener{
@@ -158,16 +149,18 @@ class ProfileFragment (email:String): Fragment() {
 
                             for (article in articles) {
 
-                                val articleVerified=article.verified.toString()
+                                val articleVerified = article.verified.toString()
 
                                 if (article != null && (articleVerified != "no" || (articleVerified == "no" && userRights != "0"))) {
 
                                     val inflater = LayoutInflater.from(requireContext())
                                     val postView = inflater.inflate(R.layout.post, null)
                                     val cardView: CardView = postView.findViewById(R.id.touchCard)
-                                    postView.findViewById<ImageView>(R.id.profileImageView).setImageDrawable(userIcon)
+                                    postView.findViewById<ImageView>(R.id.profileImageView)
+                                        .setImageDrawable(userIcon)
                                     linearContainer.addView(postView)
-                                    val flagImageView = postView.findViewById<ImageView>(R.id.redFlag)
+                                    val flagImageView =
+                                        postView.findViewById<ImageView>(R.id.redFlag)
                                     if (userRights == "0" || articleVerified == "yes") {
                                         flagImageView.visibility = View.INVISIBLE
                                     }
@@ -175,11 +168,14 @@ class ProfileFragment (email:String): Fragment() {
                                     val args = Bundle()
 
                                     if (article.mediasID != "") {
-                                        val medias = FirebaseFirestore.getInstance().collection("Medias").document(article.id)
+                                        val medias =
+                                            FirebaseFirestore.getInstance().collection("Medias")
+                                                .document(article.id)
                                         medias.get().addOnSuccessListener { documentSnapshot ->
                                             val media1 = documentSnapshot.getString("media1")
                                             if (media1 != null) {
-                                                val mediaView: ImageView = postView.findViewById(R.id.imageView)
+                                                val mediaView: ImageView =
+                                                    postView.findViewById(R.id.imageView)
                                                 mediaView.layoutParams = LinearLayout.LayoutParams(
                                                     LinearLayout.LayoutParams.MATCH_PARENT,
                                                     300
@@ -207,13 +203,9 @@ class ProfileFragment (email:String): Fragment() {
                     }
                 }
             }
-            .addOnFailureListener { exception ->
-                //
-            }
-
     }
 
-    fun handleClick(fragment: Fragment, arguments: Bundle) {
+    private fun handleClick(fragment: Fragment, arguments: Bundle) {
         fragment.arguments = arguments
         (activity as HomeActivity).moveToFragment(fragment)
     }

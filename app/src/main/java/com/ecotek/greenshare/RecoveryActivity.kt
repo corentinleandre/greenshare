@@ -20,7 +20,6 @@ class RecoveryActivity : AppCompatActivity() {
             finish()
         }
 
-        var email = findViewById<EditText>(R.id.emailrecovery)
         var sendemail = findViewById<Button>(R.id.reset)
 
         sendemail.setOnClickListener{

@@ -1,18 +1,12 @@
 package com.ecotek.greenshare
 
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import org.json.JSONArray
 import org.json.JSONException
 import java.io.IOException
-import java.util.regex.Pattern
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.decodeFromString
-
 
 var GeneralId=1
 class FireStore {
@@ -67,18 +61,5 @@ class FireStore {
             jsonException.printStackTrace()
             return null
         }
-    }
-
-    fun getname(activity: FirstFragment,identification : String){
-
-        mFirestore.collection("Users")
-            .document(identification)
-            .get()
-            .addOnSuccessListener { document ->
-                val user = document.toObject(User::class.java)
-                if (user != null) {
-                    //TODO
-                }
-            }
     }
 }
