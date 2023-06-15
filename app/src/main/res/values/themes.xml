@@ -12,7 +12,7 @@
     </style>
 
 
-    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="MyDialogTheme" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="android:windowBackground">@drawable/window_design</item>
         <item name="buttonBarButtonStyle">@style/MyPositiveButtonStyle</item>
     </style>
