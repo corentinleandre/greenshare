@@ -179,7 +179,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    fun handleClick(fragment: Fragment, arguments: Bundle) {
+    private fun handleClick(fragment: Fragment, arguments: Bundle) {
         fragment.arguments = arguments
         (activity as HomeActivity).moveToFragment(fragment)
     }

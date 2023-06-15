@@ -20,11 +20,10 @@ import androidx.cardview.widget.CardView
 import com.bumptech.glide.Glide
 
 class UserFragment (authorID: String): Fragment() {
-    var initials: String =""
-    //val currentUser = FirebaseAuth.getInstance().currentUser?.email
-    val currentUser = authorID
+    private var initials: String =""
+    private val currentUser = authorID
 
-    fun createCustomUserIcon(context: Context, initials: String): Drawable {
+    private fun createCustomUserIcon(context: Context, initials: String): Drawable {
         val size = 512 // Taille de l'icône (en pixels)
 
         val bitmap = Bitmap.createBitmap(size, size, ARGB_8888)
@@ -55,16 +54,8 @@ class UserFragment (authorID: String): Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-
         val view = inflater.inflate(R.layout.fragment_user, container, false)
-
-        //add the user's personal data
-
         val mFirestore = FirebaseFirestore.getInstance()
-
-        //creates icon User
-
 
         mFirestore.collection("Users")
             .whereEqualTo("identification", currentUser)
@@ -74,7 +65,6 @@ class UserFragment (authorID: String): Fragment() {
                 val userDocument = document.documents[0]
                 val phoneNumber = userDocument.getString("telephone")
                 val roleUser = userDocument.getString("role")
-                val groupUser = userDocument.getString("group")
                 val email = userDocument.getString("email")
                 val authorID = userDocument.getString("identification")
                 val userRights = userDocument.getString("rights")
@@ -122,7 +112,6 @@ class UserFragment (authorID: String): Fragment() {
                         // Vérifie si tous les articles ont été récupérés
                         if (articles.size == querySnapshot.documents.size) {
                             articles.sortByDescending { it.date } // Trie les articles par ordre décroissant de la date
-
 
                             for (article in articles) {
 
@@ -175,18 +164,10 @@ class UserFragment (authorID: String): Fragment() {
                     }
                 }
             }
-            .addOnFailureListener { exception ->
-                //
-            }
-
     }
 
-    fun handleClick(fragment: Fragment, arguments: Bundle) {
+    private fun handleClick(fragment: Fragment, arguments: Bundle) {
         fragment.arguments = arguments
         (activity as HomeActivity).moveToFragment(fragment)
-    }
-
-    companion object {
-
     }
 }

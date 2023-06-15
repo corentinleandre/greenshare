@@ -5,11 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
-
 
 open class LoginActivity : AppCompatActivity() {
 
@@ -18,15 +14,8 @@ open class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        //binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(R.layout.login_activity)
-        //FireStore().getJsonDataFromAsset(this, "prof_data.json")
-        //FireStore().getJsonDataFromAsset(this, "student_data.json")
-        //Article.getArticle("1"){article ->
-        //    if (article != null){
-        //        Toast.makeText(this@LoginActivity, article.content, Toast.LENGTH_LONG).show()
-        //    }
-        //}
+
         if (FirebaseAuth.getInstance().currentUser != null){
             startActivity(Intent(this@LoginActivity,HomeActivity::class.java))
             finish()
@@ -72,7 +61,6 @@ open class LoginActivity : AppCompatActivity() {
                     if (it.isSuccessful) {
                         startActivity(Intent(this@LoginActivity,HomeActivity::class.java))
                         finish()
-                        //Toast.makeText(this@LoginActivity, "bien", Toast.LENGTH_LONG).show()
                     }
                 }
         }

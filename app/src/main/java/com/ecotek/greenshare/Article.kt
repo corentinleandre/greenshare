@@ -1,7 +1,6 @@
 package com.ecotek.greenshare
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 
 data class   Article(
     val id: String = "",

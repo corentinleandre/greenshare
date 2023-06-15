@@ -1,7 +1,5 @@
 package com.ecotek.greenshare
 
-import android.media.Image
-
 data class User(val identification: String ="",
                 val firstname: String = "",
                 val lastname: String = "",

@@ -1,6 +1,5 @@
 package com.ecotek.greenshare
 
-
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.view.WindowCompat

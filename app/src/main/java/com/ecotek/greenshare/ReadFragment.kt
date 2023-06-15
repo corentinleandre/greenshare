@@ -39,24 +39,6 @@ class ReadFragment : Fragment() {
     val currentUser = FirebaseAuth.getInstance().currentUser?.email
     var userId=""
     var userRights = ""
-    private lateinit var videoLayout: LinearLayout
-    fun createVideoView(context: Context, videoUri: Uri): VideoView {
-        val videoView = VideoView(context)
-
-        videoView.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        videoView.setVideoURI(videoUri)
-        videoView.setOnPreparedListener { mediaPlayer ->
-            mediaPlayer.setVolume(0f, 0f)
-            mediaPlayer.isLooping = true
-            mediaPlayer.start()
-
-        }
-
-        return videoView!!
-    }
 
 
     private fun createCustomUserIcon(context: Context, initials: String): Drawable {
@@ -124,8 +106,6 @@ class ReadFragment : Fragment() {
         val postView = inflater.inflate(R.layout.post_read, null)
         linearContainer.addView(postView)
 
-        val imageView: ImageView = postView.findViewById(R.id.imageView1)
-        val imageName = arguments?.getString("keyi")
         val index=arguments?.getString("index")
         val numlikes = view.findViewById<TextView>(R.id.likeCount)
         val liker = view.findViewById<ImageButton>(R.id.likeButton)
@@ -183,8 +163,6 @@ class ReadFragment : Fragment() {
 
         val inflater2 = LayoutInflater.from(requireContext())
         val commentView = inflater2.inflate(R.layout.comment_input, null)
-        val cardView: CardView = commentView.findViewById(R.id.touchCard)
-        var mediaControls: MediaController? = null
         var listname = currentUser?.split(".", "@")
         val initials = listname?.get(0)?.capitalize()?.substring(0, 1) + listname?.get(1)?.capitalize()?.substring(0,1)
         val userIcon = createCustomUserIcon(requireContext(),initials)

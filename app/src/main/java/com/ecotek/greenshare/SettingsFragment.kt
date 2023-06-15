@@ -2,8 +2,6 @@ package com.ecotek.greenshare
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
-import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +10,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
-import com.google.common.io.LineReader
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.regex.Pattern
@@ -28,9 +23,8 @@ class SettingsFragment(email:String) : Fragment() {
     private lateinit var addAdmin: EditText
     private lateinit var delAdmin: EditText
     private lateinit var saveButton: Button
-    private lateinit var delTelButton: Button
-    var currentUser=email
-    var userRights=""
+    private var currentUser=email
+    private var userRights=""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_settings, container, false)
@@ -38,7 +32,7 @@ class SettingsFragment(email:String) : Fragment() {
         return view
     }
 
-    fun checkUser(view : View,inflater: LayoutInflater){
+    private fun checkUser(view : View, inflater: LayoutInflater){
         bureauEditText = view.findViewById(R.id.bureauEditText)
         telephoneEditText = view.findViewById(R.id.telephoneEditText)
         addModo = view.findViewById(R.id.moderatorAddText)

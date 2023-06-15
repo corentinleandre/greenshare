@@ -17,7 +17,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.LinearLayout
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.ScrollView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
@@ -26,13 +25,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
-
 class HomeFragment : Fragment() {
     var currentId=0
     var userRights="0"
     val currentUser = FirebaseAuth.getInstance().currentUser?.email
-
-    private lateinit var progressBar: ProgressBar
 
     fun getUserInitials(authorID: String, onComplete: (String) -> Unit) {
         val mFirestore = FirebaseFirestore.getInstance()
@@ -115,7 +111,7 @@ class HomeFragment : Fragment() {
             .addOnSuccessListener { querySnapshot ->
                 val articles = ArrayList<Article>()
                 for (document in querySnapshot) {
-                    val id = document.id.toString()
+                    val id = document.id
                     Article.getArticle(id) { article ->
                         if (article != null) {
                             articles.add(article)
@@ -127,7 +123,7 @@ class HomeFragment : Fragment() {
 
                             for (article in articles) {
 
-                                val articleVerified = article.verified.toString()
+                                val articleVerified = article.verified
 
                                 if (article != null && (articleVerified != "no" || (articleVerified == "no" && userRights != "0"))) {
 
@@ -298,16 +294,13 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
-            .addOnFailureListener { exception ->
-                //
-            }
     }
 
 
 
 
 
-     fun detectEndOfScroll(scrollView: ScrollView) {
+     private fun detectEndOfScroll(scrollView: ScrollView) {
         scrollView.viewTreeObserver.addOnScrollChangedListener {
             val view = scrollView.getChildAt(scrollView.childCount - 1)
             val diff = (view.bottom - (scrollView.height + scrollView.scrollY))
@@ -318,7 +311,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-     fun refreshScroll(scrollView: ScrollView) {
+     private fun refreshScroll(scrollView: ScrollView) {
         scrollView.viewTreeObserver.addOnScrollChangedListener {
             if (scrollView.scrollY == 0) {
                 val linearContainer: LinearLayout = scrollView.findViewById(R.id.fil)
@@ -330,7 +323,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun handleClick(fragment: Fragment, arguments: Bundle) {
+    private fun handleClick(fragment: Fragment, arguments: Bundle) {
         fragment.arguments = arguments
         (activity as HomeActivity).moveToFragment(fragment)
     }
