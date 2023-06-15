@@ -25,20 +25,15 @@
             android:iconifiedByDefault="false"
             android:imeOptions="actionSearch"
             android:layout_marginBottom="10dp"
-            android:layout_marginRight="20dp"
-            />
-    </androidx.cardview.widget.CardView>
+            android:layout_marginEnd="20dp" />
 
-    <!--<androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/searchResultsRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />-->
+    </androidx.cardview.widget.CardView>
 
     <ScrollView
         android:id="@+id/searchResultsScrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
         <LinearLayout
             android:id="@+id/fil1"
             android:layout_width="match_parent"
@@ -46,5 +41,29 @@
             android:orientation="vertical">
         </LinearLayout>
     </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/searchOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="202dp"
+            android:layout_height="202dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="90dp"
+            android:src="@drawable/baseline_search_24" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:text="@string/watch_out_for_the_case"
+            android:textColor="#FFFFFF"
+            android:textSize="25sp" />
+
+    </FrameLayout>
 
 </LinearLayout>

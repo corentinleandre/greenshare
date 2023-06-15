@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -29,6 +30,7 @@ class SearchFragment : Fragment() {
     private lateinit var linearContainer: LinearLayout
     var userRights="0"
     val currentUser = FirebaseAuth.getInstance().currentUser?.email
+    private lateinit var searchOverlay: FrameLayout
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -46,6 +48,7 @@ class SearchFragment : Fragment() {
         searchScrollView = view.findViewById(R.id.searchResultsScrollView)
         searchView.setIconifiedByDefault(false)
         searchView.queryHint = "Search articles"
+        searchOverlay = view.findViewById(R.id.searchOverlay)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 performSearch(query)
@@ -157,7 +160,11 @@ class SearchFragment : Fragment() {
                     }
                 }
             }
+            searchOverlay.visibility = View.GONE
+            searchScrollView.visibility = View.VISIBLE
         } else {
+            searchOverlay.visibility = View.VISIBLE
+            searchScrollView.visibility = View.GONE
             val alertDialog: AlertDialog? = AlertDialog.Builder(requireActivity()).create()
             if (alertDialog != null) {
                 alertDialog.setTitle("Désolé")
