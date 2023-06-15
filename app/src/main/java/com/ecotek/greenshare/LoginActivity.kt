@@ -1,6 +1,5 @@
 package com.ecotek.greenshare
 
-import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,8 +8,6 @@ import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 
 /**
  * This class represents the login screen of the application.
@@ -30,16 +27,14 @@ open class LoginActivity : AppCompatActivity() {
         }
         // Login button click listener
 
-        var loginbtn = findViewById<Button>(R.id.loginbtn)
-        var mail = findViewById<EditText>(R.id.email)
-        var pass = findViewById<EditText>(R.id.password)
+        val loginbtn = findViewById<Button>(R.id.loginbtn)
 
         loginbtn.setOnClickListener{
             loginuser()
         }
         // Forgot password button click listener
 
-        var forgotpassbtn = findViewById<Button>(R.id.forgot)
+        val forgotpassbtn = findViewById<Button>(R.id.forgot)
 
         forgotpassbtn.setOnClickListener{
             startActivity(Intent(this@LoginActivity,RecoveryActivity::class.java))
