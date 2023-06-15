@@ -27,7 +27,6 @@
         android:layout_marginTop="10dp"
         android:padding="5dp"
         android:hint="Bureau "
-        
         android:paddingHorizontal="12dp"
         android:background="@drawable/border"
         android:textColor="@color/white"
@@ -122,6 +121,7 @@
             android:inputType="textEmailAddress"
             android:paddingHorizontal="12dp"
             android:hint="Email"
+            android:textColor="@color/white"
             android:background="@drawable/border"
             android:padding="5dp"
             android:textColorHint="#80FFFFFF"/>
@@ -144,6 +144,7 @@
             android:hint="Email"
             android:background="@drawable/border"
             android:padding="5dp"
+            android:textColor="@color/white"
             android:textColorHint="#80FFFFFF"/>
 
         <TextView
@@ -162,6 +163,7 @@
             android:inputType="textEmailAddress"
             android:paddingHorizontal="12dp"
             android:hint="Email"
+            android:textColor="@color/white"
             android:background="@drawable/border"
             android:padding="5dp"
             android:textColorHint="#80FFFFFF"/>
