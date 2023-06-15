@@ -27,9 +27,8 @@ class RecoveryActivity : AppCompatActivity() {
 
         var sendemail = findViewById<Button>(R.id.reset)
 
-        sendEmail.setOnClickListener{
-            // Send password reset email
-            FirebaseAuth.getInstance().sendPasswordResetEmail(email.text.toString())
+        sendemail.setOnClickListener{
+                FirebaseAuth.getInstance().sendPasswordResetEmail(findViewById<EditText>(R.id.emailrecovery).text.toString())
                 .addOnSuccessListener {
                     Toast.makeText(this, "Reset password email sent", Toast.LENGTH_LONG).show()
                 }
