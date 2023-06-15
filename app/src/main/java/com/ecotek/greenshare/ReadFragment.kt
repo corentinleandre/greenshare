@@ -474,7 +474,7 @@ class ReadFragment : Fragment() {
         val alertDialog: AlertDialog? = AlertDialog.Builder(requireActivity()).create()
         if (alertDialog != null) {
             alertDialog.setTitle("Attention !")
-            alertDialog.setMessage("Veuillez supprimer le mot '$mot' de votre post, ce mot n'est pas autorisé. Merci d'adopter un comportement adapté et respectueux !")
+            alertDialog.setMessage("Veuillez supprimer le mot '$mot' de votre commentaire, ce mot n'est pas autorisé. Merci d'adopter un comportement adapté et respectueux !")
             alertDialog.show()
         }
     }
